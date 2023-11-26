@@ -1,0 +1,24 @@
+mat-toolbar {
+  background-color: #D3CBE0;
+}
+
+.travelBee{
+  justify-content: flex-start;
+  font-size: 30px;
+  color: white;
+}
+
+div {
+  width: 100%;
+  justify-content: flex-end;
+  display: flex;
+  align-items: center;
+}
+
+.favorite-icon {
+  color: white;
+  margin: 5px;
+}
+
+
+
