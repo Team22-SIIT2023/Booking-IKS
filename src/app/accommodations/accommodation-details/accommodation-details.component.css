@@ -1,0 +1,141 @@
+
+*{
+  padding: 2%;
+  margin-left: 10px;
+}
+
+.accommodationMainImage {
+  width: 60%;
+  height: 70%;
+  margin: 20px;
+}
+
+.accommodationCard {
+  width: 90%;
+  height: 70%;
+  stroke: #D3CBE0;
+}
+
+.address {
+  margin-left: 20px;
+  margin-top: 0;
+  padding-top: 0;
+}
+
+.description {
+  margin-bottom: 25px;
+}
+
+.accommodationName {
+  font-size: 25px;
+  padding-top: 0;
+}
+
+.amenityList {
+  height: auto;
+  margin-bottom: 20px;
+  margin-top: 0;
+  padding-top: 0;
+}
+
+.container {
+  display: flex;
+}
+
+.accommodationCard, .amenityList {
+  margin-left: 10px; /* Optional: add some space between the components */
+  margin-right: 10px; /* Optional: add some space between the components */
+  box-sizing: border-box; /* Include padding and border in the element's total width and height */
+}
+
+.amenity {
+  height: auto;
+  width: auto;
+}
+
+.icon {
+  padding-right: 0;
+  padding-left: 0;
+}
+
+.mapa {
+  width: 70%;
+  height: 40%;
+}
+
+.stars {
+  color: yellow;
+  margin-right: 0;
+  padding-right: 0;
+  padding-left: 0;
+  margin-left: 0;
+}
+
+.rating {
+  width: 220px;
+}
+
+.dates {
+  display: flex;
+  margin: 0;
+  padding: 0;
+}
+
+.filter {
+  margin: 10px;
+  padding-bottom: 0;
+  border: 2px solid #D3CBE0;
+  text-align: center;
+  border-radius: 25px; /* <---------- use this to round all corners in div */
+}
+
+p {
+  margin-right: 0;
+  margin-left: 2%;
+  padding-right: 0;
+  padding-left: 0;
+}
+
+.footer {
+  height: 30%;
+  background-color: #D3CBE0;
+  margin-top: 5%;
+}
+
+.reserveButton {
+  margin-bottom: 20px;
+  font-size: 14px;
+  padding-left: 30px;
+  padding-right: 30px;
+}
+
+.hostIcon {
+  margin: 0;
+  padding: 0;
+}
+
+.hostDescription {
+  padding: 0;
+}
+
+.commentCard {
+  height: 10%;
+  width: 22%;
+  padding-left: 0;
+}
+
+.commentIcon {
+  padding: 0;
+  margin-top: 0;
+}
+
+.commentUser {
+  padding-top: 0;
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.commentDivider {
+  padding-bottom: 25px;
+  padding-top: 0;
+}

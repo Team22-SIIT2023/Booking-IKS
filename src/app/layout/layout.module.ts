@@ -8,13 +8,14 @@ import {RouterLink, RouterModule} from "@angular/router";
 @NgModule({
   declarations: [
     HeaderComponent,
-    NavBarComponent,
+    NavBarComponent
   ],
-    imports: [
-        CommonModule,
-        MaterialModule,
-        RouterModule
-    ],
+  imports: [
+    CommonModule,
+    MaterialModule,
+    RouterLink,
+    RouterModule
+  ],
   exports: [
     NavBarComponent,
     HeaderComponent,
