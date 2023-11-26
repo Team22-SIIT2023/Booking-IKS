@@ -11,7 +11,7 @@ import {AccommodationsModule} from "./accommodations/accommodations.module";
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
     BrowserModule,

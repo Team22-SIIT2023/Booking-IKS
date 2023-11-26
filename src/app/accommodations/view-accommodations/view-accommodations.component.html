@@ -1,0 +1,103 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<img src="../../../assets/images/bannerr.png" class="img-fluid rounded" />
+
+<div class="combo-box-container">
+  <input type="text" id="search-bar" placeholder="Enter your destination">
+  <select>
+    <option disabled selected value="">Accommodation type</option>
+    <option value="option1">Hotel</option>
+    <option value="option2">Motel</option>
+    <option value="option3">Villa</option>
+  </select>
+  <select>
+    <option disabled selected value="">Number of guests</option>
+    <option value="itemX">2</option>
+    <option value="itemY">3</option>
+    <option value="itemZ">4</option>
+  </select>
+  <mat-form-field class="date-picker">
+    <mat-date-range-input [rangePicker]="rangePicker">
+      <input matStartDate placeholder="Start date">
+      <input matEndDate placeholder="End date">
+    </mat-date-range-input>
+    <mat-datepicker-toggle matIconSuffix [for]="rangePicker"></mat-datepicker-toggle>
+    <mat-date-range-picker #rangePicker>
+      <mat-date-range-picker-actions>
+        <button mat-button matDateRangePickerCancel>Cancel</button>
+        <button mat-raised-button color="primary" matDateRangePickerApply>Apply</button>
+      </mat-date-range-picker-actions>
+    </mat-date-range-picker>
+  </mat-form-field>
+  <button id="search-btn">Search</button>
+</div>
+
+
+
+<div class="filter-panel">
+  <div class="checkbox-grid">
+    <label><input type="checkbox" name="amenity" value="wifi"> Wi-Fi</label>
+    <label><input type="checkbox" name="amenity" value="pool"> Pool</label>
+    <label><input type="checkbox" name="amenity" value="parking"> Parking</label>
+    <label><input type="checkbox" name="amenity" value="gym"> Gym</label>
+    <label><input type="checkbox" name="amenity" value="breakfast"> Breakfast</label>
+
+    <label><input type="checkbox" name="amenity" value="ac"> Air Conditioning</label>
+    <label><input type="checkbox" name="amenity" value="pet-friendly"> Pet Friendly</label>
+    <label><input type="checkbox" name="amenity" value="kitchen"> Kitchen</label>
+    <label><input type="checkbox" name="amenity" value="tv"> TV</label>
+    <label><input type="checkbox" name="amenity" value="balcony"> Balcony</label>
+
+    <label><input type="checkbox" name="amenity" value="shuttle"> Shuttle Service</label>
+    <label><input type="checkbox" name="amenity" value="spa"> Spa</label>
+    <label><input type="checkbox" name="amenity" value="laundry"> Laundry</label>
+    <label><input type="checkbox" name="amenity" value="wifi"> Conference Room</label>
+    <label><input type="checkbox" name="amenity" value="bar"> Bar</label>
+  </div>
+  <div class="action-buttons">
+    <button type="button">Apply Filters</button>
+    <button type="button">Reset Filters</button>
+    <button type="button">Clear All</button>
+  </div>
+</div>
+
+<div class="main-div">
+<div class="accommodation">
+  <img src="../../../assets/images/ap1.jpg" alt="Accommodation 1">
+  <div class="accommodation-card">
+    <h2>Accommodation Title 1</h2>
+    <div class="accommodation-address">
+      <p> <i class="fas fa-map-marker-alt address-icon"></i>123 Street, City, Country</p>
+    </div>
+    <p>Description of the accommodation. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+    <p>Price: $100 per night</p>
+    <button class="details-btn">Details</button>
+  </div>
+</div>
+<div class="accommodation">
+  <img src="../../../assets/images/ap2.jpg" alt="Accommodation 1">
+  <div class="accommodation-card">
+    <h2>Accommodation Title 2</h2>
+    <div class="accommodation-address">
+      <p> <i class="fas fa-map-marker-alt address-icon"></i>123 Street, City, Country</p>
+    </div>
+    <p>Description of the accommodation. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+    <p>Price: $100 per night</p>
+    <button class="details-btn">Details</button>
+  </div>
+</div>
+  <div class="accommodation">
+    <img src="../../../assets/images/ap1.jpg" alt="Accommodation 1">
+    <div class="accommodation-card">
+      <h2>Accommodation Title 1</h2>
+      <div class="accommodation-address">
+        <p> <i class="fas fa-map-marker-alt address-icon"></i>123 Street, City, Country</p>
+      </div>
+      <p>Description of the accommodation. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+      <p>Price: $100 per night</p>
+      <button class="details-btn">Details</button>
+    </div>
+  </div>
+</div>
+<div class="footer">
+</div>
