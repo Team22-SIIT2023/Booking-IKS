@@ -1,8 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import {AccommodationDetailsComponent} from "./accommodations/accommodation-details/accommodation-details.component";
 
 const routes: Routes = [
-  // {component: WineComponent, path:"wine"},
+  {component: AccommodationDetailsComponent, path:"accommodationDetails"},
   // {component: HomeComponent, path:"home"},
   // {component: CreateWineComponent, path:"create"}
 ];
