@@ -4,20 +4,24 @@ import {ViewAccommodationsComponent} from "./view-accommodations/view-accommodat
 import {MaterialModule} from "../infrastructure/material/material.module";
 import { AccommodationDetailsComponent } from './accommodation-details/accommodation-details.component';
 import { AccommodationComponent } from './accommodation/accommodation.component';
+import { AccommodationCardComponent } from './accommodation-card/accommodation-card.component';
+import {RouterLink} from "@angular/router";
 
 @NgModule({
   declarations: [
     ViewAccommodationsComponent,
-       AccommodationDetailsComponent,
-    AccommodationComponent
+    AccommodationDetailsComponent,
+    AccommodationComponent,
+    AccommodationCardComponent
   ],
   imports: [
     CommonModule,
-    MaterialModule
+    MaterialModule,
+    RouterLink
   ],
   exports:[
     ViewAccommodationsComponent,
-     AccommodationDetailsComponent
+    AccommodationDetailsComponent
   ]
 })
 export class AccommodationsModule { }
