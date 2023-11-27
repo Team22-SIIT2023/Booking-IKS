@@ -5,7 +5,7 @@ import {HeaderComponent} from "./layout/header/header.component";
 import {AccommodationDetailsComponent} from "./accommodations/accommodation-details/accommodation-details.component";
 
 const routes: Routes = [
-  {component: AccommodationDetailsComponent, path:"accommodationDetails"},
+  {component: AccommodationDetailsComponent, path:"home/accommodations/accommodationDetails/:id"},
   {component: ViewAccommodationsComponent, path:"home/accommodations"},
   {path: '', redirectTo: '/home', pathMatch: 'full'},
   {path:"home",component:HeaderComponent}

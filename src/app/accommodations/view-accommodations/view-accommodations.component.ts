@@ -9,7 +9,7 @@ import {AccommodationsService} from "../accommodations.service";
 })
 export class ViewAccommodationsComponent implements  OnInit{
 
-
+  clickedAccommodation:number|undefined
   accommodations: Accommodation[] = []
   constructor(private service: AccommodationsService) {
   }
@@ -21,5 +21,9 @@ export class ViewAccommodationsComponent implements  OnInit{
       },
       error: (_) => {console.log("Greska!")}
     })
+  }
+  onAccommodationClicked(accommodation:Accommodation){
+    this.clickedAccommodation=accommodation.id;
+
   }
 }
