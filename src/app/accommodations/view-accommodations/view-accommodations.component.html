@@ -62,42 +62,45 @@
 </div>
 
 <div class="main-div">
-<div class="accommodation">
-  <img src="../../../assets/images/ap1.jpg" alt="Accommodation 1">
-  <div class="accommodation-card">
-    <h2>Accommodation Title 1</h2>
-    <div class="accommodation-address">
-      <p> <i class="fas fa-map-marker-alt address-icon"></i>123 Street, City, Country</p>
-    </div>
-    <p>Description of the accommodation. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-    <p>Price: $100 per night</p>
-    <button class="details-btn">Details</button>
+  <div *ngFor="let accommodation of accommodations">
+    <app-accommodation-card [accommodation]="accommodation"></app-accommodation-card>
   </div>
-</div>
-<div class="accommodation">
-  <img src="../../../assets/images/ap2.jpg" alt="Accommodation 1">
-  <div class="accommodation-card">
-    <h2>Accommodation Title 2</h2>
-    <div class="accommodation-address">
-      <p> <i class="fas fa-map-marker-alt address-icon"></i>123 Street, City, Country</p>
-    </div>
-    <p>Description of the accommodation. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-    <p>Price: $100 per night</p>
-    <button class="details-btn">Details</button>
-  </div>
-</div>
-  <div class="accommodation">
-    <img src="../../../assets/images/ap1.jpg" alt="Accommodation 1">
-    <div class="accommodation-card">
-      <h2>Accommodation Title 1</h2>
-      <div class="accommodation-address">
-        <p> <i class="fas fa-map-marker-alt address-icon"></i>123 Street, City, Country</p>
-      </div>
-      <p>Description of the accommodation. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-      <p>Price: $100 per night</p>
-      <button class="details-btn">Details</button>
-    </div>
-  </div>
+<!--<div class="accommodation">-->
+<!--  <img src="../../../assets/images/ap1.jpg" alt="Accommodation 1">-->
+<!--  <div class="accommodation-card">-->
+<!--    <h2>Accommodation Title 1</h2>-->
+<!--    <div class="accommodation-address">-->
+<!--      <p> <i class="fas fa-map-marker-alt address-icon"></i>123 Street, City, Country</p>-->
+<!--    </div>-->
+<!--    <p>Description of the accommodation. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>-->
+<!--    <p>Price: $100 per night</p>-->
+<!--    <button class="details-btn">Details</button>-->
+<!--  </div>-->
+<!--</div>-->
+<!--<div class="accommodation">-->
+<!--  <img src="../../../assets/images/ap2.jpg" alt="Accommodation 1">-->
+<!--  <div class="accommodation-card">-->
+<!--    <h2>Accommodation Title 2</h2>-->
+<!--    <div class="accommodation-address">-->
+<!--      <p> <i class="fas fa-map-marker-alt address-icon"></i>123 Street, City, Country</p>-->
+<!--    </div>-->
+<!--    <p>Description of the accommodation. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>-->
+<!--    <p>Price: $100 per night</p>-->
+<!--    <button class="details-btn">Details</button>-->
+<!--  </div>-->
+<!--</div>-->
+<!--  <div class="accommodation">-->
+<!--    <img src="../../../assets/images/ap1.jpg" alt="Accommodation 1">-->
+<!--    <div class="accommodation-card">-->
+<!--      <h2>Accommodation Title 1</h2>-->
+<!--      <div class="accommodation-address">-->
+<!--        <p> <i class="fas fa-map-marker-alt address-icon"></i>123 Street, City, Country</p>-->
+<!--      </div>-->
+<!--      <p>Description of the accommodation. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>-->
+<!--      <p>Price: $100 per night</p>-->
+<!--      <button class="details-btn">Details</button>-->
+<!--    </div>-->
+<!--  </div>-->
 </div>
 <div class="footer">
 </div>
