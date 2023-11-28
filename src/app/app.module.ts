@@ -8,6 +8,8 @@ import { NavBarComponent } from './nav-bar/nav-bar.component';
 import {LayoutModule} from "./layout/layout.module";
 import {AccommodationDetailsComponent} from "./accommodations/accommodation-details/accommodation-details.component";
 import {AccommodationsModule} from "./accommodations/accommodations.module";
+import { AccountModule } from './account/account.module';
+import { RegistrationComponent } from './account/registration/registration.component';
 import {HttpClientModule} from "@angular/common/http";
 
 @NgModule({
@@ -20,6 +22,7 @@ import {HttpClientModule} from "@angular/common/http";
     BrowserAnimationsModule,
     LayoutModule,
     AccommodationsModule,
+    AccountModule
     HttpClientModule,
   ],
   providers: [],
