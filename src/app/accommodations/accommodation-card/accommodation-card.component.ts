@@ -1,5 +1,5 @@
-import {Component, Input} from '@angular/core';
-import {Accommodation} from "../accommodation/model/model.module";
+import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Accommodation, Address} from "../accommodation/model/model.module";
 
 @Component({
   selector: 'app-accommodation-card',
@@ -10,4 +10,11 @@ export class AccommodationCardComponent {
 
   @Input()
   accommodation: Accommodation | undefined;
+  @Output()
+  clicked:EventEmitter<Accommodation>=new EventEmitter<Accommodation>();
+
+  onAccommodationClicked():void{
+    this.clicked.emit(this.accommodation);
+  }
+
 }

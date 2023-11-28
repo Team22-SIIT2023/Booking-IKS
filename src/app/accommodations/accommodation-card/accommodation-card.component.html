@@ -4,10 +4,12 @@
   <div class="accommodation-card">
     <h2>{{accommodation?.name}}</h2>
     <div class="accommodation-address">
-      <p> <i class="fas fa-map-marker-alt address-icon"></i>123 Street, City, Country</p>
+      <p> <i class="fas fa-map-marker-alt address-icon"></i>
+      {{accommodation?.address?.country}},{{accommodation?.address?.city}},
+        {{accommodation?.address?.address}}</p>
     </div>
     <p>{{accommodation?.description}}</p>
     <p>Price: $100 per night</p>
-    <button class="details-btn">Details</button>
+    <button (click)="onAccommodationClicked()" [routerLink]="['accommodationDetails',accommodation?.id]" class="details-btn">Details</button>
   </div>
 </div>

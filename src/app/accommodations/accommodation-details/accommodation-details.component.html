@@ -1,42 +1,43 @@
 <div class="container">
 <mat-card class="accommodationCard">
-  <mat-card-header class="accommodationName"><strong>Akeah Verdi Budapest</strong> <div class="rating">
+  <mat-card-header class="accommodationName"><strong>{{accommodation?.name}}</strong> <div class="rating">
     <mat-icon *ngFor="let star of Array(5)" class="stars">star</mat-icon>
   </div></mat-card-header>
-  <mat-card-subtitle class="address">1096 Budimpešta, 89 Üllői út, Mađarska </mat-card-subtitle>
+  <mat-card-subtitle class="address">
+    {{accommodation?.address?.country}},{{accommodation?.address?.city}},{{accommodation?.address?.address}}
+  </mat-card-subtitle>
   <img mat-card-image class="accommodationMainImage" src="../../../assets/images/hotel2.jpg" alt="slika"/>
-  <mat-card-content class="description">Objekat Verdi Grand Hotel se nalazi u Budimpešti, na 1,7 km od Mađarskog nacionalnog muzeja. U ponudi je smeštaj sa fitnes centrom, privatnim parkingom, barom i vrtom. Ovaj hotel sa 4 zvezdice raspolaže uslugom konsijerža i turističkim deskom. Recepcija radi non-stop, a gostima su takođe na raspolaganju prevoz od/do aerodroma, bankomat i besplatan WiFi u svim prostorijama.
-    Ovaj hotel gostima nudi klimatizovane sobe sa radnim stolom, kuvalom, sefom, flat-screen TV-om i sopstvenim kupatilom sa tušem. U sobama objekta Verdi Grand Hotel su obezbeđeni peškiri i posteljina.</mat-card-content>
+  <mat-card-content class="description">{{accommodation?.description}}</mat-card-content>
   <mat-card-actions align="end">
     <button mat-button>Add to favorite<mat-icon matListItemIcon>favorite</mat-icon></button>
   </mat-card-actions>
-  <mat-card-footer class="hostDescription" ><mat-icon class="hostIcon">house</mat-icon>Host: </mat-card-footer>
+  <mat-card-footer class="hostDescription" ><mat-icon class="hostIcon">house</mat-icon>Host:{{accommodation?.hostId}} </mat-card-footer>
 </mat-card>
 <div class="amenity">
   <h4>Available amenities</h4>
-  <mat-list class="amenityList" role="list">
+  <mat-list *ngFor="let amenity of accommodation?.amenities" class="amenityList" role="list">
   <mat-list-item>
-    <mat-icon class="icon" matListItemIcon>pool</mat-icon>
-    <span matListItemTitle>Pool</span>
+    <mat-icon class="icon" matListItemIcon>{{amenity?.name}}</mat-icon>
+    <span matListItemTitle>{{amenity?.name}}</span>
   </mat-list-item>
   <mat-divider></mat-divider>
-  <mat-list-item>
-    <mat-icon class="icon" matListItemIcon>pets</mat-icon>
-    <span matListItemTitle>Pets</span>
-  </mat-list-item>
-  <mat-divider></mat-divider>
-  <mat-list-item>
-<!--    <img matListItemAvatar src="..." alt="...">-->
-    <mat-icon class="icon" matListItemIcon>wifi</mat-icon>
-    <span matListItemTitle>WiFi</span>
-  </mat-list-item>
-  <mat-divider></mat-divider>
-  <mat-list-item>
-    <!--    <img matListItemAvatar src="..." alt="...">-->
-    <mat-icon class="icon" matListItemIcon>air</mat-icon>
-    <span matListItemTitle>Air conditioning</span>
-  </mat-list-item>
-  <mat-divider></mat-divider>
+<!--  <mat-list-item>-->
+<!--    <mat-icon class="icon" matListItemIcon>pets</mat-icon>-->
+<!--    <span matListItemTitle>Pets</span>-->
+<!--  </mat-list-item>-->
+<!--  <mat-divider></mat-divider>-->
+<!--  <mat-list-item>-->
+<!--&lt;!&ndash;    <img matListItemAvatar src="..." alt="...">&ndash;&gt;-->
+<!--    <mat-icon class="icon" matListItemIcon>wifi</mat-icon>-->
+<!--    <span matListItemTitle>WiFi</span>-->
+<!--  </mat-list-item>-->
+<!--  <mat-divider></mat-divider>-->
+<!--  <mat-list-item>-->
+<!--    &lt;!&ndash;    <img matListItemAvatar src="..." alt="...">&ndash;&gt;-->
+<!--    <mat-icon class="icon" matListItemIcon>air</mat-icon>-->
+<!--    <span matListItemTitle>Air conditioning</span>-->
+<!--  </mat-list-item>-->
+<!--  <mat-divider></mat-divider>-->
 </mat-list>
 
 <img class="mapa" src="../../../assets/images/mapa.jpg">
@@ -46,14 +47,18 @@
 <div class="filter">
   <div class="dates">
     <p>Select dates</p>
-    <mat-form-field>
-      <mat-label>Enter a date range</mat-label>
-      <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
-        <input matStartDate formControlName="start" placeholder="Start date">
-        <input matEndDate formControlName="end" placeholder="End date">
+    <mat-form-field class="date-picker">
+      <mat-date-range-input [rangePicker]="rangePicker">
+        <input matStartDate placeholder="Start date">
+        <input matEndDate placeholder="End date">
       </mat-date-range-input>
-      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-date-range-picker #picker></mat-date-range-picker>
+      <mat-datepicker-toggle matIconSuffix [for]="rangePicker"></mat-datepicker-toggle>
+      <mat-date-range-picker #rangePicker>
+        <mat-date-range-picker-actions>
+          <button mat-button matDateRangePickerCancel>Cancel</button>
+          <button mat-raised-button color="primary" matDateRangePickerApply>Apply</button>
+        </mat-date-range-picker-actions>
+      </mat-date-range-picker>
     </mat-form-field>
   <p>Number of quests</p>
   <mat-form-field>

@@ -2,11 +2,11 @@
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1), 0 -4px 8px rgba(0, 0, 0, 0.1);   margin-left: 30px;
   display: flex;
   padding: 10px;
-  width: 50%;
+  width: 70%;
   margin-bottom: 20px;
 }
 .accommodation-card{
-  margin-left: 10px;
+  margin-left: 40px;
 }
 
 .accommodation img {
