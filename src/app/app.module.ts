@@ -8,6 +8,8 @@ import { NavBarComponent } from './nav-bar/nav-bar.component';
 import {LayoutModule} from "./layout/layout.module";
 import {AccommodationDetailsComponent} from "./accommodations/accommodation-details/accommodation-details.component";
 import {AccommodationsModule} from "./accommodations/accommodations.module";
+import { AccountModule } from './account/account.module';
+import { RegistrationComponent } from './account/registration/registration.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +20,8 @@ import {AccommodationsModule} from "./accommodations/accommodations.module";
     AppRoutingModule,
     BrowserAnimationsModule,
     LayoutModule,
-    AccommodationsModule
+    AccommodationsModule,
+    AccountModule
   ],
   providers: [],
   bootstrap: [AppComponent]

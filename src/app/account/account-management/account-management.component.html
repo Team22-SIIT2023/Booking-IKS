@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="account-management.component.css"> 
+</head>
+<body>
+    <div class="side-illustration">
+        <img [src]=url alt="Illustration Image">
+        <br>
+        <br>
+        <input type="file" class="d-none"  (change)="onFileSelected(imageInput.files)" #imageInput/> 
+    </div>
+    <div class="login-container">
+        <form>
+            <label for="username">First name:</label>
+            <input type="text" id="username" name="username" required>
+
+            <label for="password">Last name:</label>
+            <input type="password" id="password" name="password" required>
+
+            <label for="username">Address:</label>
+            <input type="text" id="username" name="username" required>
+
+            <label for="password">Phone number:</label>
+            <input type="password" id="password" name="password" required>
+
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+
+            <label for="password">Confirm password:</label>
+            <input type="password" id="password" name="password" required>
+
+
+            <button type="submit">Save changes</button>
+            
+            <button type="submit">Delete account</button>
+
+        </form>
+    </div>
+
+</body>
+</html>
