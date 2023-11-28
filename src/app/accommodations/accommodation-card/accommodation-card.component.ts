@@ -17,4 +17,5 @@ export class AccommodationCardComponent {
     this.clicked.emit(this.accommodation);
   }
 
+    protected readonly Array = Array;
 }
