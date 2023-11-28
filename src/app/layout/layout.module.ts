@@ -23,6 +23,7 @@ import { HomeComponent } from './home/home.component';
     exports: [
         NavBarComponent,
         HeaderComponent,
+        HomeComponent,
         FooterComponent,
     ],
 })
