@@ -14,8 +14,9 @@ import {MatListModule} from '@angular/material/list';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatNativeDateModule} from '@angular/material/core';
 import {JsonPipe} from '@angular/common';
-import {FormGroup, FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {FormGroup, Validators, FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatSelectModule} from '@angular/material/select';
+import {Component} from '@angular/core';
 
 
 @NgModule({
