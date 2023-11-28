@@ -8,7 +8,7 @@ import { RegistrationComponent } from './account/registration/registration.compo
 import { AccountManagementComponent } from './account/account-management/account-management.component';
 
 const routes: Routes = [
-  {component: AccommodationDetailsComponent, path:"home/accommodationDetails"},
+  {component: AccommodationDetailsComponent, path:"home/accommodations/accommodationDetails/:id"},
   {component: ViewAccommodationsComponent, path:"home/accommodations"},
   {component: LoginComponent, path:"logIn"},
   {component: RegistrationComponent, path:"signIn"},

@@ -1,17 +1,23 @@
 export interface Accommodation {
-  _id: number;
+  id: number;
   name: string;
   description: string;
-  address: string;
-  freeTimeSlots: string[];
-  minGuests: number;
-  maxGuests: number;
-  accommodationType: string;
-  pricePerGuest: boolean;
-  automaticConfirmations: boolean;
+  address: Address;
+  //accommodationType: AccommodationType;
   hostId: number;
-  status: string;
-  reservationDeadLine: number;
-  amenities: string[];
-  priceList: string[];
+  // reservationDeadLine: number;
+  amenities: Amenity[];
+}
+
+export interface Address {
+  country:String;
+  city:String;
+  address:String;
+}
+
+export interface Amenity{
+  id:Number;
+  name:String;
+  icon:String;
+
 }

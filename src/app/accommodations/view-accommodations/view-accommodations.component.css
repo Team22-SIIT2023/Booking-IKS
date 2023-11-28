@@ -2,7 +2,9 @@ body{
   margin: 0;
 }
 .img-fluid{
-  width: 100%;
+  margin: 0 auto;
+  width: 80%;
+  height: 40%;
 }
 select,#search-bar{
   width: 200px;
@@ -18,6 +20,8 @@ select,#search-bar{
   font-size: 16px;
 }
 .combo-box-container {
+  margin: 2%;
+  margin-bottom: 0;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 -2px 4px rgba(0, 0, 0, 0.1);
   align-items: center;
   background-color: #D3CBE0;
@@ -34,12 +38,13 @@ select,#search-bar{
 }
 
 .filter-panel {
-  width: 100%;
+  margin: 2%;
+  margin-top: 0;
   display: flex;
   padding: 10px;
   background-color: #D3CBE0;
   align-items: center;
-  border: 1px solid #5e5e5e;
+  border-top: 1px solid #5e5e5e;
 }
 .checkbox-grid {
   margin-left: 40px;
@@ -60,34 +65,9 @@ select,#search-bar{
   border:1px black solid;
 }
 
-
 .main-div{
   margin-top: 100px;
-}
-.accommodation {
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1), 0 -4px 8px rgba(0, 0, 0, 0.1);   margin-left: 30px;
-  display: flex;
-  padding: 10px;
-  width: 50%;
-  margin-bottom: 20px;
-}
-.accommodation-card{
-  margin-left: 10px;
-}
 
-.accommodation img {
-  width: 300px;
-  margin-right: 10px;
-}
-.address-icon{
-  margin-right: 5px;
-}
-.details-btn{
-  width: 100px;
-  padding: 10px;
-  background-color: #D3CBE0;
-  border-radius: 10px;
-  border:none;
 }
 .footer{
   background-color: #D3CBE0;

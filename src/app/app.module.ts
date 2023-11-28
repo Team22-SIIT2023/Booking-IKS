@@ -10,6 +10,7 @@ import {AccommodationDetailsComponent} from "./accommodations/accommodation-deta
 import {AccommodationsModule} from "./accommodations/accommodations.module";
 import { AccountModule } from './account/account.module';
 import { RegistrationComponent } from './account/registration/registration.component';
+import {HttpClientModule} from "@angular/common/http";
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { RegistrationComponent } from './account/registration/registration.compo
     LayoutModule,
     AccommodationsModule,
     AccountModule
+    HttpClientModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
