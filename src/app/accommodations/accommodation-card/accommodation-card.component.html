@@ -1,15 +1,15 @@
 <div class="accommodation">
-
-  <img src="../../../assets/images/ap1.jpg" alt="Accommodation 1">
+  <img id="accommodation-image" src="../../../assets/images/hotel3.jpg" alt="Accommodation 1">
   <div class="accommodation-card">
+    <mat-icon *ngFor="let star of Array(5)" class="stars">star</mat-icon>
     <h2>{{accommodation?.name}}</h2>
     <div class="accommodation-address">
-      <p> <i class="fas fa-map-marker-alt address-icon"></i>
+      <p><mat-icon class="address-icon"> location_on</mat-icon>
       {{accommodation?.address?.country}},{{accommodation?.address?.city}},
         {{accommodation?.address?.address}}</p>
     </div>
     <p>{{accommodation?.description}}</p>
-    <p>Price: $100 per night</p>
-    <button (click)="onAccommodationClicked()" [routerLink]="['accommodationDetails',accommodation?.id]" class="details-btn">Details</button>
+    <p id="price">Price: $100 per night</p>
+    <button mat-raised-button (click)="onAccommodationClicked()" [routerLink]="['accommodationDetails',accommodation?.id]" class="details-btn">Details</button>
   </div>
 </div>
