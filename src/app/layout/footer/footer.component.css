@@ -50,7 +50,7 @@
   border-radius: 4px;
 }
 
-.subscribe-form button {
+#subscribeBtn {
   padding: 10px;
   background-color: #D3CBE0;
   color: #333;
@@ -58,10 +58,6 @@
   border: 1px solid black;
   border-radius: 4px;
   cursor: pointer;
-}
-
-.subscribe-form button:hover {
-  background-color: #D3CBE0;
 }
 .copyright {
   color: #ccc;
