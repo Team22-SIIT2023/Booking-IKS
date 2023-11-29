@@ -31,7 +31,7 @@ export class AccommodationDetailsComponent implements OnInit{
         next:(data:Accommodation)=>{this.accommodation=data}
       })
       }
-
     )
   }
+
 }
