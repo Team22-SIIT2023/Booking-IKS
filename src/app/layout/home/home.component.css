@@ -40,4 +40,8 @@ h3{
   border-radius: 4px;
   display: inline-block;
   cursor: pointer;
+  transition: 0.2s;
+}
+.cardBtn:hover {
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
 }
