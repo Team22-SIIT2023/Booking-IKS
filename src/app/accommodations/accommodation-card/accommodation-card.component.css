@@ -40,12 +40,16 @@ h2{
   background-color: whitesmoke;
 }
 
-  .details-btn{
+.details-btn{
     display: flex;
     width: 100px;
     padding: 10px;
     background-color: whitesmoke;
     border-radius: 10px;
     border:none;
+}
+.favorite-icon{
+  padding-left: 10px;
+  padding-top:10px ;
 }
 

@@ -21,9 +21,10 @@ import {LayoutModule} from "../layout/layout.module";
     RouterLink,
     LayoutModule
   ],
-  exports:[
+  exports: [
     ViewAccommodationsComponent,
-    AccommodationDetailsComponent
+    AccommodationDetailsComponent,
+    AccommodationCardComponent
   ]
 })
 export class AccommodationsModule { }
