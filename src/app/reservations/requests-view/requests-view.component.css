@@ -2,13 +2,24 @@
   background-color: rgba(210, 207, 222, 0.71);
   box-shadow: none;
 }
+#requestsTable th,
+#requestsTable td {
+  padding: 10px;
+}
 mat-paginator{
   background-color: rgba(210, 207, 222, 0.71);
-
+}
+#cancelBtn{
+  margin-left: 10%;
+  background-color: #cbc9c9;
 }
 
 #requestsTableDiv{
-  margin: 50px;
+  align-items: center;
+  width: 70%;
+  margin: auto;
+  margin-top: 5%;
+  margin-bottom: 5%;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 -2px 4px rgba(0, 0, 0, 0.1);
 }
 .icons{

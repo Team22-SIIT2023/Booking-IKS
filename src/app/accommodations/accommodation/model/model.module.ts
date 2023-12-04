@@ -21,3 +21,28 @@ export interface Amenity{
   icon:String;
 
 }
+
+export interface FavoriteAccommodations{
+  id:number;
+  guestId:number;
+  accommodationId:number;
+}
+
+export interface ReservationRequest {
+  id:number
+  timeSlot: TimeSlot;
+  price: number;
+  //guest: Guest;
+  accommodation: Accommodation;
+  status: RequestStatus;
+}
+export interface TimeSlot {
+  startDate:Date;
+  endDate:Date;
+}
+export enum RequestStatus {
+  ACCEPTED,
+  CANCELLED,
+  WAITING
+
+}

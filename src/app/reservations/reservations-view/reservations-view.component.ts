@@ -2,51 +2,38 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {MatTableDataSource} from "@angular/material/table";
+import {RequestStatus, ReservationRequest} from "../../accommodations/accommodation/model/model.module";
+import {ReservationsService} from "../reservations.service";
 
-export interface Request {
-  timeSlot: string;
-  price: number;
-  guest: string;
-  accommodation: string;
-  guestNumber: number;
-  status: string;
-}
-
-const STATIC_REQUESTS: Request[] = [
-  { timeSlot: '2023-02-01', price: 150, guest: 'Jane Smith', accommodation: 'Hotel B', guestNumber: 1, status: 'Approved' },
-  { timeSlot: '2023-02-01', price: 150, guest: 'Jane Smith', accommodation: 'Hotel B', guestNumber: 1, status: 'Approved' },
-  { timeSlot: '2023-01-01', price: 100, guest: 'Jane Smith', accommodation: 'Hotel A', guestNumber: 2, status: 'Pending' },
-  { timeSlot: '2023-02-01', price: 150, guest: 'Jane Smith', accommodation: 'Hotel B', guestNumber: 1, status: 'Approved' },
-];
 @Component({
   selector: 'app-reservations-view',
   templateUrl: './reservations-view.component.html',
   styleUrls: ['./reservations-view.component.css']
 })
 export class ReservationsViewComponent implements OnInit{
-  columnDisplayNames: { [key: string]: string } = {
-    timeSlot: 'Dates',
-    price: 'Price',
-    guest: 'Guest',
-    accommodation: 'Accommodation',
-    guestNumber: 'Guest Number',
-    status: 'Request Status',
-    delete: 'Delete',
-  };
-  displayedColumns: string[] = ['timeSlot', 'price', 'guest', 'accommodation', 'guestNumber', 'status','delete'];
-  dataSource = new MatTableDataSource<Request>(STATIC_REQUESTS);
-  @ViewChild(MatPaginator) paginator: MatPaginator | undefined;
-  @ViewChild(MatSort) sort: MatSort | undefined;
+  requests: ReservationRequest[] = [];
+  dataSource = new MatTableDataSource<ReservationRequest>([]); // Initialize with an empty array
+  displayedColumns: string[] = ['timeSlot','price', 'accommodation','status','cancel'];
 
+  @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort!: MatSort;
 
-  ngOnInit() {
-    // @ts-ignore
-    this.dataSource.paginator = this.paginator;
-  }
+  constructor(private service: ReservationsService) { }
 
-  ngAfterViewInit() {
-    // @ts-ignore
-    this.dataSource.sort = this.sort;
+  ngOnInit(): void {
+    this.service.getAll(RequestStatus.ACCEPTED).subscribe({
+      next: (data: ReservationRequest[]) => {
+        this.requests = data;
+        this.dataSource = new MatTableDataSource<ReservationRequest>(this.requests);
+        // @ts-ignore
+        this.dataSource.paginator = this.paginator;
+        // @ts-ignore
+        this.dataSource.sort = this.sort;
+      },
+      error: (_) => {
+        console.log("Error fetching data from ReservationsService");
+      }
+    });
   }
 
 }
