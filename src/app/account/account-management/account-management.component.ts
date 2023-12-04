@@ -10,8 +10,8 @@ import { Account,Address, User } from "../model/model.module";
 export class AccountManagementComponent implements OnInit {
   
   user: User | undefined;
-  account: Account | undefined;
-  address: Address | undefined;
+  url: string|null|ArrayBuffer = '../../../assets/images/addpicture.png' 
+
   constructor(private service: UserService) {
   }
 
@@ -20,14 +20,15 @@ export class AccountManagementComponent implements OnInit {
     this.service.getUser(1).subscribe({
       next: (data: User) => {
         this.user = data;
-        // this.address = data.address;
-        // this.account = data.account;
+        if(this.user.picturePath!=""){
+          this.url=this.user.picturePath;
+        }
       },
       error: (_) => {console.log("Greska!")}
     })
   }
 
-  url: string|null|ArrayBuffer = '../../../assets/images/addpicture.png' 
+
   
   onFileSelected(files: FileList | null) {
       if (files) {
