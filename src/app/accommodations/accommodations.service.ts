@@ -18,6 +18,11 @@ export class AccommodationsService {
     return this.httpClient.get<Accommodation[]>(environment.apiHost + 'accommodations')
   }
 
+  getUpdatedAndNew(): Observable<Accommodation[]> {
+    return this.httpClient.get<Accommodation[]>(environment.apiHost + 'accommodations?new')
+  }
+
+    
   add(accommodation: CreateAccommodation): Observable<CreateAccommodation> {
     return this.httpClient.post<CreateAccommodation>(environment.apiHost + "accommodations", accommodation)
   }

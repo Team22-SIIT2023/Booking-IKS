@@ -22,13 +22,13 @@ export interface Account{
   type : Type;
 }
 
-enum Status {
+export enum Status {
   ACTIVE,
   BLOCKED,
   REPORTED
 }
 
-enum Type {
+export enum Type {
   GUEST,
   HOST,
   ADMIN
