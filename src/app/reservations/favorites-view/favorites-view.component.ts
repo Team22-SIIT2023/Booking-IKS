@@ -13,36 +13,17 @@ export class FavoritesViewComponent implements OnInit{
 
   clickedAccommodation:number|undefined
   accommodations: Accommodation[] = []
-  constructor(private service: FavoritesService,private accService:AccommodationsService) {
+  constructor(private service: AccommodationsService) {
   }
 
   ngOnInit(): void {
-    this.service.getAllforGuest().subscribe({
-      next: (favoriteAccommodations: FavoriteAccommodations[]) => {
-
-        const accommodationIds = favoriteAccommodations.map(favoriteAccommodation =>
-          favoriteAccommodation.accommodationId
-        );
-        const accommodationRequests = accommodationIds.map(accommodationId =>
-          this.accService.getAccommodation(accommodationId)
-        );
-
-        forkJoin(accommodationRequests).subscribe({
-          next: (accommodations: Accommodation[]) => {
-            this.accommodations = accommodations;
-          },
-          error: (_) => {
-            console.log("Error fetching Accommodations");
-          },
-        });
+    this.service.getAllFavorites(1).subscribe({
+      next: (data: Accommodation[]) => {
+        this.accommodations = data
       },
-      error: (_) => {
-        console.log("Error fetching data from FavoritesService");
-      },
-    });
+      error: (_) => {console.log("Greska!")}
+    })
   }
-
-
   onAccommodationClicked(accommodation:Accommodation){
     this.clickedAccommodation=accommodation.id;
 

@@ -18,6 +18,10 @@ export class AccommodationsService {
     return this.httpClient.get<Accommodation[]>(environment.apiHost + 'accommodations')
   }
 
+  getAllFavorites(id:number): Observable<Accommodation[]> {
+    return this.httpClient.get<Accommodation[]>(environment.apiHost + 'users/guest/'+id)
+  } //u koji servis ovo da se stavi?
+
   add(accommodation: Accommodation): Observable<Accommodation> {
     return this.httpClient.post<Accommodation>(environment.apiHost + 'add', accommodation)
   }

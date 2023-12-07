@@ -10,8 +10,11 @@ mat-paginator{
   background-color: rgba(210, 207, 222, 0.71);
 }
 #cancelBtn{
-  margin-left: 10%;
-  background-color: #cbc9c9;
+  width: 100px;
+  padding: 4px;
+  background-color: #D3CBE0;
+  border-radius: 10px;
+  border:1px black solid;
 }
 #rateIcon{
   color: #939393;

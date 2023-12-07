@@ -21,7 +21,7 @@ export class ReservationsViewComponent implements OnInit{
   constructor(private service: ReservationsService) { }
 
   ngOnInit(): void {
-    this.service.getAll(RequestStatus.ACCEPTED).subscribe({
+    this.service.getAll(RequestStatus.ACCEPTED,"").subscribe({
       next: (data: ReservationRequest[]) => {
         this.requests = data;
         this.dataSource = new MatTableDataSource<ReservationRequest>(this.requests);

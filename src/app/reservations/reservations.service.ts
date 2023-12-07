@@ -13,17 +13,22 @@ export class ReservationsService {
   constructor(private httpClient: HttpClient) {
   }
 
-  getAll(requestParam: RequestStatus): Observable<ReservationRequest[]> {
+  getAll(requestParam: RequestStatus, accommodationName?: string,startDate? :string,endDate?:string): Observable<ReservationRequest[]> {
     const enumParam = RequestStatus[requestParam];
+    let params = new HttpParams().set('status', enumParam);
 
-    const params = new HttpParams().set('status', enumParam);
+    if(startDate && endDate){
+      params=params.set('begin',startDate);
+      params=params.set('end',endDate);
+    }
+
+    if (accommodationName) {
+      params = params.set('accommodationName', accommodationName);
+    }
 
     const options = { params };
 
     return this.httpClient.get<ReservationRequest[]>(environment.apiHost + 'requests', options);
   }
-
-  //add getAllForGuest and getAllForHost that have ids as path variable and status as request param!
-  //also add guest and host models!
 
 }
