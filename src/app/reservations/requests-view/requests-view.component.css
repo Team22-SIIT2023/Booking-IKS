@@ -1,0 +1,58 @@
+.date-picker{
+  margin-top: 20px;
+  margin-right: 40px;
+  font-size: 16px;
+}
+.combo-box-container {
+  display: flex;
+  align-items: center;
+  width: 70%;
+  margin: auto;
+  margin-top:5%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 -2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #D3CBE0;
+}
+#accommodation-select{
+  margin-top: 20px;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+#filter-btn{
+  width: 100px;
+  padding: 4px;
+  background-color: #D3CBE0;
+  border-radius: 10px;
+  border:1px black solid;
+}
+
+#requestsTable{
+  background-color: rgba(210, 207, 222, 0.71);
+  box-shadow: none;
+}
+#requestsTable th,
+#requestsTable td {
+  padding: 10px;
+}
+mat-paginator{
+  background-color: rgba(210, 207, 222, 0.71);
+}
+#cancelBtn{
+  width: 100px;
+  padding: 4px;
+  background-color: #D3CBE0;
+  border-radius: 10px;
+  border:1px black solid;
+}
+
+#requestsTableDiv{
+  align-items: center;
+  width: 70%;
+  margin: auto;
+  margin-top: 5%;
+  margin-bottom: 5%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 -2px 4px rgba(0, 0, 0, 0.1);
+}
+.icons{
+  font-weight:unset;
+  color: #939393;
+}
