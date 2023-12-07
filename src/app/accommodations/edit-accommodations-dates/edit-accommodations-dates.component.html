@@ -1,0 +1,40 @@
+<div class="container">
+  <form class="example-form"  [formGroup]="createAccommodationForm">
+
+    <mat-form-field class="date-picker example-full-width">
+      <mat-date-range-input [rangePicker]="rangePicker">
+        <input matStartDate placeholder="Start date">
+        <input matEndDate placeholder="End date">
+      </mat-date-range-input>
+      <mat-datepicker-toggle matIconSuffix [for]="rangePicker"></mat-datepicker-toggle>
+      <mat-date-range-picker #rangePicker>
+        <mat-date-range-picker-actions>
+          <button mat-button matDateRangePickerCancel>Cancel</button>
+          <button mat-raised-button color="primary" matDateRangePickerApply>Apply</button>
+        </mat-date-range-picker-actions>
+      </mat-date-range-picker>
+    </mat-form-field>
+
+    <mat-form-field floatLabel="always" class="example-full-width">
+      <mat-label>Price</mat-label>
+      <input matInput type="number" class="example-right-align" placeholder="0" name="price" formControlName="price">
+      <span matTextPrefix>$&nbsp;</span>
+      <span matTextSuffix>.00</span>
+    </mat-form-field>
+
+<!--    <mat-radio-group class="radioBtn" aria-label="Select an option">-->
+<!--      <mat-radio-button value="1">Price per guest</mat-radio-button>-->
+<!--      <mat-radio-button value="2">Price for the entire accommodation unit</mat-radio-button>-->
+<!--    </mat-radio-group>-->
+
+    <mat-checkbox formControlName="checkPrice" class="example-margin">Price per guest</mat-checkbox>
+    <mat-checkbox formControlName="checkReservation" class="example-margin">Automatic reservation acceptances</mat-checkbox>
+
+    <mat-form-field floatLabel="always" class="deadline example-full-width">
+      <mat-label>Deadline for cancellation of reservation</mat-label>
+      <input matInput type="number" name="deadline" class="example-right-align" formControlName="deadline" placeholder="0" >
+    </mat-form-field>
+  </form>
+
+  <button mat-raised-button class="reserveButton">Accept</button>
+</div>

@@ -6,8 +6,14 @@
     <button [routerLink]="['home']"  mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
       <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="home"></mat-icon>
     </button>
-    <button  mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
-      <mat-icon>favorite</mat-icon>
+    <button [routerLink]="['create']" mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
+      <mat-icon>add</mat-icon>
+    </button>
+    <button [routerLink]="['editDates']" mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
+      <mat-icon>edit</mat-icon>
+    </button>
+    <button [routerLink]="['reservations']" mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
+      <mat-icon>collections_bookmark</mat-icon>
     </button>
     <button [routerLink]="['myAccount']" mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
       <mat-icon>language</mat-icon>
@@ -24,5 +30,14 @@
     <button [routerLink]="['accommodationApproval']" mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
       <mat-icon>fiber_new</mat-icon>
     </button>
+    <button mat-icon-button [matMenuTriggerFor]="menu" class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
+      <mat-icon matBadge="15" matBadgeColor="warn">notifications</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <div class="nott" *ngFor="let notification of notifications">
+        <app-notification-card [notification]="notification"></app-notification-card>
+        <hr/>
+      </div>
+    </mat-menu>
   </div>
 </mat-toolbar>

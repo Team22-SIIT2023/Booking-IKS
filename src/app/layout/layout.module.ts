@@ -6,6 +6,7 @@ import {MaterialModule} from "../infrastructure/material/material.module";
 import {RouterLink, RouterModule} from "@angular/router";
 import { FooterComponent } from './footer/footer.component';
 import { HomeComponent } from './home/home.component';
+import {NotificationModule} from "../notification/notification.module";
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { HomeComponent } from './home/home.component';
     CommonModule,
     MaterialModule,
     RouterLink,
-    RouterModule
+    RouterModule,
+    NotificationModule
   ],
     exports: [
         NavBarComponent,

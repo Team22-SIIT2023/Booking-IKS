@@ -19,11 +19,6 @@ export class AccommodationDetailsComponent implements OnInit{
   constructor(private root:ActivatedRoute,private acommodationsService:AccommodationsService) {
   }
 
-  // range = new FormGroup({
-  //   start: new FormControl<Date | null>(null),
-  //   end: new FormControl<Date | null>(null),
-  // });
-
   ngOnInit(): void {
     this.root.params.subscribe((params) =>{
       const id=+params['id']
@@ -33,5 +28,4 @@ export class AccommodationDetailsComponent implements OnInit{
       }
     )
   }
-
 }

@@ -8,13 +8,17 @@ import { AccommodationCardComponent } from './accommodation-card/accommodation-c
 import {RouterLink} from "@angular/router";
 import {LayoutModule} from "../layout/layout.module";
 import { AccommodationsService } from './accommodations.service';
+import { CreateAccommodationComponent } from './create-accommodation/create-accommodation.component';
+import { EditAccommodationsDatesComponent } from './edit-accommodations-dates/edit-accommodations-dates.component';
 
 @NgModule({
   declarations: [
     ViewAccommodationsComponent,
     AccommodationDetailsComponent,
     AccommodationComponent,
-    AccommodationCardComponent
+    AccommodationCardComponent,
+    CreateAccommodationComponent,
+    EditAccommodationsDatesComponent
   ],
   imports: [
     CommonModule,
@@ -22,11 +26,10 @@ import { AccommodationsService } from './accommodations.service';
     RouterLink,
     LayoutModule
   ],
-  exports:[
+  exports: [
     ViewAccommodationsComponent,
     AccommodationDetailsComponent,
-    AccommodationCardComponent,
-    AccommodationDetailsComponent
+    AccommodationCardComponent
   ]
 })
 export class AccommodationsModule { }

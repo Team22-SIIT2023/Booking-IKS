@@ -1,17 +1,24 @@
 <div class="combo-box-container">
-  <input type="text" id="search-bar" placeholder="Enter your destination">
-  <select>
-    <option disabled selected value="">Accommodation type</option>
-    <option value="option1">Hotel</option>
-    <option value="option2">Motel</option>
-    <option value="option3">Villa</option>
-  </select>
-  <select>
-    <option disabled selected value="">Number of guests</option>
-    <option value="itemX">2</option>
-    <option value="itemY">3</option>
-    <option value="itemZ">4</option>
-  </select>
+  <mat-form-field>
+    <mat-label>Enter your destination</mat-label>
+    <input matInput type="string" >
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Accommodation type</mat-label>
+    <mat-select>
+      <mat-option value="option1">Hotel</mat-option>
+      <mat-option value="option2">Motel</mat-option>
+      <mat-option value="option3">Villa</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Number of guests</mat-label>
+    <mat-select>
+      <mat-option value="itemX">2</mat-option>
+      <mat-option value="itemY">3</mat-option>
+      <mat-option value="itemZ">4</mat-option>
+    </mat-select>
+  </mat-form-field>
   <mat-form-field class="date-picker">
     <mat-date-range-input [rangePicker]="rangePicker">
       <input matStartDate placeholder="Start date">
@@ -32,29 +39,24 @@
 
 <div class="filter-panel">
   <div class="checkbox-grid">
-    <label><input type="checkbox" name="amenity" value="wifi"> Wi-Fi</label>
-    <label><input type="checkbox" name="amenity" value="pool"> Pool</label>
-    <label><input type="checkbox" name="amenity" value="parking"> Parking</label>
-    <label><input type="checkbox" name="amenity" value="gym"> Gym</label>
-    <label><input type="checkbox" name="amenity" value="breakfast"> Breakfast</label>
+    <mat-checkbox class="example-margin">Wi-Fi</mat-checkbox>
+    <mat-checkbox class="example-margin">Pool</mat-checkbox>
+    <mat-checkbox class="example-margin">Parking</mat-checkbox>
+    <mat-checkbox class="example-margin">Gym</mat-checkbox>
+    <mat-checkbox class="example-margin">Breakfast</mat-checkbox>
 
-    <label><input type="checkbox" name="amenity" value="ac"> Air Conditioning</label>
-    <label><input type="checkbox" name="amenity" value="pet-friendly"> Pet Friendly</label>
-    <label><input type="checkbox" name="amenity" value="kitchen"> Kitchen</label>
-    <label><input type="checkbox" name="amenity" value="tv"> TV</label>
-    <label><input type="checkbox" name="amenity" value="balcony"> Balcony</label>
+    <mat-checkbox class="example-margin">Air conditioning</mat-checkbox>
+    <mat-checkbox class="example-margin">Pet friendly</mat-checkbox>
+    <mat-checkbox class="example-margin">Kitchen</mat-checkbox>
+    <mat-checkbox class="example-margin">TV</mat-checkbox>
+    <mat-checkbox class="example-margin">Balcony</mat-checkbox>
 
-    <label><input type="checkbox" name="amenity" value="shuttle"> Shuttle Service</label>
-    <label><input type="checkbox" name="amenity" value="spa"> Spa</label>
-    <label><input type="checkbox" name="amenity" value="laundry"> Laundry</label>
-    <label><input type="checkbox" name="amenity" value="wifi"> Conference Room</label>
-    <label><input type="checkbox" name="amenity" value="bar"> Bar</label>
-  </div>
-  <div class="action-buttons">
-    <button mat-raised-button type="button">Apply Filters</button>
-    <button mat-raised-button type="button">Reset Filters</button>
-    <button mat-raised-button type="button">Clear All</button>
-  </div>
+    <mat-checkbox class="example-margin">Shuttle Service</mat-checkbox>
+    <mat-checkbox class="example-margin">Spa</mat-checkbox>
+    <mat-checkbox class="example-margin">Laundry</mat-checkbox>
+    <mat-checkbox class="example-margin">Conference room</mat-checkbox>
+    <mat-checkbox class="example-margin">Bar</mat-checkbox>
+      </div>
 </div>
 
 <div class="main-div">

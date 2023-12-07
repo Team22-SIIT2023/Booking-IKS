@@ -10,12 +10,21 @@ import { AccountManagementComponent } from './account/account-management/account
 import { CommentsAndGradesCardsComponent } from './administrator/comments-and-grades-cards/comments-and-grades-cards.component';
 import { ReportedUserCardsComponent } from './administrator/reported-user-cards/reported-user-cards.component';
 import { AccommodationApprovalCardsComponent } from './administrator/accommodation-approval-cards/accommodation-approval-cards.component';
+import {CreateAccommodationComponent} from "./accommodations/create-accommodation/create-accommodation.component";
+import {EditAccommodationsDatesComponent} from "./accommodations/edit-accommodations-dates/edit-accommodations-dates.component";
+import {AccommodationComponent} from "./accommodations/accommodation/accommodation.component";
+import {ReservationComponent} from "./reservations/tabsView/reservation.component";
 
 
 const routes: Routes = [
   {component: AccommodationDetailsComponent, path:"home/accommodations/accommodationDetails/:id"},
   {component: AccommodationDetailsComponent, path:"accommodationApproval/accommodationDetails/:id"},
+  {component: AccommodationComponent, path:"accommodation"},
   {component: ViewAccommodationsComponent, path:"home/accommodations"},
+  {component: CreateAccommodationComponent, path:"create"},
+  {component: EditAccommodationsDatesComponent, path:"editDates"},
+  {component: AccommodationDetailsComponent, path:"reservations/accommodationDetails/:id"},
+  {component: ReservationComponent, path:"reservations"},
   {component: LoginComponent, path:"logIn"},
   {component: RegistrationComponent, path:"signIn"},
   {component: AccountManagementComponent, path:"myAccount"},

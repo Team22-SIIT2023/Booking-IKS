@@ -12,6 +12,8 @@ import { AccountModule } from './account/account.module';
 import { RegistrationComponent } from './account/registration/registration.component';
 import {HttpClientModule} from "@angular/common/http";
 import { AdministratorModule } from './administrator/administrator.module';
+import {NotificationModule} from "./notification/notification.module";
+import {ReservationsModule} from "./reservations/reservations.module";
 
 @NgModule({
   declarations: [
@@ -23,6 +25,8 @@ import { AdministratorModule } from './administrator/administrator.module';
     BrowserAnimationsModule,
     LayoutModule,
     AccommodationsModule,
+    NotificationModule,
+    ReservationsModule,
     AccountModule,
     HttpClientModule,
     AdministratorModule
