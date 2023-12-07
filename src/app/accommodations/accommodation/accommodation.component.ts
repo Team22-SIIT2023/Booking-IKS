@@ -8,7 +8,6 @@ import {Accommodation} from "./model/model.module";
   styleUrls: ['./accommodation.component.css']
 })
 
-
 export class AccommodationComponent implements OnInit{
 
   accommodations: Accommodation[] = []

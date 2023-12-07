@@ -20,5 +20,29 @@ div {
   margin: 5px;
 }
 
+.notification {
+  display: block;
+}
+
+.notificationIcon {
+  color: #664269;
+  margin-left: 0;
+  padding-left: 0;
+}
 
 
+.notificationType {
+  justify-content: flex-start;
+  display: flex;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+h4{
+  margin-right: 5px;
+}
+
+
+.nott {
+  width: 400px;
+}
