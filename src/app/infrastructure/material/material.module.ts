@@ -25,7 +25,6 @@ import {Component} from '@angular/core';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatChipsModule} from '@angular/material/chips';
 import {MatBadgeModule} from '@angular/material/badge';
-import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatRadioModule} from '@angular/material/radio';
 
 
@@ -35,7 +34,6 @@ import {MatRadioModule} from '@angular/material/radio';
   declarations: [],
   imports: [
     CommonModule,
-    MatCheckboxModule,
     MatTabsModule,
     MatOptionModule,
     MatToolbarModule,
@@ -64,7 +62,6 @@ import {MatRadioModule} from '@angular/material/radio';
   exports: [
     MatToolbarModule,
     MatTabsModule,
-    MatCheckboxModule,
     MatPaginator,
     MatOptionModule,
     MatSort,
