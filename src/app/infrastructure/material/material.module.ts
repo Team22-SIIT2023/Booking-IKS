@@ -13,9 +13,14 @@ import {MatCardModule} from '@angular/material/card';
 import {MatListModule} from '@angular/material/list';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatNativeDateModule} from '@angular/material/core';
+import {MatTabsModule} from '@angular/material/tabs';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import {MatCheckboxModule} from "@angular/material/checkbox";
 import {JsonPipe} from '@angular/common';
 import {FormGroup, Validators, FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatSelectModule} from '@angular/material/select';
+import {MatOptionModule} from "@angular/material/core";
 import {Component} from '@angular/core';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatChipsModule} from '@angular/material/chips';
@@ -28,6 +33,9 @@ import {MatRadioModule} from '@angular/material/radio';
   declarations: [],
   imports: [
     CommonModule,
+    MatCheckboxModule,
+    MatTabsModule,
+    MatOptionModule,
     MatToolbarModule,
     MatButtonModule,
     MatTableModule,
@@ -53,6 +61,11 @@ import {MatRadioModule} from '@angular/material/radio';
   ],
   exports: [
     MatToolbarModule,
+    MatTabsModule,
+    MatCheckboxModule,
+    MatPaginator,
+    MatOptionModule,
+    MatSort,
     MatButtonModule,
     MatTableModule,
     MatPaginatorModule,

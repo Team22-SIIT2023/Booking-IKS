@@ -25,9 +25,10 @@ import { EditAccommodationsDatesComponent } from './edit-accommodations-dates/ed
     RouterLink,
     LayoutModule
   ],
-  exports:[
+  exports: [
     ViewAccommodationsComponent,
-    AccommodationDetailsComponent
+    AccommodationDetailsComponent,
+    AccommodationCardComponent
   ]
 })
 export class AccommodationsModule { }

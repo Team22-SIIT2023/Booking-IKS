@@ -12,6 +12,7 @@ import { AccountModule } from './account/account.module';
 import { RegistrationComponent } from './account/registration/registration.component';
 import {HttpClientModule} from "@angular/common/http";
 import {NotificationModule} from "./notification/notification.module";
+import {ReservationsModule} from "./reservations/reservations.module";
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import {NotificationModule} from "./notification/notification.module";
     LayoutModule,
     AccommodationsModule,
     NotificationModule,
+    ReservationsModule,
     AccountModule,
     HttpClientModule,
   ],

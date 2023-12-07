@@ -25,6 +25,10 @@ export class AccommodationsService {
   update(accommodation: EditAccommodation): Observable<EditAccommodation> {
     return this.httpClient.put<EditAccommodation>(environment.apiHost + "accommodations/1", accommodation)
   }
+  
+  getAllFavorites(id:number): Observable<Accommodation[]> {
+    return this.httpClient.get<Accommodation[]>(environment.apiHost + 'users/guest/'+id)
+  } //u koji servis ovo da se stavi?
 
   getAccommodation(id: number): Observable<Accommodation> {
     return this.httpClient.get<Accommodation>(environment.apiHost + 'accommodations/' + id)

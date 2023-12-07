@@ -68,3 +68,25 @@ export interface EditAccommodation{
   priceList: PriceListItem[];
   freeTimeSlots: TimeSlot[];
 }
+
+export interface FavoriteAccommodations{
+  id:number;
+  guestId:number;
+  accommodationId:number;
+}
+
+export interface ReservationRequest {
+  id:number
+  timeSlot: TimeSlot;
+  price: number;
+  //guest: Guest;
+  accommodation: Accommodation;
+  status: RequestStatus;
+}
+
+export enum RequestStatus {
+  ACCEPTED,
+  CANCELLED,
+  WAITING
+
+}
