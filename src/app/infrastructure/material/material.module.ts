@@ -22,6 +22,11 @@ import {FormGroup, Validators, FormControl, FormsModule, ReactiveFormsModule} fr
 import {MatSelectModule} from '@angular/material/select';
 import {MatOptionModule} from "@angular/material/core";
 import {Component} from '@angular/core';
+import {MatMenuModule} from '@angular/material/menu';
+import {MatChipsModule} from '@angular/material/chips';
+import {MatBadgeModule} from '@angular/material/badge';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatRadioModule} from '@angular/material/radio';
 
 
 @NgModule({
@@ -47,7 +52,12 @@ import {Component} from '@angular/core';
     JsonPipe,
     FormsModule,
     ReactiveFormsModule,
-    MatSelectModule
+    MatSelectModule,
+    MatMenuModule,
+    MatChipsModule,
+    MatBadgeModule,
+    MatCheckboxModule,
+    MatRadioModule
   ],
   exports: [
     MatToolbarModule,
@@ -72,7 +82,12 @@ import {Component} from '@angular/core';
     JsonPipe,
     FormsModule,
     ReactiveFormsModule,
-    MatSelectModule
+    MatSelectModule,
+    MatMenuModule,
+    MatChipsModule,
+    MatBadgeModule,
+    MatCheckboxModule,
+    MatRadioModule
   ]
 })
 export class MaterialModule {

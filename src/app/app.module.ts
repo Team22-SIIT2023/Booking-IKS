@@ -11,6 +11,7 @@ import {AccommodationsModule} from "./accommodations/accommodations.module";
 import { AccountModule } from './account/account.module';
 import { RegistrationComponent } from './account/registration/registration.component';
 import {HttpClientModule} from "@angular/common/http";
+import {NotificationModule} from "./notification/notification.module";
 import {ReservationsModule} from "./reservations/reservations.module";
 
 @NgModule({
@@ -23,6 +24,7 @@ import {ReservationsModule} from "./reservations/reservations.module";
     BrowserAnimationsModule,
     LayoutModule,
     AccommodationsModule,
+    NotificationModule,
     ReservationsModule,
     AccountModule,
     HttpClientModule,
