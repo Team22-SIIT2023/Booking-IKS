@@ -1,0 +1,13 @@
+<mat-card>
+    <mat-card-content>
+      <div class="user-section">
+        <img class="user-picture" [src]="reportedUser?.picturePath" alt="User Profile Picture">
+        <div>
+          <p class="username">{{reportedUser?.account?.email}}</p>
+        </div>
+      </div>
+      <div class="action-buttons">
+        <button class = "approve" >Block</button>
+      </div>
+    </mat-card-content>
+  </mat-card>

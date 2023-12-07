@@ -7,6 +7,7 @@ import { AccommodationComponent } from './accommodation/accommodation.component'
 import { AccommodationCardComponent } from './accommodation-card/accommodation-card.component';
 import {RouterLink} from "@angular/router";
 import {LayoutModule} from "../layout/layout.module";
+import { AccommodationsService } from './accommodations.service';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,8 @@ import {LayoutModule} from "../layout/layout.module";
   ],
   exports:[
     ViewAccommodationsComponent,
+    AccommodationDetailsComponent,
+    AccommodationCardComponent,
     AccommodationDetailsComponent
   ]
 })

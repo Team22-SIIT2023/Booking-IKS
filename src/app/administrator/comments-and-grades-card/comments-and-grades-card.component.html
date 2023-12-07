@@ -1,0 +1,19 @@
+<mat-card>
+    <mat-card-content>
+      <div class="user-section">
+        <img class="user-picture" [src]="commentAndGrade?.guest?.picturePath" alt="User Profile Picture">
+        <div>
+          <p class="username">{{commentAndGrade?.guest?.account?.email}}</p>
+        </div>
+      </div>
+      <mat-icon *ngFor="let star of Array(5).fill(0); let i = index" class="stars" [style.color]="getColorForStar(i, commentAndGrade?.rating)">star</mat-icon>
+      <p class="comment-text">{{commentAndGrade?.text}}</p>
+  
+      <!-- Add Approve and Decline buttons -->
+      <div class="action-buttons">
+        <button class = "approve" >Approve</button>
+        <button class = "decline">Decline</button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  

@@ -11,6 +11,7 @@ import {AccommodationsModule} from "./accommodations/accommodations.module";
 import { AccountModule } from './account/account.module';
 import { RegistrationComponent } from './account/registration/registration.component';
 import {HttpClientModule} from "@angular/common/http";
+import { AdministratorModule } from './administrator/administrator.module';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import {HttpClientModule} from "@angular/common/http";
     AccommodationsModule,
     AccountModule,
     HttpClientModule,
+    AdministratorModule
   ],
   providers: [],
   bootstrap: [AppComponent]
