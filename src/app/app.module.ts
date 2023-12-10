@@ -10,10 +10,13 @@ import {AccommodationDetailsComponent} from "./accommodations/accommodation-deta
 import {AccommodationsModule} from "./accommodations/accommodations.module";
 import { AccountModule } from './account/account.module';
 import { RegistrationComponent } from './account/registration/registration.component';
-import {HttpClientModule} from "@angular/common/http";
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import { AdministratorModule } from './administrator/administrator.module';
 import {NotificationModule} from "./notification/notification.module";
 import {ReservationsModule} from "./reservations/reservations.module";
+import {InterceptService} from "./interceptors/intercept.service";
+import {ToastrModule} from "ngx-toastr";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -21,17 +24,20 @@ import {ReservationsModule} from "./reservations/reservations.module";
   ],
   imports: [
     BrowserModule,
+    FormsModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     LayoutModule,
+    ReactiveFormsModule,
     AccommodationsModule,
     NotificationModule,
     ReservationsModule,
     AccountModule,
     HttpClientModule,
-    AdministratorModule
+    AdministratorModule,
+    ToastrModule.forRoot(),
   ],
-  providers: [],
+  providers: [{provide: HTTP_INTERCEPTORS, useClass: InterceptService, multi: true}],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
