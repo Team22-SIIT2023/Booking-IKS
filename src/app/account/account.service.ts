@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Account, User ,Address} from './model/model.module';
-import { HttpClient } from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/env/env';
 
@@ -9,8 +9,12 @@ import { environment } from 'src/env/env';
 })
 export class UserService {
   users: User[] = [];
+  private headers = new HttpHeaders({'Content-Type': 'application/json'});
 
   constructor(private httpClient: HttpClient) {
+  }
+  login(auth: any): Observable<any> {
+    return this.httpClient.post(environment.apiHost+'users/login', {username: auth.username, password: auth.password}, {headers: this.headers, responseType: 'json'});
   }
 
   getAll(): Observable<User[]> {
