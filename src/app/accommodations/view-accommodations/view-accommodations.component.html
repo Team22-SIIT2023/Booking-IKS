@@ -1,64 +1,56 @@
-<div class="combo-box-container">
+<div class="combo-box-container" [formGroup]="filterFrom">
   <mat-form-field>
     <mat-label>Enter your destination</mat-label>
-    <input matInput type="string" >
+    <input matInput type="string" formControlName="destination"/>
   </mat-form-field>
   <mat-form-field>
     <mat-label>Accommodation type</mat-label>
-    <mat-select>
-      <mat-option value="option1">Hotel</mat-option>
-      <mat-option value="option2">Motel</mat-option>
-      <mat-option value="option3">Villa</mat-option>
+    <mat-select formControlName="accommodationType">
+      <mat-option value="HOTEL">Hotel</mat-option>
+      <mat-option value="MOTEL">Motel</mat-option>
+      <mat-option value="VILLA">Villa</mat-option>
     </mat-select>
   </mat-form-field>
   <mat-form-field>
     <mat-label>Number of guests</mat-label>
-    <mat-select>
-      <mat-option value="itemX">2</mat-option>
-      <mat-option value="itemY">3</mat-option>
-      <mat-option value="itemZ">4</mat-option>
+    <mat-select formControlName="guestNum">
+      <mat-option value="2">2</mat-option>
+      <mat-option value="3">3</mat-option>
+      <mat-option value="4">4</mat-option>
     </mat-select>
   </mat-form-field>
   <mat-form-field class="date-picker">
     <mat-date-range-input [rangePicker]="rangePicker">
-      <input matStartDate placeholder="Start date">
-      <input matEndDate placeholder="End date">
+      <input matStartDate placeholder="Start date" #dateRangeStart>
+      <input matEndDate placeholder="End date" #dateRangeEnd>
     </mat-date-range-input>
     <mat-datepicker-toggle matIconSuffix [for]="rangePicker"></mat-datepicker-toggle>
     <mat-date-range-picker #rangePicker>
       <mat-date-range-picker-actions>
         <button mat-button matDateRangePickerCancel>Cancel</button>
-        <button mat-raised-button color="primary" matDateRangePickerApply>Apply</button>
+        <button mat-raised-button color="primary" matDateRangePickerApply (click)="dateRangeChanged(dateRangeStart,dateRangeEnd)">Apply</button>
       </mat-date-range-picker-actions>
     </mat-date-range-picker>
   </mat-form-field>
-  <button mat-raised-button id="search-btn">Search</button>
+  <button mat-raised-button id="search-btn" (click)="search(dateRangeStart,dateRangeEnd)">Search</button>
 </div>
-
+<div class="price-range-container" [formGroup]="priceForm">
+  <p>Filter by price range : </p>
+  <span class="min-value">{{minValue}}</span>
+  <mat-slider min="1000" max="50000" (input)="sliderChanges()">
+    <input formControlName="minValue" value="5000" matSliderStartThumb>
+    <input formControlName="maxValue" value="20000" matSliderEndThumb>
+  </mat-slider>
+  <span class="max-value">{{maxValue}}</span>
+</div>
 
 
 <div class="filter-panel">
   <div class="checkbox-grid">
-    <mat-checkbox class="example-margin">Wi-Fi</mat-checkbox>
-    <mat-checkbox class="example-margin">Pool</mat-checkbox>
-    <mat-checkbox class="example-margin">Parking</mat-checkbox>
-    <mat-checkbox class="example-margin">Gym</mat-checkbox>
-    <mat-checkbox class="example-margin">Breakfast</mat-checkbox>
-
-    <mat-checkbox class="example-margin">Air conditioning</mat-checkbox>
-    <mat-checkbox class="example-margin">Pet friendly</mat-checkbox>
-    <mat-checkbox class="example-margin">Kitchen</mat-checkbox>
-    <mat-checkbox class="example-margin">TV</mat-checkbox>
-    <mat-checkbox class="example-margin">Balcony</mat-checkbox>
-
-    <mat-checkbox class="example-margin">Shuttle Service</mat-checkbox>
-    <mat-checkbox class="example-margin">Spa</mat-checkbox>
-    <mat-checkbox class="example-margin">Laundry</mat-checkbox>
-    <mat-checkbox class="example-margin">Conference room</mat-checkbox>
-    <mat-checkbox class="example-margin">Bar</mat-checkbox>
-      </div>
+    <mat-checkbox *ngFor="let amenity of amenities"  (change)="onChange(amenity.name)" value="{{amenity.name}}"
+                  class="example-margin">{{amenity.name}}</mat-checkbox>
+  </div>
 </div>
-
 <div class="main-div">
   <div *ngFor="let accommodation of accommodations">
     <app-accommodation-card [accommodation]="accommodation"></app-accommodation-card>

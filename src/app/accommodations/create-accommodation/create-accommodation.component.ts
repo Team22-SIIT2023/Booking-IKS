@@ -89,7 +89,7 @@ export class CreateAccommodationComponent {
         type: <AccommodationType> this.createAccommodationForm.value.selectType,
         pricePerGuest: this.createAccommodationForm.value.checkPrice,
         automaticConfirmation: this.createAccommodationForm.value.checkReservation,
-        hostId: Host(),
+        host: Host(),
         reservationDeadline: this.createAccommodationForm.value.deadline,
         amenities: amenitiesList,
         freeTimeSlots: timeslots,

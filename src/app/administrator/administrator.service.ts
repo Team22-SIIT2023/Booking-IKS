@@ -27,4 +27,9 @@ export class CommentAndGradeService {
   getCommentAndGrade(id: number): Observable<CommentAndGrade> {
     return this.httpClient.get<CommentAndGrade>(environment.apiHost + 'comments/' + id)
   }
+
+  getAverageAccommodationRating(id: number | undefined): Observable<number> {
+      return this.httpClient.get<number>(environment.apiHost + 'comments/accommodation/'+id+'/averageRate')
+
+  }
 }
