@@ -1,7 +1,10 @@
 <div class="container">
 <mat-card class="accommodationCard">
-  <mat-card-header class="accommodationName"><strong>{{accommodation?.name}}</strong> <div class="rating">
+  <mat-card-header class="accommodationName">
+    <span [routerLink]="['editDates']"><mat-icon class="iconEdit" >edit</mat-icon></span>
+    <strong>{{accommodation?.name}}</strong> <div class="rating">
     <mat-icon *ngFor="let star of Array(5)" class="stars">star</mat-icon>
+
   </div></mat-card-header>
   <mat-card-subtitle class="address">
     {{accommodation?.address?.country}}, {{accommodation?.address?.city}}, {{accommodation?.address?.address}}
@@ -20,7 +23,7 @@
     <div mat-card-avatar class="example-header-image"></div>
     <div class="hostInformation">
       <mat-card-title class="hostTitle">Host of accommodation</mat-card-title>
-      <mat-card-subtitle>alisajones@gmail.com</mat-card-subtitle>
+      <mat-card-subtitle>{{accommodation?.host?.account?.username}}</mat-card-subtitle>
       <mat-icon *ngFor="let star of Array(5)" class="stars">star</mat-icon>
     </div>
   </mat-card-footer>
@@ -32,50 +35,36 @@
 <!--    </mat-card>-->
 <!--  </mat-card-footer>-->
 </mat-card>
-<div class="amenity">
-  <h4>Available amenities</h4>
-  <mat-list *ngFor="let amenity of accommodation?.amenities" class="amenityList" role="list">
-  <mat-list-item class="amenityItem">
-    <mat-icon class="amenityIcon" matListItemIcon>{{amenity?.name}}</mat-icon>
-    <span class="amenityName" matListItemTitle>{{amenity?.name}}</span>
-  </mat-list-item>
-  <mat-divider></mat-divider>
-<!--  <mat-list-item>-->
-<!--    <mat-icon class="icon" matListItemIcon>pets</mat-icon>-->
-<!--    <span matListItemTitle>Pets</span>-->
-<!--  </mat-list-item>-->
-<!--  <mat-divider></mat-divider>-->
-<!--  <mat-list-item>-->
-<!--&lt;!&ndash;    <img matListItemAvatar src="..." alt="...">&ndash;&gt;-->
-<!--    <mat-icon class="icon" matListItemIcon>wifi</mat-icon>-->
-<!--    <span matListItemTitle>WiFi</span>-->
-<!--  </mat-list-item>-->
-<!--  <mat-divider></mat-divider>-->
-<!--  <mat-list-item>-->
-<!--    &lt;!&ndash;    <img matListItemAvatar src="..." alt="...">&ndash;&gt;-->
-<!--    <mat-icon class="icon" matListItemIcon>air</mat-icon>-->
-<!--    <span matListItemTitle>Air conditioning</span>-->
-<!--  </mat-list-item>-->
-<!--  <mat-divider></mat-divider>-->
-</mat-list>
-
-<img class="mapa" src="../../../assets/images/mapa.jpg">
-</div>
+  <div id="amenityMap">
+  <div class="amenity">
+    <h4>Available amenities</h4>
+    <mat-list *ngFor="let amenity of accommodation?.amenities" class="amenityList" role="list">
+      <mat-list-item class="amenityItem">
+        <mat-icon class="amenityIcon" matListItemIcon>{{amenity?.name}}</mat-icon>
+        <span class="amenityName" matListItemTitle>{{amenity?.name}}</span>
+      </mat-list-item>
+      <mat-divider></mat-divider>
+    </mat-list>
+  </div>
+    <div class="mapa">
+      <app-map *ngIf="address" [address]="address"></app-map>
+    </div>
+  </div>
 </div>
 
-<div class="filter">
+<div class="filter" [formGroup]="form">
   <div class="dates">
     <p>Select dates</p>
     <mat-form-field class="date-picker">
-      <mat-date-range-input [rangePicker]="rangePicker">
-        <input matStartDate placeholder="Start date">
-        <input matEndDate placeholder="End date">
+      <mat-date-range-input [rangePicker]="rangePicker" [dateFilter]="dateFilter">
+        <input matStartDate placeholder="Start date" #dateRangeStart >
+        <input matEndDate placeholder="End date" #dateRangeEnd>
       </mat-date-range-input>
-      <mat-datepicker-toggle matIconSuffix [for]="rangePicker"></mat-datepicker-toggle>
+      <mat-datepicker-toggle matSuffix [for]="rangePicker"></mat-datepicker-toggle>
       <mat-date-range-picker #rangePicker>
         <mat-date-range-picker-actions>
           <button mat-button matDateRangePickerCancel>Cancel</button>
-          <button mat-raised-button color="primary" matDateRangePickerApply>Apply</button>
+          <button mat-raised-button color="primary" matDateRangePickerApply (click)="calculateTotalPrice(dateRangeStart,dateRangeEnd)">Apply</button>
         </mat-date-range-picker-actions>
       </mat-date-range-picker>
     </mat-form-field>
@@ -83,49 +72,29 @@
   <mat-form-field>
     <mat-label>Select</mat-label>
     <mat-icon matSuffix>person</mat-icon>
-    <mat-select>
-      <mat-option value="one">1</mat-option>
-      <mat-option value="two">2</mat-option>
+    <mat-select  formControlName="numberSelect"  id="numberSelect" #numberSelect>
+      <mat-option *ngFor="let numberOption of numberOptions | async" [value]="numberOption" (click)="calculateTotalPrice(dateRangeStart,dateRangeEnd)">
+        {{numberOption}}</mat-option>
     </mat-select>
   </mat-form-field>
   <p>Price</p>
   <mat-form-field floatLabel="always">
     <mat-label class="label">Price</mat-label>
-    <input matInput type="number" class="example-right-align" >
-    <span matTextPrefix>$&nbsp;100</span>
+    <input formControlName="priceInput" matInput type="number" class="example-right-align" >
+<!--    <span matTextPrefix>100$</span>-->
   </mat-form-field>
   </div>
-  <button mat-raised-button class="reserveButton">Reserve</button>
+  <button mat-raised-button class="reserveButton" (click)="createReservation(dateRangeStart,dateRangeEnd)">Reserve</button>
 </div>
 
 
 <h3>Comments</h3>
 <div class="comments">
-  <mat-card class="commentCard">
-    <mat-card-title class="commentIcon"><mat-icon class="iconComm">comment</mat-icon></mat-card-title>
-    <mat-card-header class="commentUser"><p class="commentEmail">paraperic@gmail.com</p> <mat-icon *ngFor="let star of Array(5)" class="stars">star</mat-icon>
-    </mat-card-header>
-    <mat-divider class="commentDivider"></mat-divider>
-    <mat-card-content>Perfect!!!</mat-card-content>
-  </mat-card>
-
-  <mat-card class="commentCard">
-    <mat-card-title class="commentIcon"><mat-icon class="iconComm">comment</mat-icon></mat-card-title>
-    <mat-card-header class="commentUser"><p class="commentEmail">paraperic@gmail.com</p> <mat-icon *ngFor="let star of Array(5)" class="stars">star</mat-icon>
-    </mat-card-header>
-    <mat-divider class="commentDivider"></mat-divider>
-    <mat-card-content>I like it!!!</mat-card-content>
-  </mat-card>
-
-  <mat-card class="commentCard">
-    <mat-card-title class="commentIcon"><mat-icon class="iconComm">comment</mat-icon></mat-card-title>
-    <mat-card-header class="commentUser"><p class="commentEmail">paraperic@gmail.com</p> <mat-icon *ngFor="let star of Array(5)" class="stars">star</mat-icon>
-    </mat-card-header>
-    <mat-divider class="commentDivider"></mat-divider>
-    <mat-card-content>Great location!!!</mat-card-content>
-  </mat-card>
-
+  <div *ngFor="let comment of comments">
+    <app-comment-card [comment]="comment"></app-comment-card>
+  </div>
 </div>
+
 
 
 <div class="footer">

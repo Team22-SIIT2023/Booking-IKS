@@ -27,4 +27,5 @@ export class CommentAndGradeService {
   getCommentAndGrade(id: number): Observable<CommentAndGrade> {
     return this.httpClient.get<CommentAndGrade>(environment.apiHost + 'comments/' + id)
   }
+
 }

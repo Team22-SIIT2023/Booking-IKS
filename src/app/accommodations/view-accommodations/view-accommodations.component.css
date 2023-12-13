@@ -27,9 +27,42 @@ body{
   border-radius: 10px;
   border:1px black solid;
 }
+#clear-filters{
+  width: 100px;
+  padding: 10px;
+  background-color: #D3CBE0;
+  border-radius: 10px;
+  border:1px black solid;
+}
+#disablePrice-btn{
+  margin-left: 20px;
+  width: 130px;
+  padding: 10px;
+  background-color: #D3CBE0;
+  border-radius: 10px;
+  border:1px black solid;
+}
+
 mat-form-field{
   margin-top: 20px;
 }
+mat-slider {
+  width: 300px;
+}
+.price-range-container {
+  margin-left: 2%;
+  margin-right: 2%;
+  margin-top:0;
+  display: flex;
+  padding: 20px;
+  background-color: #D3CBE0;
+  align-items: center;
+  border-top: 1px solid #5e5e5e;
+}
+.price-range-container p{
+  margin-right: 2%;
+}
+
 
 .filter-panel {
   margin: 2%;

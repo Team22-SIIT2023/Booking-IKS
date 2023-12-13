@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Account, User ,Address} from './model/model.module';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/env/env';
 
@@ -42,5 +42,18 @@ export class UserService {
     console.log("Uslo")
     const url = `${environment.apiHost}users/${id}`;
     return this.httpClient.delete<void>(url);
+  }
+
+  signup(user: User): Observable<User> {
+    return this.httpClient.post<User>(environment.apiHost + 'users/signup', user);
+  }
+
+  sendEmail(user: User): Observable<string> {
+    const userId = user.id;
+    // @ts-ignore
+    let params = new HttpParams().set('userId', 3);
+    const options = { params };
+    return this.httpClient.get<string>(environment.apiHost + 'email/send', options);
+
   }
 }

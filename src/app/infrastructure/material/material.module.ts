@@ -26,14 +26,15 @@ import {MatMenuModule} from '@angular/material/menu';
 import {MatChipsModule} from '@angular/material/chips';
 import {MatBadgeModule} from '@angular/material/badge';
 import {MatRadioModule} from '@angular/material/radio';
-
-
+import {MatSliderModule} from '@angular/material/slider';
+import {MatSnackBarModule} from "@angular/material/snack-bar";
 
 
 @NgModule({
   declarations: [],
   imports: [
     CommonModule,
+    MatSliderModule,
     MatTabsModule,
     MatOptionModule,
     MatToolbarModule,
@@ -57,11 +58,13 @@ import {MatRadioModule} from '@angular/material/radio';
     MatChipsModule,
     MatBadgeModule,
     MatCheckboxModule,
-    MatRadioModule
+    MatRadioModule,
+    MatSnackBarModule
   ],
   exports: [
     MatToolbarModule,
     MatTabsModule,
+    MatSliderModule,
     MatPaginator,
     MatOptionModule,
     MatSort,
@@ -86,7 +89,9 @@ import {MatRadioModule} from '@angular/material/radio';
     MatChipsModule,
     MatBadgeModule,
     MatCheckboxModule,
-    MatRadioModule
+    MatRadioModule,
+    MatSnackBarModule
+
   ]
 })
 export class MaterialModule {

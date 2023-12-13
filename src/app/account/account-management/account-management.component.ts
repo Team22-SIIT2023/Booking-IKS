@@ -10,8 +10,6 @@ import { Router } from '@angular/router';
   styleUrls: ['./account-management.component.css']
 })
 export class AccountManagementComponent implements OnInit {
-  
-
   user: User | any;
   url: string | null | ArrayBuffer = '../../../assets/images/addpicture.png';
 
@@ -41,7 +39,6 @@ export class AccountManagementComponent implements OnInit {
     this.service.getUser(1).subscribe({
       next: (data: User) => {
         this.user = data;
-
         if (this.user.picturePath !== "") {
           this.url = this.user.picturePath;
         }

@@ -12,12 +12,27 @@
 h2{
   margin: 0;
 }
+/*.stars {*/
+/*  color: yellow;*/
+/*  margin-right: 0;*/
+/*  padding-right: 0;*/
+/*  padding-left: 0;*/
+/*  margin-left: 0;*/
+/*}*/
+.star-container {
+  display: flex;
+}
+
 .stars {
-  color: yellow;
-  margin-right: 0;
-  padding-right: 0;
-  padding-left: 0;
-  margin-left: 0;
+  font-size: 24px;
+}
+
+.filled-star {
+  color: gold; /* or any color you prefer for filled stars */
+}
+
+.empty-star {
+  color: #ddd; /* or any color you prefer for empty stars */
 }
 .accommodation-card{
   margin-left: 30px;
@@ -32,7 +47,15 @@ h2{
   margin: 0;
 }
 #price {
-  display: inline-block;
+  width: 150px;
+  border-radius: 10px;
+  border:1px solid #b6b5b5;
+  padding: 10px;
+  margin-top: 0;
+  background-color: whitesmoke;
+}
+#unitPrice {
+  width: 150px;
   border-radius: 10px;
   border:1px solid #b6b5b5;
   padding: 10px;

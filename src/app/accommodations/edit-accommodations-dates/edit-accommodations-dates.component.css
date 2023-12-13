@@ -8,8 +8,9 @@
   margin:0 auto;
   margin-top: 5%;
   /*justify-content: center;*/
-  padding-top: 4%;
-  padding-bottom: 4%;
+  padding-top: 2%;
+  padding-bottom: 5%;
+  /*margin-bottom: 5%;*/
 }
 
 .example-form {
@@ -29,13 +30,33 @@
   margin-top: 30px;
 }
 
-
 .reserveButton {
-  margin-left: 47%;
+  margin-left: 43%;
   margin-top: 50px;
   font-size: 16px;
   padding-left: 50px;
   padding-right: 50px;
   padding-bottom: 15px;
   padding-top: 15px;
+}
+
+.mat-elevation-z8 {
+  /*align-content: center;*/
+  /*padding-left: 100px;*/
+  /*justify-content: center;*/
+  margin-top: 50px;
+  margin-bottom: 80px;
+  margin-left: 100px;
+  margin-right: 100px;
+}
+
+.error-message {
+  color: #ff0000; /* Red color for error messages */
+  font-size: 11px;
+  margin-top: 3px;
+}
+
+h3 {
+  margin-left: 50px;
+  margin-bottom: 50px;
 }

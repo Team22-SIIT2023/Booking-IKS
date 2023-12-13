@@ -5,64 +5,67 @@
 <body>
 <h2>Beecome a member, sign up now!</h2>
 <div class="flex-container">
+  <form class="example-form" [formGroup]="registrationForm">
+
     <div class="flex-item-left">
-        <form class="example-form">
+<!--        <form class="example-form">-->
             <mat-form-field class="example-full-width">
               <mat-label>First name</mat-label>
-              <input type="first name" matInput>
+              <input type="first name" formControlName="firstName" matInput>
             </mat-form-field>
-        </form>
-        <form class="example-form">
+<!--        </form>-->
+<!--        <form class="example-form">-->
             <mat-form-field class="example-full-width">
               <mat-label>Address</mat-label>
-              <input type="address" matInput >
+              <input type="address" formControlName="address" matInput >
             </mat-form-field>
-        </form>
-        <form class="example-form">
+<!--        </form>-->
+<!--        <form class="example-form">-->
             <mat-form-field class="example-full-width">
               <mat-label>Username</mat-label>
-              <input type="email" matInput>
+              <input type="email" formControlName="username" matInput>
             </mat-form-field>
-        </form>
-        <form class="example-form">
+<!--        </form>-->
+<!--        <form class="example-form">-->
             <mat-form-field class="example-full-width">
               <mat-label>Confirm password</mat-label>
-              <input type="password" matInput >
+              <input type="password" formControlName="confirmPassword" matInput >
             </mat-form-field>
-        </form>
+<!--        </form>-->
     </div>
     <div class="flex-item-right">
-        <form class="example-form">
+<!--        <form class="example-form">-->
             <mat-form-field class="example-full-width">
               <mat-label>Last name</mat-label>
-              <input type="last name" matInput >
+              <input type="last name" formControlName="lastName" matInput >
             </mat-form-field>
-        </form>
-        <form class="example-form">
+<!--        </form>-->
+<!--        <form class="example-form">-->
             <mat-form-field class="example-full-width">
               <mat-label>Phone number:</mat-label>
-              <input type="number" matInput >
+              <input type="number" formControlName="phoneNumber" matInput >
             </mat-form-field>
-        </form>
-        <form class="example-form">
+<!--        </form>-->
+<!--        <form class="example-form">-->
             <mat-form-field class="example-full-width">
               <mat-label>Password</mat-label>
-              <input type="password" matInput >
+              <input type="password" formControlName="password" matInput >
             </mat-form-field>
-        </form>
-        <form class="role-combobox">
+<!--        </form>-->
+<!--        <form class="role-combobox">-->
         <mat-form-field>
             <mat-label>Select role</mat-label>
-                <mat-select>
-                    <mat-option value = 'option1'> Guest </mat-option>
-                    <mat-option value = 'option2'> Host </mat-option>
+                <mat-select formControlName="role">
+                    <mat-option value="GUEST"> Guest </mat-option>
+                    <mat-option value="HOST"> Host </mat-option>
                 </mat-select>
             </mat-form-field>
-        </form>
+<!--        </form>-->
         </div>
+  </form>
 </div>
 <div class="center-container">
-<button mat-raised-button >SIGN UP</button>
+<button mat-raised-button  (click)="submit()"  >SIGN UP</button>
 </div>
 <p>Already have an account? <a [routerLink]="['/logIn']">Login here</a></p>
 </body>
