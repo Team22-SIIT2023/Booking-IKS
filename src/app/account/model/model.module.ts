@@ -3,7 +3,7 @@ export interface User {
   firstName:string;
   lastName:string;
   address:Address;
-  phoneNumber : string;
+  phoneNumber : number;
   account : Account;
   picturePath : string;
 }
@@ -11,15 +11,14 @@ export interface User {
 export interface Address{
   country:string;
   city:string;
-  postalCode:String;
   address:string;
 }
 
 export interface Account{
-  email : string;
+  username : string;
   password: string;
   status : Status;
-  type : Type;
+  role : Role;
 }
 
 export enum Status {
@@ -28,8 +27,6 @@ export enum Status {
   REPORTED
 }
 
-export enum Type {
-  GUEST,
-  HOST,
-  ADMIN
+export interface Role {
+  name: string
 }

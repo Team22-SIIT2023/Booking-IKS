@@ -19,7 +19,7 @@ export class AccommodationsService {
   }
 
   getUpdatedAndNew(): Observable<Accommodation[]> {
-    return this.httpClient.get<Accommodation[]>(environment.apiHost + 'accommodations?new')
+    return this.httpClient.get<Accommodation[]>(environment.apiHost + 'accommodations?status=created')
   }
 
     
