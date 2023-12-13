@@ -2,6 +2,14 @@ import {Account, User} from "../../../account/model/model.module";
 import {Guest} from "../../../administrator/comments-and-grades/model/model.module";
 
 export interface Accommodation {
+  // id?: number;
+  // name: string;
+  // description: string;
+  // address: Address;
+  // //accommodationType: AccommodationType;
+  // hostId: number;
+  // // reservationDeadLine: number;
+  // amenities: Amenity[];
   id?: number;
   name?: string;
   description?: string;
@@ -23,7 +31,6 @@ export enum AccommodationStatus {
   UPDATED,
   CREATED,
   DECLINED
-
 }
 
 export interface Address {
@@ -50,10 +57,10 @@ export interface PriceListItem {
   price: number;
 }
 export interface Host extends User{
-
 }
 
 export interface CreateAccommodation {
+  id?:number,
   name: string;
   description: string;
   address: Address;
@@ -77,11 +84,11 @@ export enum AccommodationType {
 }
 
 export interface EditAccommodation{
-  pricePerGuest: boolean;
-  automaticConfirmation: boolean;
-  reservationDeadline: number;
+  // pricePerGuest: boolean;
+  // automaticConfirmation: sboolean;
+  // reservationDeadline: number;
   priceList: PriceListItem[];
-  freeTimeSlots: TimeSlot[];
+  // freeTimeSlots: TimeSlot[];
 }
 
 export interface FavoriteAccommodations{
@@ -105,4 +112,9 @@ export enum RequestStatus {
   CANCELLED,
   WAITING
 
+}
+
+export interface Image {
+  url: string,
+  file: File
 }

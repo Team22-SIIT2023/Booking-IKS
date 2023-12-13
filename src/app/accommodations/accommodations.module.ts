@@ -12,6 +12,7 @@ import { EditAccommodationsDatesComponent } from './edit-accommodations-dates/ed
 import {CommentCardComponent} from "../comments/comment-card/comment-card.component";
 import {CommentsModule} from "../comments/comments.module";
 import {MapModule} from "../map/map.module";
+import {SharedModule} from "../shared/shared.module";
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import {MapModule} from "../map/map.module";
     MapModule,
     MaterialModule,
     RouterLink,
-    LayoutModule
+    LayoutModule,
+    SharedModule
   ],
   exports: [
     ViewAccommodationsComponent,

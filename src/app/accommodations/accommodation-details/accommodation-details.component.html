@@ -1,7 +1,10 @@
 <div class="container">
 <mat-card class="accommodationCard">
-  <mat-card-header class="accommodationName"><strong>{{accommodation?.name}}</strong> <div class="rating">
+  <mat-card-header class="accommodationName">
+    <span [routerLink]="['editDates']"><mat-icon class="iconEdit" >edit</mat-icon></span>
+    <strong>{{accommodation?.name}}</strong> <div class="rating">
     <mat-icon *ngFor="let star of Array(5)" class="stars">star</mat-icon>
+
   </div></mat-card-header>
   <mat-card-subtitle class="address">
     {{accommodation?.address?.country}}, {{accommodation?.address?.city}}, {{accommodation?.address?.address}}

@@ -27,8 +27,7 @@ import {MatChipsModule} from '@angular/material/chips';
 import {MatBadgeModule} from '@angular/material/badge';
 import {MatRadioModule} from '@angular/material/radio';
 import {MatSliderModule} from '@angular/material/slider';
-
-
+import {MatSnackBarModule} from "@angular/material/snack-bar";
 
 
 @NgModule({
@@ -59,7 +58,8 @@ import {MatSliderModule} from '@angular/material/slider';
     MatChipsModule,
     MatBadgeModule,
     MatCheckboxModule,
-    MatRadioModule
+    MatRadioModule,
+    MatSnackBarModule
   ],
   exports: [
     MatToolbarModule,
@@ -89,7 +89,9 @@ import {MatSliderModule} from '@angular/material/slider';
     MatChipsModule,
     MatBadgeModule,
     MatCheckboxModule,
-    MatRadioModule
+    MatRadioModule,
+    MatSnackBarModule
+
   ]
 })
 export class MaterialModule {

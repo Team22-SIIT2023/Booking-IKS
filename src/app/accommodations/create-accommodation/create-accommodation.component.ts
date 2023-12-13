@@ -1,18 +1,16 @@
 import {Component, Host} from '@angular/core';
-import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, Validators} from "@angular/forms";
 import {Router} from "@angular/router";
 import {AccommodationsService} from "../accommodations.service";
-import {AccommodationsModule} from "../accommodations.module";
 import {
   Amenity,
   Address,
   CreateAccommodation,
   PriceListItem,
-  TimeSlot, AccommodationType
+  TimeSlot, AccommodationType, Accommodation, Image
 } from "../accommodation/model/model.module";
-import {MatDatepickerInputEvent} from "@angular/material/datepicker";
-import {MatCheckboxChange} from "@angular/material/checkbox";
 import {DatePipe} from "@angular/common";
+import {AmenityService} from "../../amenity/amenity.service";
 
 @Component({
   selector: 'app-create-accommodation',
@@ -21,50 +19,60 @@ import {DatePipe} from "@angular/common";
 })
 export class CreateAccommodationComponent {
   events: string[] = [];
-  selectedAmenities: string[] = [];
+  selectedAmenities: Amenity[] = [];
   startDate: string = "";
   endDate: string = "";
+  allAmenities2: Amenity[] = []
+  // createAccommodationForm:FormGroup;
+  submitted: boolean =false;
+  todayDate:Date = new Date();
+  // @ts-ignore
+  newAccommodation: Accommodation;
+  constructor(private accommodationService: AccommodationsService, private router: Router,
+              private amenityService: AmenityService,
+              private fb: FormBuilder) {
+  }
 
-  allAmenities: string[] = ["wifi", "pool", "parking", "gym", "breakfast", "air conditioning",
-    "pet friendly", "kitchen", "tv", "balcony", "spa", "laundry", "conference room", "bar"]
 
-
-  createAccommodationForm = new FormGroup({
-    name: new FormControl(),
-    city: new FormControl(),
-    country: new FormControl(),
-    address: new FormControl(),
-    description: new FormControl(),
-    minGuests: new FormControl(),
-    maxGuests: new FormControl(),
-    price: new FormControl(),
-    deadline: new FormControl(),
+  createAccommodationForm = this.fb.group({
+    name: ['',[Validators.required]],
+    city: ['',[Validators.required]],
+    country: ['',[Validators.required]],
+    address: ['',[Validators.required]],
+    description: ['',[Validators.required]],
+    minGuests: ['',[Validators.required]],
+    maxGuests: ['',[Validators.required]],
+    price: ['',[Validators.required]],
+    deadline: ['',[Validators.required]],
     checkPrice: new FormControl(),
     checkReservation: new FormControl(),
-    selectType: new FormControl()
+    selectType: ['',[Validators.required]]
   });
 
-  constructor(private accommodationService: AccommodationsService, private router: Router) {}
-
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.amenityService.getAll().subscribe({
+      next: (data: Amenity[]) => {
+        this.allAmenities2 = data
+      },
+      error: (_) => {console.log("Greska!")}
+    })
+  }
 
   create() {
+    this.submitted=true;
 
-    let date;
+    console.log("vanja ", this.createAccommodationForm.value.name);
+
     if (this.createAccommodationForm.valid) {
+      // console.log("vakiiiii")
       const address: Address = {
+        // @ts-ignore
         city: this.createAccommodationForm.value.city,
+        // @ts-ignore
         country: this.createAccommodationForm.value.country,
+        // @ts-ignore
         address: this.createAccommodationForm.value.address,
       };
-      const amenitiesList: Amenity[] = []
-      for (var am of this.selectedAmenities) {
-        const amenity: Amenity = {
-          name: am,
-        };
-        amenitiesList.push(amenity);
-      }
-
 
       const timeslots: TimeSlot[] = []
       const timeSlot: TimeSlot = {
@@ -75,58 +83,108 @@ export class CreateAccommodationComponent {
 
       const pricelist: PriceListItem[] = [];
       const pricelistItem: PriceListItem = {
+        // @ts-ignore
         price: this.createAccommodationForm.value.price,
         timeSlot: timeSlot
       }
       pricelist.push(pricelistItem);
 
       const accommodation: CreateAccommodation = {
+        // @ts-ignore
         name: this.createAccommodationForm.value.name,
+        // @ts-ignore
         description: this.createAccommodationForm.value.description,
         address: address,
+        // @ts-ignore
         minGuests: this.createAccommodationForm.value.minGuests,
+        // @ts-ignore
         maxGuests: this.createAccommodationForm.value.maxGuests,
+        // @ts-ignore
         type: <AccommodationType> this.createAccommodationForm.value.selectType,
         pricePerGuest: this.createAccommodationForm.value.checkPrice,
         automaticConfirmation: this.createAccommodationForm.value.checkReservation,
         host: Host(),
+        // @ts-ignore
         reservationDeadline: this.createAccommodationForm.value.deadline,
-        amenities: amenitiesList,
+        amenities: this.selectedAmenities,
         freeTimeSlots: timeslots,
         priceList: pricelist
       };
-      console.log("checkeeed ", timeSlot.endDate);
+      console.log("checkeeed ", this.createAccommodationForm.value.name);
 
 
       this.accommodationService.add(accommodation).subscribe(
         {
           next: (data: CreateAccommodation) => {
-            // alert(data);
+            this.newAccommodation = data;
+            console.log("IDDD" + this.newAccommodation.id);
+            // @ts-ignore
+            this.uploadPicture(this.newAccommodation.id);
+
           },
           error: (_) => {
           }
         }
       );
+
+    }
+    else {
+
     }
   }
   url: string|null|ArrayBuffer = '../../../assets/images/addpicture.png'
 
-  onFileSelected(files: FileList | null) {
+  selectedImages: Image[] = [];
+
+  onFileSelected(event: any):void {
+    const files: FileList | null = event.target.files;
     if (files) {
-      var reader = new FileReader()
-      reader.readAsDataURL(files[0])
-      reader.onload = (event:Event) => {
-        let fileReader = event.target as FileReader
-        this.url = fileReader.result;
+      for (let i=0; i < files.length; i++) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          if (e.target) {
+            const imageURL = e.target.result as string;
+            const image : Image = {
+              url: imageURL,
+              file: files[i]
+            }
+            this.selectedImages.push(image);
+            console.log(files[i]); // ovde ispise undefined
+          }
+        };
+        reader.readAsDataURL(files[i]);
       }
     }
   }
-
-  // addEvent(type: string, event: MatDatepickerInputEvent<Date>) {
-  //   this.events.push(`${type}: ${event.value}`);
-  //   // this.startDate = new Date(`${type}: ${event.value}`)
+  //
+  // var reader = new FileReader()
+  // reader.readAsDataURL(files[0])
+  // reader.onload = (event:Event) => {
+  //   let fileReader = event.target as FileReader
+  //   this.url = fileReader.result;
   // }
-  onChange(amenity: string) {
+
+
+  uploadPicture(idAccommodation: number) {
+    const images : File[] = [];
+    for (let image of this.selectedImages) {
+      images.push(image.file);
+    }
+
+    // const idAccommodation = this.newAccommodation.id;
+    // @ts-ignore
+    this.accommodationService.uploadImage(images, idAccommodation).subscribe(
+      {
+        next: (data: Accommodation) => {
+          // alert(data);
+        },
+        error: (_) => {
+        }
+      }
+    );
+  }
+
+  onChange(amenity: Amenity) {
     this.selectedAmenities.push(amenity)
   }
 
