@@ -8,9 +8,9 @@ import { Account,Address, User } from "../model/model.module";
   styleUrls: ['./account-management.component.css']
 })
 export class AccountManagementComponent implements OnInit {
-  
+
   user: User | undefined;
-  url: string|null|ArrayBuffer = '../../../assets/images/addpicture.png' 
+  url: string|null|ArrayBuffer = '../../../assets/images/addpicture.png'
 
   constructor(private service: UserService) {
   }
@@ -21,7 +21,7 @@ export class AccountManagementComponent implements OnInit {
       next: (data: User) => {
         this.user = data;
         if(this.user.picturePath!=""){
-          this.url=this.user.picturePath;
+          // this.url=this.user.picturePath;
         }
       },
       error: (_) => {console.log("Greska!")}
@@ -29,7 +29,7 @@ export class AccountManagementComponent implements OnInit {
   }
 
 
-  
+
   onFileSelected(files: FileList | null) {
       if (files) {
           var reader = new FileReader()
