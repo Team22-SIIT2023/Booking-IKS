@@ -1,4 +1,5 @@
 import {Account, User} from "../../../account/model/model.module";
+import {Guest} from "../../../administrator/comments-and-grades/model/model.module";
 
 export interface Accommodation {
   // id?: number;
@@ -19,18 +20,24 @@ export interface Accommodation {
   pricePerGuest?: boolean;
   automaticConfirmation?: boolean;
   status?: AccommodationStatus;
-  hostId?: Host;
+  host?: Host;
   reservationDeadline?: number;
   amenities?: Amenity[];
   priceList?: PriceListItem[];
-  freeTimeSlots?: TimeSlot[];
+  freeTimeSlots?:TimeSlot[];
+}
+export enum AccommodationStatus {
+  ACCEPTED,
+  UPDATED,
+  CREATED,
+  DECLINED
 }
 
 export interface Address {
   id?: number;
-  country:String;
-  city:String;
-  address:String;
+  country?:String;
+  city?:String;
+  address?:String;
 }
 
 export interface Amenity {
@@ -62,7 +69,7 @@ export interface CreateAccommodation {
   type: AccommodationType;
   pricePerGuest: boolean;
   automaticConfirmation: boolean;
-  hostId: Host;
+  host: Host;
   reservationDeadline: number;
   amenities: Amenity[];
   priceList: PriceListItem[];
@@ -70,10 +77,10 @@ export interface CreateAccommodation {
 }
 
 export enum AccommodationType {
-  HOTEL,
-  MOTEL,
-  VILLA,
-  APARTMENT
+  HOTEL="HOTEL",
+  MOTEL="MOTEL",
+  VILLA="VILLA",
+  APARTMENT="APARTMENT"
 }
 
 export interface EditAccommodation{
@@ -91,12 +98,13 @@ export interface FavoriteAccommodations{
 }
 
 export interface ReservationRequest {
-  id:number
-  timeSlot: TimeSlot;
-  price: number;
-  //guest: Guest;
-  accommodation: Accommodation;
-  status: RequestStatus;
+  id?:number
+  timeSlot?: TimeSlot;
+  price?: number;
+  guest?: Guest;
+  accommodation?: Accommodation;
+  status?: RequestStatus;
+  guestNumber?:number;
 }
 
 export enum RequestStatus {
@@ -104,13 +112,6 @@ export enum RequestStatus {
   CANCELLED,
   WAITING
 
-}
-
-export enum AccommodationStatus {
-  ACCEPTED,
-  UPDATED,
-  CREATED,
-  DECLINED
 }
 
 export interface Image {

@@ -7,9 +7,11 @@ import { AccommodationComponent } from './accommodation/accommodation.component'
 import { AccommodationCardComponent } from './accommodation-card/accommodation-card.component';
 import {RouterLink} from "@angular/router";
 import {LayoutModule} from "../layout/layout.module";
-import { AccommodationsService } from './accommodations.service';
 import { CreateAccommodationComponent } from './create-accommodation/create-accommodation.component';
 import { EditAccommodationsDatesComponent } from './edit-accommodations-dates/edit-accommodations-dates.component';
+import {CommentCardComponent} from "../comments/comment-card/comment-card.component";
+import {CommentsModule} from "../comments/comments.module";
+import {MapModule} from "../map/map.module";
 import {SharedModule} from "../shared/shared.module";
 
 @NgModule({
@@ -23,6 +25,8 @@ import {SharedModule} from "../shared/shared.module";
   ],
   imports: [
     CommonModule,
+    CommentsModule,
+    MapModule,
     MaterialModule,
     RouterLink,
     LayoutModule,

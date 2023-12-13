@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Page</title>
-    <link rel="stylesheet" href="account-management.component.css"> 
+    <link rel="stylesheet" href="account-management.component.css">
 </head>
 <body>
     <div class="side-illustration">
         <img [src]=url alt="Illustration Image">
         <br>
         <br>
-        <input type="file" class="d-none"  (change)="onFileSelected(imageInput.files)" #imageInput/> 
+        <input type="file" class="d-none"  (change)="onFileSelected(imageInput.files)" #imageInput/>
     </div>
     <div class="login-container">
         <form>
@@ -28,7 +28,7 @@
             <input type="number" id="phoneNumber" name="password" [value]="user?.phoneNumber" required>
 
             <label for="username">Username:</label>
-            <input type="email" id="username" name="username" [value]="user?.account?.email" required>
+            <input type="email" id="username" name="username" [value]="user?.account?.username" required>
 
             <label for="password">Password:</label>
             <input type="password" id="password" name="password" [value]="user?.account?.password" required>
