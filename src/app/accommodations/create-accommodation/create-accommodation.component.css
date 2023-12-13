@@ -59,8 +59,8 @@
 }
 
 .reserveButton {
-  margin-left: 47%;
-  margin-top: 60px;
+  margin-left: 43%;
+  margin-top: 80px;
   font-size: 16px;
   padding-left: 50px;
   padding-right: 50px;
@@ -70,4 +70,34 @@
 
 .cont2 {
   height: 100px;
+}
+
+.error-message {
+  color: #ff0000; /* Red color for error messages */
+  font-size: 11px;
+  margin-top: 3px;
+}
+
+.loadImages {
+  padding-top: 20px;
+  margin-top: 20px;
+  display: flex;
+  height: 200px;
+  width: 100%;
+  border: 1px solid rgb(128, 128, 128);
+  border-radius: 20px;
+  overflow-x: scroll;
+}
+
+
+.image {
+  margin-left: 25px;
+  width: 180px;
+  height: 180px;
+}
+
+
+.fileInput {
+  margin-top: 40px;
+  margin-left: 25px;
 }

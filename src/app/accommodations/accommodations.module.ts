@@ -10,6 +10,7 @@ import {LayoutModule} from "../layout/layout.module";
 import { AccommodationsService } from './accommodations.service';
 import { CreateAccommodationComponent } from './create-accommodation/create-accommodation.component';
 import { EditAccommodationsDatesComponent } from './edit-accommodations-dates/edit-accommodations-dates.component';
+import {SharedModule} from "../shared/shared.module";
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { EditAccommodationsDatesComponent } from './edit-accommodations-dates/ed
     CommonModule,
     MaterialModule,
     RouterLink,
-    LayoutModule
+    LayoutModule,
+    SharedModule
   ],
   exports: [
     ViewAccommodationsComponent,

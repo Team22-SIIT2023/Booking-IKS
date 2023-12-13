@@ -1,14 +1,29 @@
 import {Account, User} from "../../../account/model/model.module";
 
 export interface Accommodation {
+  // id?: number;
+  // name: string;
+  // description: string;
+  // address: Address;
+  // //accommodationType: AccommodationType;
+  // hostId: number;
+  // // reservationDeadLine: number;
+  // amenities: Amenity[];
   id?: number;
-  name: string;
-  description: string;
-  address: Address;
-  //accommodationType: AccommodationType;
-  hostId: number;
-  // reservationDeadLine: number;
-  amenities: Amenity[];
+  name?: string;
+  description?: string;
+  address?: Address;
+  minGuests?: number;
+  maxGuests?: number;
+  type?: AccommodationType;
+  pricePerGuest?: boolean;
+  automaticConfirmation?: boolean;
+  status?: AccommodationStatus;
+  hostId?: Host;
+  reservationDeadline?: number;
+  amenities?: Amenity[];
+  priceList?: PriceListItem[];
+  freeTimeSlots?: TimeSlot[];
 }
 
 export interface Address {
@@ -35,10 +50,10 @@ export interface PriceListItem {
   price: number;
 }
 export interface Host extends User{
-
 }
 
 export interface CreateAccommodation {
+  id?:number,
   name: string;
   description: string;
   address: Address;
@@ -62,11 +77,11 @@ export enum AccommodationType {
 }
 
 export interface EditAccommodation{
-  pricePerGuest: boolean;
-  automaticConfirmation: boolean;
-  reservationDeadline: number;
+  // pricePerGuest: boolean;
+  // automaticConfirmation: sboolean;
+  // reservationDeadline: number;
   priceList: PriceListItem[];
-  freeTimeSlots: TimeSlot[];
+  // freeTimeSlots: TimeSlot[];
 }
 
 export interface FavoriteAccommodations{
@@ -89,4 +104,16 @@ export enum RequestStatus {
   CANCELLED,
   WAITING
 
+}
+
+export enum AccommodationStatus {
+  ACCEPTED,
+  UPDATED,
+  CREATED,
+  DECLINED
+}
+
+export interface Image {
+  url: string,
+  file: File
 }
