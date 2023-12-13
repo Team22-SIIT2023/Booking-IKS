@@ -22,7 +22,7 @@ const routes: Routes = [
   {component: AccommodationComponent, path:"accommodation"},
   {component: ViewAccommodationsComponent, path:"home/accommodations"},
   {component: CreateAccommodationComponent, path:"create"},
-  {component: EditAccommodationsDatesComponent, path:"editDates"},
+  {component: EditAccommodationsDatesComponent, path:"home/accommodations/accommodationDetails/:id/editDates"},
   {component: AccommodationDetailsComponent, path:"reservations/accommodationDetails/:id"},
   {component: ReservationComponent, path:"reservations"},
   {component: LoginComponent, path:"logIn"},
