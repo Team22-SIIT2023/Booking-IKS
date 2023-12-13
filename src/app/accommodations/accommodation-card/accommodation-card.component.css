@@ -67,6 +67,7 @@ h2{
     display: flex;
     width: 100px;
     padding: 10px;
+    margin-top: 10px;
     background-color: whitesmoke;
     border-radius: 10px;
     border:none;

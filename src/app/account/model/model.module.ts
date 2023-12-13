@@ -1,11 +1,11 @@
 export interface User {
-  id?: number;
-  firstName: string;
-  lastName: string;
-  address: Address;
-  phoneNumber: string;
-  account: Account;
-  picturePath?: string;
+  id: number;
+  firstName:string;
+  lastName:string;
+  address:Address;
+  phoneNumber : number;
+  account : Account;
+  picturePath? : string;
   lastPasswordResetDate?: Date
 }
 
@@ -28,7 +28,6 @@ export interface Role {
   id?: number;
   name: string;
 }
-//add role class insted of enum type!!
 
 export enum Status {
   PENDING,
@@ -37,8 +36,3 @@ export enum Status {
   REPORTED
 }
 
-export enum Type {
-  GUEST,
-  HOST,
-  ADMIN
-}

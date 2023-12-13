@@ -3,7 +3,7 @@ body{
     background-color: #D3CBE0;
     border-top: 1px solid #664269;
     justify-content: center; 
-    height: auto;
+    height: 100%;
   }
   .pagination {
       display: flex;
