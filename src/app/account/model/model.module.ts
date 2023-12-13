@@ -18,7 +18,7 @@ export interface Address{
 
 export interface Account{
   id?: number;
-  username: string;
+  username : string;
   password: string;
   status: Status;
   role: Role;
@@ -28,6 +28,7 @@ export interface Role {
   id?: number;
   name: string;
 }
+//add role class insted of enum type!!
 
 export enum Status {
   PENDING,

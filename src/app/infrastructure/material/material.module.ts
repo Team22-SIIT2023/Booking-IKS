@@ -26,6 +26,7 @@ import {MatMenuModule} from '@angular/material/menu';
 import {MatChipsModule} from '@angular/material/chips';
 import {MatBadgeModule} from '@angular/material/badge';
 import {MatRadioModule} from '@angular/material/radio';
+import {MatSliderModule} from '@angular/material/slider';
 import {MatSnackBarModule} from "@angular/material/snack-bar";
 
 
@@ -33,6 +34,7 @@ import {MatSnackBarModule} from "@angular/material/snack-bar";
   declarations: [],
   imports: [
     CommonModule,
+    MatSliderModule,
     MatTabsModule,
     MatOptionModule,
     MatToolbarModule,
@@ -62,6 +64,7 @@ import {MatSnackBarModule} from "@angular/material/snack-bar";
   exports: [
     MatToolbarModule,
     MatTabsModule,
+    MatSliderModule,
     MatPaginator,
     MatOptionModule,
     MatSort,
