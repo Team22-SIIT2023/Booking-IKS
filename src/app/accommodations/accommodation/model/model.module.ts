@@ -28,9 +28,9 @@ export enum AccommodationStatus {
 
 export interface Address {
   id?: number;
-  country:String;
-  city:String;
-  address:String;
+  country?:String;
+  city?:String;
+  address?:String;
 }
 
 export interface Amenity {
@@ -70,10 +70,10 @@ export interface CreateAccommodation {
 }
 
 export enum AccommodationType {
-  HOTEL,
-  MOTEL,
-  VILLA,
-  APARTMENT
+  HOTEL="HOTEL",
+  MOTEL="MOTEL",
+  VILLA="VILLA",
+  APARTMENT="APARTMENT"
 }
 
 export interface EditAccommodation{

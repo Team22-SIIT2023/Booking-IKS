@@ -23,7 +23,7 @@ export class AccommodationsService {
   private formatDate(date: Date): string {
     return <string>new DatePipe('en-US').transform(date, 'yyyy-MM-dd');
   }
-  getAll(destination?:string,type?:AccommodationType,guestNum?:number,
+  getAll(country?:string,city?:string,type?:AccommodationType,guestNum?:number,
          startDate?:Date,endDate?:Date,amenities?:string[],
          minPrice?:number,maxPrice?:number): Observable<Accommodation[]> {
     let params=new HttpParams();
@@ -34,8 +34,11 @@ export class AccommodationsService {
       params=params.set('begin',this.formatDate(startDate));
       params=params.set('end',this.formatDate(endDate));
     }
-    if (destination) {
-      params = params.set('country', destination);
+    if (country && city) {
+        params = params.set('country', country);
+        params=params.set('city',city);
+      }else if(country){
+        params=params.set('country',country);
     }
     if(guestNum){
       params=params.set("guestNumber",guestNum);

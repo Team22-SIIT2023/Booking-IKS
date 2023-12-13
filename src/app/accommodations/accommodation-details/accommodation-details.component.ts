@@ -6,6 +6,7 @@ import {
 } from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {AccommodationsService} from "../accommodations.service";
+import * as L from 'leaflet';
 
 import {
     Accommodation,
@@ -19,6 +20,9 @@ import {FormControl, FormGroup} from "@angular/forms";
 import {MatOption} from "@angular/material/core";
 import {Observable, range, toArray} from "rxjs";
 import {transformMenu} from "@angular/material/menu";
+import {CommentAndGrade} from "../../administrator/comments-and-grades/model/model.module";
+import {CommentsService} from "../../comments/comments.service";
+import {MapService} from "../../map/map.service";
 
 @Component({
   selector: 'app-accommodation-details',
@@ -34,6 +38,8 @@ export class AccommodationDetailsComponent implements OnInit{
   timeSlot: TimeSlot | undefined;
   guestNum: number | undefined;
   price:number=0;
+  comments: CommentAndGrade[] = [];
+  address: string | undefined;
 
   form:FormGroup=new FormGroup({
         numberSelect:new FormControl(),
@@ -41,7 +47,8 @@ export class AccommodationDetailsComponent implements OnInit{
     });
 
   constructor(private root:ActivatedRoute,private acommodationsService:AccommodationsService,
-              private reservationService:ReservationsService) {
+              private reservationService:ReservationsService,
+              private commentService:CommentsService, private mapService:MapService) {
   }
 
   ngOnInit(): void {
@@ -49,7 +56,10 @@ export class AccommodationDetailsComponent implements OnInit{
       const id=+params['id']
       this.acommodationsService.getAccommodation(id).subscribe({
         next:(data:Accommodation)=>{
-          this.accommodation=data
+          this.accommodation=data;
+          // @ts-ignore
+            this.address=this.accommodation.address?.address+','+
+                this.accommodation.address?.city;
           const min=this.accommodation?.minGuests;
           const max=this.accommodation?.maxGuests;
           if (min != null) {
@@ -63,10 +73,18 @@ export class AccommodationDetailsComponent implements OnInit{
                     this.availableDateRanges.push({ start: timeSlot.startDate, end: timeSlot.endDate });
                 });
             }
+          this.commentService.getAllForAccommodation(this.accommodation?.id).subscribe({
+            next: (data: CommentAndGrade[]) => {
+              this.comments = data
+            },
+            error: (_) => {console.log("Greska!")}
+          })
         }
       })
       }
+
     )
+
   }
     dateFilter = (date: Date): boolean => {
         return this.isDateInAvailableRange(date);
@@ -110,7 +128,6 @@ export class AccommodationDetailsComponent implements OnInit{
           this.reservationService.add(request).subscribe(
             {
               next: (data: ReservationRequest) => {
-                alert(data);
               },
               error: (_) => {
               }
@@ -120,6 +137,7 @@ export class AccommodationDetailsComponent implements OnInit{
   }
 
   protected readonly transformMenu = transformMenu;
+
 
     calculateTotalPrice(dateRangeStart: HTMLInputElement, dateRangeEnd: HTMLInputElement) {
         // @ts-ignore

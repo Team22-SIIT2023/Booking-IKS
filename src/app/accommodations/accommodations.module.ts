@@ -9,6 +9,9 @@ import {RouterLink} from "@angular/router";
 import {LayoutModule} from "../layout/layout.module";
 import { CreateAccommodationComponent } from './create-accommodation/create-accommodation.component';
 import { EditAccommodationsDatesComponent } from './edit-accommodations-dates/edit-accommodations-dates.component';
+import {CommentCardComponent} from "../comments/comment-card/comment-card.component";
+import {CommentsModule} from "../comments/comments.module";
+import {MapModule} from "../map/map.module";
 
 @NgModule({
   declarations: [
@@ -21,6 +24,8 @@ import { EditAccommodationsDatesComponent } from './edit-accommodations-dates/ed
   ],
   imports: [
     CommonModule,
+    CommentsModule,
+    MapModule,
     MaterialModule,
     RouterLink,
     LayoutModule

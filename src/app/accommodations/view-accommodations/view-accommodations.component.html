@@ -1,23 +1,19 @@
 <div class="combo-box-container" [formGroup]="filterFrom">
   <mat-form-field>
-    <mat-label>Enter your destination</mat-label>
+    <mat-label>Enter:country,city</mat-label>
     <input matInput type="string" formControlName="destination"/>
   </mat-form-field>
   <mat-form-field>
     <mat-label>Accommodation type</mat-label>
     <mat-select formControlName="accommodationType">
-      <mat-option value="HOTEL">Hotel</mat-option>
-      <mat-option value="MOTEL">Motel</mat-option>
-      <mat-option value="VILLA">Villa</mat-option>
+      <mat-option *ngFor="let option of typeOptions" [value]="option">
+        {{ option}}
+      </mat-option>
     </mat-select>
   </mat-form-field>
-  <mat-form-field>
+  <mat-form-field floatLabel="always" class="guests example-full-width">
     <mat-label>Number of guests</mat-label>
-    <mat-select formControlName="guestNum">
-      <mat-option value="2">2</mat-option>
-      <mat-option value="3">3</mat-option>
-      <mat-option value="4">4</mat-option>
-    </mat-select>
+    <input matInput type="number" min="0" name="guestNum" class="example-right-align" formControlName="guestNum">
   </mat-form-field>
   <mat-form-field class="date-picker">
     <mat-date-range-input [rangePicker]="rangePicker">
@@ -33,21 +29,24 @@
     </mat-date-range-picker>
   </mat-form-field>
   <button mat-raised-button id="search-btn" (click)="search(dateRangeStart,dateRangeEnd)">Search</button>
+  <button mat-raised-button id="clear-filters" (click)="clearFilters()">Clear</button>
+
 </div>
 <div class="price-range-container" [formGroup]="priceForm">
   <p>Filter by price range : </p>
-  <span class="min-value">{{minValue}}</span>
-  <mat-slider min="1000" max="50000" (input)="sliderChanges()">
+  <span class="min-value">{{minValueView}}</span>
+  <mat-slider min="1000" max="100000" (input)="sliderChanges()">
     <input formControlName="minValue" value="5000" matSliderStartThumb>
     <input formControlName="maxValue" value="20000" matSliderEndThumb>
   </mat-slider>
-  <span class="max-value">{{maxValue}}</span>
+  <span class="max-value">{{maxValueView}}</span>
+  <button id="disablePrice-btn" mat-raised-button (click)="disablePrice()">Disable/Enable</button>
 </div>
 
 
 <div class="filter-panel">
   <div class="checkbox-grid">
-    <mat-checkbox *ngFor="let amenity of amenities"  (change)="onChange(amenity.name)" value="{{amenity.name}}"
+    <mat-checkbox *ngFor="let amenity of amenities"  #checkbox (change)="onChange(amenity.name)" value="{{amenity.name}}"
                   class="example-margin">{{amenity.name}}</mat-checkbox>
   </div>
 </div>

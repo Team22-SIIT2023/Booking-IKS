@@ -9,18 +9,19 @@ export interface User {
 }
 
 export interface Address{
-  country:string;
-  city:string;
-  postalCode:String;
-  address:string;
+  country?:string;
+  city?:string;
+  // postalCode:String;
+  address?:string;
 }
 
 export interface Account{
-  email : string;
+  username : string;
   password: string;
   status : Status;
   type : Type;
 }
+//add role class insted of enum type!!
 
 export enum Status {
   ACTIVE,

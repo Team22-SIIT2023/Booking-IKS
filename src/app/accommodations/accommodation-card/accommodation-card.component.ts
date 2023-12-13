@@ -2,7 +2,7 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {Accommodation, Address, Amenity} from "../accommodation/model/model.module";
 import {Subscription} from "rxjs";
 import {DataService} from "../data.service";
-import {CommentAndGradeService} from "../../administrator/administrator.service";
+import {CommentsService} from "../../comments/comments.service";
 
 @Component({
   selector: 'app-accommodation-card',
@@ -21,7 +21,7 @@ export class AccommodationCardComponent {
   clicked:EventEmitter<Accommodation>=new EventEmitter<Accommodation>();
 
 
-  constructor(private dataService: DataService, private commentService:CommentAndGradeService) {}
+  constructor(private dataService: DataService, private commentService:CommentsService) {}
 
   ngOnInit() {
 

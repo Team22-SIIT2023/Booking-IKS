@@ -17,6 +17,8 @@ import {ReservationsModule} from "./reservations/reservations.module";
 import {InterceptService} from "./interceptors/intercept.service";
 import {ToastrModule} from "ngx-toastr";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import { CommentsModule } from './comments/comments.module';
+import {MapModule} from "./map/map.module";
 
 @NgModule({
   declarations: [
@@ -30,6 +32,8 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
     LayoutModule,
     ReactiveFormsModule,
     AccommodationsModule,
+    CommentsModule,
+    MapModule,
     NotificationModule,
     ReservationsModule,
     AccountModule,

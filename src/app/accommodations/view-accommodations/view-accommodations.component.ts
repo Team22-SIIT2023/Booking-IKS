@@ -6,6 +6,7 @@ import {DatePipe, formatDate} from "@angular/common";
 import {AmenitiesService} from "../../amenities/amenities.service";
 import {MatOption} from "@angular/material/core";
 import {DataService} from "../data.service";
+import {MatCheckbox} from "@angular/material/checkbox";
 
 @Component({
   selector: 'app-view-accommodations',
@@ -21,9 +22,14 @@ export class ViewAccommodationsComponent implements  OnInit{
   guestNum: number | undefined;
   timeSlot: TimeSlot | undefined;
   finalPrice: number | undefined;
+  country:string=""
+  city:string=""
+  minValueView=5000;
+  maxValueView=20000;
   minValue=5000;
   maxValue=20000;
   @ViewChildren(MatOption) options: QueryList<MatOption> | undefined;
+  @ViewChildren(MatCheckbox) checkboxes: QueryList<MatCheckbox> | undefined;
   filterFrom = new FormGroup({
     destination: new FormControl(),
     accommodationType: new FormControl(),
@@ -35,11 +41,13 @@ export class ViewAccommodationsComponent implements  OnInit{
   priceForm:FormGroup;
   amenities: Amenity[]=[];
   selectedAmenities:string[]=[];
+  typeOptions: string[]=[];
   constructor(private service: AccommodationsService,private dataService: DataService,
               private amenityService:AmenitiesService,private fb: FormBuilder) {
   }
 
   ngOnInit(): void {
+    this.typeOptions=Object.values(AccommodationType).map(item => String(item));
     this.priceForm = this.fb.group({
       minValue: 5000,
       maxValue: 20000
@@ -64,10 +72,26 @@ export class ViewAccommodationsComponent implements  OnInit{
   }
   search(dateRangeStart: HTMLInputElement, dateRangeEnd: HTMLInputElement){
     const destination = this.filterFrom.value.destination;
-    const accommodationType=<AccommodationType>this.filterFrom.value.accommodationType;
-    const guestNumber=<number>this.filterFrom.value.guestNum;
+    if(destination){
+      const destArray=destination.split(",");
+      if(destArray.length>1){
+        this.country=destArray[0];
+        this.city=destArray[1];
+      }else{
+        this.country=destination;
+    }
 
-    this.service.getAll(destination,accommodationType,guestNumber,
+    }
+    const accommodationType=<AccommodationType>this.filterFrom.value.accommodationType;
+    const guestNumber=this.filterFrom.value.guestNum;
+    if(!this.priceForm.enabled){
+      this.minValue=0;
+      this.maxValue=0;
+    }else{
+      this.minValue=this.minValueView;
+      this.maxValue=this.maxValueView;
+    }
+    this.service.getAll(this.country,this.city,accommodationType,guestNumber,
       this.startDate,this.endDate,this.selectedAmenities,this.minValue,this.maxValue).subscribe({
       next: (data: Accommodation[]) => {
         this.accommodations = data
@@ -78,10 +102,6 @@ export class ViewAccommodationsComponent implements  OnInit{
 
   }
 
-  // getFormattedDate(date: Date, format: string):string|null {
-  //   const datePipe : DatePipe = new DatePipe('en-US');
-  //   return datePipe.transform(date, format);
-  // }
     getFormattedDate(date: Date): Date {
         const formattedDate = formatDate(date, 'yyyy-MM-dd', 'en-US');
         return new Date(formattedDate);
@@ -97,9 +117,9 @@ export class ViewAccommodationsComponent implements  OnInit{
 
   calculateTotalPrice(dateRangeStart: HTMLInputElement, dateRangeEnd: HTMLInputElement) {
     // @ts-ignore
-    const selectedValue = this.filterFrom.get('guestNum').value;
+    const selectedValue = this.filterFrom.value.guestNum;
 
-    if(selectedValue && dateRangeEnd!=null && dateRangeStart!=null) {
+    if(selectedValue && dateRangeEnd.value!="" && dateRangeStart.value!="") {
       this.setValues(dateRangeStart, dateRangeEnd);
       const timeDifference = this.getFormattedDate(new Date(dateRangeEnd.value)).getTime() - this.getFormattedDate(new Date(dateRangeStart.value)).getTime();
       const nights = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
@@ -127,12 +147,7 @@ export class ViewAccommodationsComponent implements  OnInit{
   }
   private setValues(dateRangeStart: HTMLInputElement,dateRangeEnd:HTMLInputElement) {
     // @ts-ignore
-    const selectedValue = this.filterFrom.get('guestNum').value;
-    // @ts-ignore
-    const selectedOption = this.options.find(option => option.value === selectedValue);
-    // @ts-ignore
-    const stringValue: string = selectedOption.viewValue;
-    this.guestNum = parseInt(stringValue, 10);
+    this.guestNum  = this.filterFrom.value.guestNum;
 
     this.timeSlot= {
       // @ts-ignore
@@ -157,9 +172,24 @@ export class ViewAccommodationsComponent implements  OnInit{
 
   sliderChanges() {
     // @ts-ignore
-    this.minValue = this.priceForm.value.minValue;
+    this.minValueView = this.priceForm.value.minValue;
     // @ts-ignore
-    this.maxValue =this.priceForm.value.maxValue;
+    this.maxValueView =this.priceForm.value.maxValue;
 
+  }
+  clearFilters() {
+    this.filterFrom.reset();
+    // @ts-ignore
+    this.checkboxes.forEach((checkbox) => {
+      checkbox.checked = false;
+    });
+  }
+
+  disablePrice() {
+    if (this.priceForm.enabled) {
+      this.priceForm.disable();
+    } else {
+      this.priceForm.enable();
+    }
   }
 }

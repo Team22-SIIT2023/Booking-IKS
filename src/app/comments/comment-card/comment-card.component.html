@@ -1,0 +1,14 @@
+<mat-card class="commentCard">
+<!--  <mat-card-title class="commentIcon"><mat-icon class="iconComm">comment</mat-icon></mat-card-title>-->
+  <mat-card-header class="commentUser">
+    <div id="email-div">
+      <p class="commentEmail">Email: {{ comment?.guest?.account?.username }}</p>
+    </div>
+    <div id="rating">
+      <p>Rating: {{ comment?.rating }}</p>
+      <mat-icon *ngFor="let star of Array(5); let i = index" class="stars" [ngClass]="getStarColor(i + 1)">star</mat-icon>
+    </div>
+  </mat-card-header>
+  <mat-divider class="commentDivider"></mat-divider>
+  <mat-card-content>{{comment?.text}}</mat-card-content>
+</mat-card>

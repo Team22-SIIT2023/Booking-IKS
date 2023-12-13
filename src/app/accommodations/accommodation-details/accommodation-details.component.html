@@ -20,7 +20,7 @@
     <div mat-card-avatar class="example-header-image"></div>
     <div class="hostInformation">
       <mat-card-title class="hostTitle">Host of accommodation</mat-card-title>
-      <mat-card-subtitle>alisajones@gmail.com</mat-card-subtitle>
+      <mat-card-subtitle>{{accommodation?.host?.account?.username}}</mat-card-subtitle>
       <mat-icon *ngFor="let star of Array(5)" class="stars">star</mat-icon>
     </div>
   </mat-card-footer>
@@ -32,35 +32,21 @@
 <!--    </mat-card>-->
 <!--  </mat-card-footer>-->
 </mat-card>
-<div class="amenity">
-  <h4>Available amenities</h4>
-  <mat-list *ngFor="let amenity of accommodation?.amenities" class="amenityList" role="list">
-  <mat-list-item class="amenityItem">
-    <mat-icon class="amenityIcon" matListItemIcon>{{amenity?.name}}</mat-icon>
-    <span class="amenityName" matListItemTitle>{{amenity?.name}}</span>
-  </mat-list-item>
-  <mat-divider></mat-divider>
-<!--  <mat-list-item>-->
-<!--    <mat-icon class="icon" matListItemIcon>pets</mat-icon>-->
-<!--    <span matListItemTitle>Pets</span>-->
-<!--  </mat-list-item>-->
-<!--  <mat-divider></mat-divider>-->
-<!--  <mat-list-item>-->
-<!--&lt;!&ndash;    <img matListItemAvatar src="..." alt="...">&ndash;&gt;-->
-<!--    <mat-icon class="icon" matListItemIcon>wifi</mat-icon>-->
-<!--    <span matListItemTitle>WiFi</span>-->
-<!--  </mat-list-item>-->
-<!--  <mat-divider></mat-divider>-->
-<!--  <mat-list-item>-->
-<!--    &lt;!&ndash;    <img matListItemAvatar src="..." alt="...">&ndash;&gt;-->
-<!--    <mat-icon class="icon" matListItemIcon>air</mat-icon>-->
-<!--    <span matListItemTitle>Air conditioning</span>-->
-<!--  </mat-list-item>-->
-<!--  <mat-divider></mat-divider>-->
-</mat-list>
-
-<img class="mapa" src="../../../assets/images/mapa.jpg">
-</div>
+  <div id="amenityMap">
+  <div class="amenity">
+    <h4>Available amenities</h4>
+    <mat-list *ngFor="let amenity of accommodation?.amenities" class="amenityList" role="list">
+      <mat-list-item class="amenityItem">
+        <mat-icon class="amenityIcon" matListItemIcon>{{amenity?.name}}</mat-icon>
+        <span class="amenityName" matListItemTitle>{{amenity?.name}}</span>
+      </mat-list-item>
+      <mat-divider></mat-divider>
+    </mat-list>
+  </div>
+    <div class="mapa">
+      <app-map *ngIf="address" [address]="address"></app-map>
+    </div>
+  </div>
 </div>
 
 <div class="filter" [formGroup]="form">
@@ -101,31 +87,11 @@
 
 <h3>Comments</h3>
 <div class="comments">
-  <mat-card class="commentCard">
-    <mat-card-title class="commentIcon"><mat-icon class="iconComm">comment</mat-icon></mat-card-title>
-    <mat-card-header class="commentUser"><p class="commentEmail">paraperic@gmail.com</p> <mat-icon *ngFor="let star of Array(5)" class="stars">star</mat-icon>
-    </mat-card-header>
-    <mat-divider class="commentDivider"></mat-divider>
-    <mat-card-content>Perfect!!!</mat-card-content>
-  </mat-card>
-
-  <mat-card class="commentCard">
-    <mat-card-title class="commentIcon"><mat-icon class="iconComm">comment</mat-icon></mat-card-title>
-    <mat-card-header class="commentUser"><p class="commentEmail">paraperic@gmail.com</p> <mat-icon *ngFor="let star of Array(5)" class="stars">star</mat-icon>
-    </mat-card-header>
-    <mat-divider class="commentDivider"></mat-divider>
-    <mat-card-content>I like it!!!</mat-card-content>
-  </mat-card>
-
-  <mat-card class="commentCard">
-    <mat-card-title class="commentIcon"><mat-icon class="iconComm">comment</mat-icon></mat-card-title>
-    <mat-card-header class="commentUser"><p class="commentEmail">paraperic@gmail.com</p> <mat-icon *ngFor="let star of Array(5)" class="stars">star</mat-icon>
-    </mat-card-header>
-    <mat-divider class="commentDivider"></mat-divider>
-    <mat-card-content>Great location!!!</mat-card-content>
-  </mat-card>
-
+  <div *ngFor="let comment of comments">
+    <app-comment-card [comment]="comment"></app-comment-card>
+  </div>
 </div>
+
 
 
 <div class="footer">
