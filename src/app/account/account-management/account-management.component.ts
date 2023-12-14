@@ -19,7 +19,7 @@ export class AccountManagementComponent implements OnInit {
 
     return password === confirmPassword ? null : { 'passwordMismatch': true };
   };
-  
+
   updateUserForm = new FormGroup({
     firstName: new FormControl('', [Validators.required, Validators.minLength(3)]),
     lastName: new FormControl('', [Validators.required, Validators.minLength(3)]),
@@ -81,12 +81,12 @@ export class AccountManagementComponent implements OnInit {
       };
 
       console.log(this.user)
-      
+
       const account: Account = {
         username: this.updateUserForm.value.username as string || '',
         password: this.updateUserForm.value.password as string || '',
         status: this.user.account?.status,
-        role: this.user.account?.role
+        roles: this.user.account?.roles
       };
 
       const updatedUser: User = {

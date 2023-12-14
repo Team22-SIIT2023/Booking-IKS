@@ -21,7 +21,7 @@ export interface Account{
   username : string;
   password: string;
   status: Status;
-  role: Role[];
+  roles: Role[];
 }
 
 export interface Role {
