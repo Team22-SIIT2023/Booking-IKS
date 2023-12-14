@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpParams} from "@angular/common/http";
+import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {
   Accommodation,
@@ -19,6 +19,8 @@ import {DatePipe} from "@angular/common";
 
 export class AccommodationsService {
   accommodations: Accommodation[] = [];
+  private headers = new HttpHeaders({'Content-Type': 'application/json'});
+
 
   constructor(private httpClient: HttpClient) {
   }
@@ -29,6 +31,8 @@ export class AccommodationsService {
   getAll(country?:string,city?:string,type?:AccommodationType,guestNum?:number,
          startDate?:Date,endDate?:Date,amenities?:string[],
          minPrice?:number,maxPrice?:number): Observable<Accommodation[]> {
+    // let queryParams = {};
+
     let params=new HttpParams();
     if(type){
       params=params.set('type', type);
@@ -56,8 +60,14 @@ export class AccommodationsService {
       params = params.append('end_price', maxPrice);
     }
 
-    const options = { params };
-    return this.httpClient.get<Accommodation[]>(environment.apiHost + 'accommodations',options)
+    // queryParams = {
+    //   headers: this.headers,
+    //   observe: 'response',
+    //   params: params
+    // };
+    const options = { params: params };
+
+    return this.httpClient.get<Accommodation[]>(environment.apiHost + 'accommodations', options)
   }
 
   getUpdatedAndNew(): Observable<Accommodation[]> {
