@@ -2,7 +2,11 @@ import {Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren} from 
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {MatTableDataSource} from "@angular/material/table";
-import {RequestStatus, ReservationRequest} from "../../accommodations/accommodation/model/model.module";
+import {
+  AccommodationType,
+  RequestStatus,
+  ReservationRequest
+} from "../../accommodations/accommodation/model/model.module";
 import {ReservationsService} from "../reservations.service";
 import {FormControl, FormGroup} from "@angular/forms";
 import {MatOption} from "@angular/material/core";
@@ -19,17 +23,14 @@ export class RequestsViewComponent implements OnInit {
   dataSource = new MatTableDataSource<ReservationRequest>([]); // Initialize with an empty array
   displayedColumns: string[] = ['timeSlot','price', 'accommodation','status','cancel'];
 
-  @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
-  @ViewChild(MatSort, { static: true }) sort!: MatSort;
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
 
-  @ViewChildren(MatOption) options: QueryList<MatOption> | undefined;
-  selectedName: string ="";
   startDate:string="";
   endDate:string="";
   filterRequestsForm:FormGroup=new FormGroup({
     accommodationName:new FormControl(),
   });
-
 
   constructor(private service: ReservationsService) {
   }
@@ -41,13 +42,13 @@ export class RequestsViewComponent implements OnInit {
    this.fetchData();
   }
   fetchData(){
-    this.service.getAll(RequestStatus.WAITING,this.selectedName,this.startDate,this.endDate).subscribe({
+    const selectedName=<string>this.filterRequestsForm.value.accommodationName;
+    console.log(selectedName);
+    this.service.getAll(RequestStatus.WAITING,selectedName,this.startDate,this.endDate).subscribe({
       next: (data: ReservationRequest[]) => {
         this.requests = data;
         this.dataSource = new MatTableDataSource<ReservationRequest>(this.requests);
-        // @ts-ignore
         this.dataSource.paginator = this.paginator;
-        // @ts-ignore
         this.dataSource.sort = this.sort;
       },
       error: (_) => {
@@ -56,19 +57,6 @@ export class RequestsViewComponent implements OnInit {
     });
 
   }
-  onSelectionChange() {
-    // @ts-ignore
-    const selectedValue = this.filterRequestsForm.get('accommodationName').value;
-    // @ts-ignore
-    const selectedOption = this.options.find(option => option.value === selectedValue);
-
-    if (selectedOption) {
-      this.selectedName = selectedOption.viewValue;
-    } else {
-      console.log('Selected option not found');
-    }
-  }
-
   getFormatedDate(date: Date, format: string) {
     const datePipe = new DatePipe('en-US');
     return datePipe.transform(date, format);
@@ -79,4 +67,6 @@ export class RequestsViewComponent implements OnInit {
     // @ts-ignore
     this.endDate=this.getFormatedDate(new Date(dateRangeEnd.value),"yyyy-MM-dd");
   }
+  //promeniti na drugi nacin kao sto je kod accommodations-view za datume
+
 }

@@ -7,6 +7,8 @@ import {AmenitiesService} from "../../amenities/amenities.service";
 import {MatOption} from "@angular/material/core";
 import {DataService} from "../data.service";
 import {MatCheckbox} from "@angular/material/checkbox";
+import {UserService} from "../../account/account.service";
+import {MatDateRangePicker} from "@angular/material/datepicker";
 
 @Component({
   selector: 'app-view-accommodations',
@@ -15,21 +17,24 @@ import {MatCheckbox} from "@angular/material/checkbox";
 })
 export class ViewAccommodationsComponent implements  OnInit{
 
-  clickedAccommodation:number|undefined
-  accommodations: Accommodation[] = []
-  startDate: Date | undefined;
-  endDate: Date | undefined ;
-  guestNum: number | undefined;
-  timeSlot: TimeSlot | undefined;
-  finalPrice: number | undefined;
+  accommodations: Accommodation[] = [];
+  currentPage: number = 1;
+  itemsPerPage: number = 2;
+  startDate: Date |undefined;
+  endDate: Date |undefined;
+  guestNum: number;
+  timeSlot: TimeSlot;
+  finalPrice: number;
   country:string=""
   city:string=""
+  hostId: number;
   minValueView=5000;
   maxValueView=20000;
   minValue=5000;
   maxValue=20000;
-  @ViewChildren(MatOption) options: QueryList<MatOption> | undefined;
-  @ViewChildren(MatCheckbox) checkboxes: QueryList<MatCheckbox> | undefined;
+  role: string = '';
+  @ViewChildren(MatOption) options: QueryList<MatOption>;
+  @ViewChildren(MatCheckbox) checkboxes: QueryList<MatCheckbox>;
   filterFrom = new FormGroup({
     destination: new FormControl(),
     accommodationType: new FormControl(),
@@ -37,22 +42,28 @@ export class ViewAccommodationsComponent implements  OnInit{
     minValue:new FormControl(),
     maxValue:new FormControl()
   });
-  // @ts-ignore
   priceForm:FormGroup;
   amenities: Amenity[]=[];
   selectedAmenities:string[]=[];
   typeOptions: string[]=[];
   constructor(private service: AccommodationsService,private dataService: DataService,
-              private amenityService:AmenitiesService,private fb: FormBuilder) {
+              private amenityService:AmenitiesService,private fb: FormBuilder,
+              private userService:UserService) {
   }
 
   ngOnInit(): void {
+    this.userService.userState.subscribe((result) => {
+      this.role = result;
+    });
     this.typeOptions=Object.values(AccommodationType).map(item => String(item));
     this.priceForm = this.fb.group({
       minValue: 5000,
       maxValue: 20000
     });
-    this.service.getAll().subscribe({
+    if(this.role=="ROLE_HOST"){
+      this.hostId=this.userService.getUserId();
+    }
+    this.service.getAll(this.hostId).subscribe({
       next: (data: Accommodation[]) => {
         this.accommodations = data
       },
@@ -66,10 +77,6 @@ export class ViewAccommodationsComponent implements  OnInit{
     })
 
   }
-  onAccommodationClicked(accommodation:Accommodation){
-    this.clickedAccommodation=accommodation.id;
-
-  }
   search(dateRangeStart: HTMLInputElement, dateRangeEnd: HTMLInputElement){
     const destination = this.filterFrom.value.destination;
     if(destination){
@@ -79,8 +86,12 @@ export class ViewAccommodationsComponent implements  OnInit{
         this.city=destArray[1];
       }else{
         this.country=destination;
+      }
+    }else{
+      this.country=destination;
     }
-
+    if(this.role=="ROLE_HOST"){
+      this.hostId=this.userService.getUserId();
     }
     const accommodationType=<AccommodationType>this.filterFrom.value.accommodationType;
     const guestNumber=this.filterFrom.value.guestNum;
@@ -91,7 +102,7 @@ export class ViewAccommodationsComponent implements  OnInit{
       this.minValue=this.minValueView;
       this.maxValue=this.maxValueView;
     }
-    this.service.getAll(this.country,this.city,accommodationType,guestNumber,
+    this.service.getAll(this.hostId,this.country,this.city,accommodationType,guestNumber,
       this.startDate,this.endDate,this.selectedAmenities,this.minValue,this.maxValue).subscribe({
       next: (data: Accommodation[]) => {
         this.accommodations = data
@@ -108,15 +119,16 @@ export class ViewAccommodationsComponent implements  OnInit{
     }
 
   dateRangeChanged(dateRangeStart: HTMLInputElement, dateRangeEnd: HTMLInputElement) {
-    // @ts-ignore
-    this.startDate = this.getFormattedDate(new Date(dateRangeStart.value))
-    // @ts-ignore
-    this.endDate = this.getFormattedDate(new Date(dateRangeEnd.value))
-
+    try{
+      this.startDate = this.getFormattedDate(new Date(dateRangeStart.value))
+      this.endDate = this.getFormattedDate(new Date(dateRangeEnd.value))
+    }catch (Exception){
+      this.startDate = undefined;
+      this.endDate = undefined;
+    }
   }
 
   calculateTotalPrice(dateRangeStart: HTMLInputElement, dateRangeEnd: HTMLInputElement) {
-    // @ts-ignore
     const selectedValue = this.filterFrom.value.guestNum;
 
     if(selectedValue && dateRangeEnd.value!="" && dateRangeStart.value!="") {
@@ -128,10 +140,8 @@ export class ViewAccommodationsComponent implements  OnInit{
           .subscribe((price: number) => {
               this.finalPrice = price;
               if ( accommodation.pricePerGuest) {
-                // @ts-ignore
                 this.dataService.updatePrice(this.finalPrice, this.finalPrice/this.guestNum/nights);
               }else{
-                // @ts-ignore
                 this.dataService.updatePrice(this.finalPrice, this.finalPrice/nights);
               }
               this.dataService.updateIsPerGuest(accommodation.pricePerGuest);
@@ -146,43 +156,42 @@ export class ViewAccommodationsComponent implements  OnInit{
 
   }
   private setValues(dateRangeStart: HTMLInputElement,dateRangeEnd:HTMLInputElement) {
-    // @ts-ignore
     this.guestNum  = this.filterFrom.value.guestNum;
 
     this.timeSlot= {
-      // @ts-ignore
       startDate:this.getFormattedDate(new Date(dateRangeStart.value)),
-      // @ts-ignore
       endDate: this.getFormattedDate(new Date(dateRangeEnd.value)),
     };
   }
 
-  onChange(amenity: String) {
-    // @ts-ignore
+  onChange(amenity: string) {
     if (this.selectedAmenities.includes(amenity)) {
       this.selectedAmenities = this.
         selectedAmenities.filter((item) => item !== amenity);
     } else {
-      // @ts-ignore
       this.selectedAmenities.push(amenity);
     }
-    console.log(this.selectedAmenities);
 
   }
 
   sliderChanges() {
-    // @ts-ignore
     this.minValueView = this.priceForm.value.minValue;
-    // @ts-ignore
     this.maxValueView =this.priceForm.value.maxValue;
 
   }
-  clearFilters() {
+
+  clearFilters(rangePicker: MatDateRangePicker<any>) {
     this.filterFrom.reset();
-    // @ts-ignore
     this.checkboxes.forEach((checkbox) => {
       checkbox.checked = false;
     });
+    this.selectedAmenities=[]
+    this.country="";
+    this.city="";
+    rangePicker.select(undefined);
+    this.startDate = undefined;
+    this.endDate = undefined;
+
   }
 
   disablePrice() {
@@ -191,5 +200,24 @@ export class ViewAccommodationsComponent implements  OnInit{
     } else {
       this.priceForm.enable();
     }
+  }
+  get paginatedAccommodations(): any[] {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    return this.accommodations.slice(startIndex, endIndex);
+  }
+
+  onPageChange(pageNumber: number): void {
+    this.currentPage = pageNumber;
+    window.scrollTo({
+      top: 0,
+      behavior: 'auto'
+    });
+  }
+
+  getPages(): number[] {
+    const totalItems = this.accommodations.length;
+    const totalPages = Math.ceil(totalItems / this.itemsPerPage);
+    return Array.from({ length: totalPages }, (_, index) => index + 1);
   }
 }
