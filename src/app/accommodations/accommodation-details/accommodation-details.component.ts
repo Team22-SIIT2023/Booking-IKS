@@ -100,7 +100,6 @@ export class AccommodationDetailsComponent implements OnInit{
       })
       }
     )
-
   }
   decodeBase64AndSanitize(image: string): string {
     const decodedImage = atob(image);

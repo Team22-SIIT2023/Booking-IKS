@@ -3,9 +3,12 @@
 }
 
 h2{
-  margin-left: 5%;
-  padding-left: 5%;
+  /*margin-left: 5%;*/
+  /*padding-left: 5%;*/
+  text-align: center;
   margin-top:5%;
+  margin-bottom: 0;
+  padding-bottom: 0;
   color:#2f1936;
 }
 
@@ -31,7 +34,7 @@ body {
   height: fit-content;
   flex-direction: row;
   font-size: 20px;
-  padding: 5%;
+  padding: 4%;
   text-align: center;
 }
 
@@ -75,9 +78,17 @@ body {
   }
 }
 
+
 button {
+  text-align: center;
+  text-align: center;
+  justify-content: center;
   width: 20%;
   padding: 30px;
+  /*padding-left: 15px;*/
+  margin-left: 20px;
+  margin-right: 0;
+  /*padding-right: 0;*/
 }
 button:hover {
   background-color: #664269;
@@ -87,6 +98,8 @@ p {
   text-align: center;
   margin-top: 15px;
   color: #ffffff;
+  /*margin-bottom: 50px;*/
+  padding-bottom: 100px;
 }
 
 a {
@@ -97,4 +110,10 @@ a {
 
 a:hover {
   text-decoration: underline;
+}
+
+.error-message {
+  color: #ff0000; /* Red color for error messages */
+  font-size: 11px;
+  margin-top: 3px;
 }
