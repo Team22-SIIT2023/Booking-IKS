@@ -23,7 +23,7 @@ import { User } from 'src/app/account/model/model.module';
 export class CreateAccommodationComponent {
   events: string[] = [];
   selectedAmenities: Amenity[] = [];
-  startDate: string = "";
+  startDate: string;
   endDate: string = "";
   allAmenities2: Amenity[] = []
   // createAccommodationForm:FormGroup;
@@ -113,6 +113,7 @@ export class CreateAccommodationComponent {
         timeSlot: timeSlot
       }
       pricelist.push(pricelistItem);
+
 
       const accommodation: CreateAccommodation = {
         // @ts-ignore

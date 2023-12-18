@@ -45,6 +45,7 @@ export class LoginComponent implements OnInit{
         console.log("VANJAAAAAAAAAAAAAAAAAAAAAAAAA")
         this.toastr.success('Successful login!');
         localStorage.setItem('user', JSON.stringify(result));
+        this.authenticationService.setUser()
         this.router.navigate(['home']);
       },
       error => {

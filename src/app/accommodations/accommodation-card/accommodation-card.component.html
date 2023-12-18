@@ -1,20 +1,20 @@
 <div class="accommodation">
-  <img id="accommodation-image" src="../../../assets/images/hotel3.jpg" alt="Accommodation 1">
+  <img id="accommodation-image" [src]="image" alt="Accommodation 1">
   <div class="accommodation-card">
     <div class="star-container">
       <mat-icon *ngFor="let star of Array(5); let i = index" class="stars" [ngClass]="getStarColor(i + 1)">star</mat-icon>
     </div>
     <p id="rating">Average rating:</p>
     <p>{{ rating }}</p>
-    <h2>{{accommodation?.name}}<mat-icon class="favorite-icon" color="warn">favorite</mat-icon></h2>
+    <h2>{{accommodation.name}}<mat-icon class="favorite-icon" color="warn">favorite</mat-icon></h2>
     <div class="accommodation-address">
       <p><mat-icon class="address-icon"> location_on</mat-icon>
-      {{accommodation?.address?.country}},{{accommodation?.address?.city}},
-        {{accommodation?.address?.address}}</p>
+      {{accommodation.address.country}},{{accommodation.address.city}},
+        {{accommodation.address.address}}</p>
     </div>
-    <p>{{accommodation?.description}}</p>
+    <p>{{accommodation.description}}</p>
     <p id="price">Price:{{currentPrice}}</p>
     <p id="unitPrice">{{unitText}}{{unitPrice}}</p>
-    <button mat-raised-button (click)="onAccommodationClicked()" [routerLink]="['accommodationDetails',accommodation?.id]" class="details-btn">Details</button>
+    <button mat-raised-button (click)="onAccommodationClicked()" [routerLink]="['accommodationDetails',accommodation.id]" class="details-btn">Details</button>
   </div>
 </div>

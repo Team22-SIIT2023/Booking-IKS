@@ -64,6 +64,7 @@ import {MatSnackBarModule} from "@angular/material/snack-bar";
   exports: [
     MatToolbarModule,
     MatTabsModule,
+    MatSnackBarModule,
     MatSliderModule,
     MatPaginator,
     MatOptionModule,
@@ -89,8 +90,7 @@ import {MatSnackBarModule} from "@angular/material/snack-bar";
     MatChipsModule,
     MatBadgeModule,
     MatCheckboxModule,
-    MatRadioModule,
-    MatSnackBarModule
+    MatRadioModule
 
   ]
 })
