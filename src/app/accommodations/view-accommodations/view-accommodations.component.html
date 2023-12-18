@@ -29,7 +29,7 @@
     </mat-date-range-picker>
   </mat-form-field>
   <button mat-raised-button id="search-btn" (click)="search(dateRangeStart,dateRangeEnd)">Search</button>
-  <button mat-raised-button id="clear-filters" (click)="clearFilters()">Clear</button>
+  <button mat-raised-button id="clear-filters" (click)="clearFilters(rangePicker)">Clear</button>
 
 </div>
 <div class="price-range-container" [formGroup]="priceForm">
@@ -51,8 +51,11 @@
   </div>
 </div>
 <div class="main-div">
-  <div *ngFor="let accommodation of accommodations">
+  <div *ngFor="let accommodation of paginatedAccommodations">
     <app-accommodation-card [accommodation]="accommodation"></app-accommodation-card>
   </div>
+</div>
+<div class="pagination">
+  <button *ngFor="let pageNumber of getPages()" (click)="onPageChange(pageNumber)">{{ pageNumber }}</button>
 </div>
 <app-footer></app-footer>

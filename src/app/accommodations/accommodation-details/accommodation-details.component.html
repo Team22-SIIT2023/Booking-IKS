@@ -1,21 +1,22 @@
-<div class="container">
+<div *ngIf="accommodation" class="container">
+  <div class="imageDescription">
 <mat-card class="accommodationCard">
   <mat-card-header class="accommodationName">
-    <span [routerLink]="['editDates']"><mat-icon class="iconEdit" >edit</mat-icon></span>
-    <strong>{{accommodation?.name}}</strong> <div class="rating">
+    <span  *ngIf="role == 'ROLE_HOST'"  [routerLink]="['editDates']"><mat-icon class="iconEdit" >edit</mat-icon></span>
+    <strong>{{accommodation.name}}</strong> <div class="rating">
     <mat-icon *ngFor="let star of Array(5)" class="stars">star</mat-icon>
 
   </div></mat-card-header>
   <mat-card-subtitle class="address">
-    {{accommodation?.address?.country}}, {{accommodation?.address?.city}}, {{accommodation?.address?.address}}
+    {{accommodation.address.country}}, {{accommodation.address.city}}, {{accommodation.address.address}}
   </mat-card-subtitle>
   <div class="images">
-  <img mat-card-image class="accommodationMainImage" src="../../../assets/images/hotel2.jpg" alt="slika"/>
-  <img mat-card-image class="accommodationMainImage" src="../../../assets/images/hotel3.jpg" alt="slika"/>
-  <img mat-card-image class="accommodationMainImage" src="../../../assets/images/hotel4.jpg" alt="slika"/>
-  <img mat-card-image class="accommodationMainImage" src="../../../assets/images/hotel5.jpg" alt="slika"/>
+    <div class="images-container" *ngFor="let image of images">
+      <img mat-card-image [src]="decodeBase64AndSanitize(image)" alt="slika"/>
+    </div>
   </div>
-  <mat-card-content class="description">{{accommodation?.description}}</mat-card-content>
+
+  <mat-card-content class="description">{{accommodation.description}}</mat-card-content>
   <mat-card-actions align="end">
     <button mat-button>Add to favorite<mat-icon matListItemIcon>favorite</mat-icon></button>
   </mat-card-actions>
@@ -23,25 +24,19 @@
     <div mat-card-avatar class="example-header-image"></div>
     <div class="hostInformation">
       <mat-card-title class="hostTitle">Host of accommodation</mat-card-title>
-      <mat-card-subtitle>{{accommodation?.host?.account?.username}}</mat-card-subtitle>
+      <mat-card-subtitle>{{accommodation.host.account.username}}</mat-card-subtitle>
       <mat-icon *ngFor="let star of Array(5)" class="stars">star</mat-icon>
     </div>
   </mat-card-footer>
-<!--  <mat-card-footer class="hostDescription">-->
-<!--    <mat-card class="hostCard">-->
-<!--      <mat-card-header class="host">Host of accommodation</mat-card-header>-->
-<!--        <mat-card-subtitle class="hostEmail">alisajones@gmail.com-->
-<!--     </mat-card-subtitle>-->
-<!--    </mat-card>-->
-<!--  </mat-card-footer>-->
 </mat-card>
+  </div>
   <div id="amenityMap">
   <div class="amenity">
     <h4>Available amenities</h4>
-    <mat-list *ngFor="let amenity of accommodation?.amenities" class="amenityList" role="list">
+    <mat-list *ngFor="let amenity of accommodation.amenities" class="amenityList" role="list">
       <mat-list-item class="amenityItem">
-        <mat-icon class="amenityIcon" matListItemIcon>{{amenity?.name}}</mat-icon>
-        <span class="amenityName" matListItemTitle>{{amenity?.name}}</span>
+        <mat-icon class="amenityIcon" matListItemIcon>{{amenity.name}}</mat-icon>
+        <span class="amenityName" matListItemTitle>{{amenity.name}}</span>
       </mat-list-item>
       <mat-divider></mat-divider>
     </mat-list>
@@ -52,7 +47,7 @@
   </div>
 </div>
 
-<div class="filter" [formGroup]="form">
+<div *ngIf="role != 'ROLE_HOST'" class="filter" [formGroup]="form" >
   <div class="dates">
     <p>Select dates</p>
     <mat-form-field class="date-picker">
@@ -79,9 +74,7 @@
   </mat-form-field>
   <p>Price</p>
   <mat-form-field floatLabel="always">
-    <mat-label class="label">Price</mat-label>
-    <input formControlName="priceInput" matInput type="number" class="example-right-align" >
-<!--    <span matTextPrefix>100$</span>-->
+    <input  formControlName="priceInput" matInput type="number" class="example-right-align" [readonly]="true">
   </mat-form-field>
   </div>
   <button mat-raised-button class="reserveButton" (click)="createReservation(dateRangeStart,dateRangeEnd)">Reserve</button>

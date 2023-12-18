@@ -15,8 +15,8 @@ export class ReservationsViewComponent implements OnInit{
   dataSource = new MatTableDataSource<ReservationRequest>([]); // Initialize with an empty array
   displayedColumns: string[] = ['timeSlot','price', 'accommodation','status','cancel'];
 
-  @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
-  @ViewChild(MatSort, { static: true }) sort!: MatSort;
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   constructor(private service: ReservationsService) { }
 
@@ -25,9 +25,7 @@ export class ReservationsViewComponent implements OnInit{
       next: (data: ReservationRequest[]) => {
         this.requests = data;
         this.dataSource = new MatTableDataSource<ReservationRequest>(this.requests);
-        // @ts-ignore
         this.dataSource.paginator = this.paginator;
-        // @ts-ignore
         this.dataSource.sort = this.sort;
       },
       error: (_) => {

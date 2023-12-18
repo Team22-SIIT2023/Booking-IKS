@@ -3,6 +3,8 @@ import {Accommodation, Address, Amenity} from "../accommodation/model/model.modu
 import {Subscription} from "rxjs";
 import {DataService} from "../data.service";
 import {CommentsService} from "../../comments/comments.service";
+import {AccommodationsService} from "../accommodations.service";
+import {DomSanitizer} from "@angular/platform-browser";
 
 @Component({
   selector: 'app-accommodation-card',
@@ -10,18 +12,22 @@ import {CommentsService} from "../../comments/comments.service";
   styleUrls: ['./accommodation-card.component.css']
 })
 export class AccommodationCardComponent {
-  currentPrice: number | undefined;
-  unitPrice: number | undefined;
-  unitText: string |undefined;
+  currentPrice: number;
+  unitPrice: number;
+  unitText: string;
   rating: number = 0;
-  private subscription: Subscription | undefined;
+  images: string[] =[];
+  image:string;
+  private subscription: Subscription;
   @Input()
-  accommodation: Accommodation | undefined;
+  accommodation: Accommodation;
   @Output()
   clicked:EventEmitter<Accommodation>=new EventEmitter<Accommodation>();
 
 
-  constructor(private dataService: DataService, private commentService:CommentsService) {}
+  constructor(private dataService: DataService, private commentService:CommentsService,
+              private accommodationService:AccommodationsService,private sanitizer:DomSanitizer) {}
+
 
   ngOnInit() {
 
@@ -50,9 +56,25 @@ export class AccommodationCardComponent {
           console.error('Error fetching average rating:', error);
         }
       );
+    this.accommodationService.getImages(this.accommodation?.id).subscribe(
+      (images) => {
+        this.images = images;
+        if(this.images.length>0){
+          this.image=this.decodeBase64AndSanitize(this.images[0])
+        }
+      },
+      (error) => {
+        console.error('Error fetching images:', error);
+      }
+    );
+  }
+  decodeBase64AndSanitize(image: string): string {
+    const decodedImage = atob(image);
+    const blob = new Blob([new Uint8Array([...decodedImage].map(char => char.charCodeAt(0)))], { type: 'image/png' });
+    const imageUrl = URL.createObjectURL(blob);
+    return this.sanitizer.bypassSecurityTrustUrl(imageUrl) as string;
   }
   ngOnDestroy() {
-    // @ts-ignore
     this.subscription.unsubscribe();
   }
   onAccommodationClicked():void{
@@ -63,7 +85,7 @@ export class AccommodationCardComponent {
 
 
   getStarColor(starIndex: number): string {
-    // @ts-ignore
     return starIndex <= this.rating ? 'filled-star' : 'empty-star';
   }
+
 }

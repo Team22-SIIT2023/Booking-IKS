@@ -20,7 +20,7 @@ import {AmenityService} from "../../amenity/amenity.service";
 export class CreateAccommodationComponent {
   events: string[] = [];
   selectedAmenities: Amenity[] = [];
-  startDate: string = "";
+  startDate: string;
   endDate: string = "";
   allAmenities2: Amenity[] = []
   // createAccommodationForm:FormGroup;
@@ -88,6 +88,7 @@ export class CreateAccommodationComponent {
         timeSlot: timeSlot
       }
       pricelist.push(pricelistItem);
+
 
       const accommodation: CreateAccommodation = {
         // @ts-ignore

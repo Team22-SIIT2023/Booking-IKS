@@ -28,7 +28,7 @@ export class AccommodationsService {
   private formatDate(date: Date): string {
     return <string>new DatePipe('en-US').transform(date, 'yyyy-MM-dd');
   }
-  getAll(country?:string,city?:string,type?:AccommodationType,guestNum?:number,
+  getAll(hostId?:number,country?:string,city?:string,type?:AccommodationType,guestNum?:number,
          startDate?:Date,endDate?:Date,amenities?:string[],
          minPrice?:number,maxPrice?:number): Observable<Accommodation[]> {
     // let queryParams = {};
@@ -36,6 +36,9 @@ export class AccommodationsService {
     let params=new HttpParams();
     if(type){
       params=params.set('type', type);
+    }
+    if(hostId){
+      params=params.set('hostId', hostId);
     }
     if(startDate && endDate){
       params=params.set('begin',this.formatDate(startDate));
@@ -60,11 +63,6 @@ export class AccommodationsService {
       params = params.append('end_price', maxPrice);
     }
 
-    // queryParams = {
-    //   headers: this.headers,
-    //   observe: 'response',
-    //   params: params
-    // };
     const options = { params: params };
 
     return this.httpClient.get<Accommodation[]>(environment.apiHost + 'accommodations', options)
@@ -122,5 +120,8 @@ export class AccommodationsService {
       data.append("images", file);
     }
     return this.httpClient.post<Accommodation>(environment.apiHost + "accommodations/" + id + "/upload-picture", data)
+  }
+  getImages(id: number | undefined): Observable<string[]> {
+    return this.httpClient.get<string[]>(environment.apiHost + 'accommodations/' + id + '/images');
   }
 }

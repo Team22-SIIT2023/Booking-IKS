@@ -24,6 +24,7 @@ export class AppComponent {
     }
 
     const jwt: JwtHelperService = new JwtHelperService();
-    this.role = jwt.decodeToken(item).role[0].authority;
+    //this.role = jwt.decodeToken(item).role[0].authority;
+    this.role = jwt.decodeToken(item).role[0];
   }
 }
