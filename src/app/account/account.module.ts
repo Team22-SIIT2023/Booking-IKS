@@ -6,6 +6,7 @@ import { MaterialModule } from '../infrastructure/material/material.module';
 import { RouterModule } from '@angular/router';
 import { AccountManagementComponent } from './account-management/account-management.component';
 import {ReactiveFormsModule} from "@angular/forms";
+import {SharedModule} from "../shared/shared.module";
 
 
 
@@ -15,12 +16,13 @@ import {ReactiveFormsModule} from "@angular/forms";
     RegistrationComponent,
     AccountManagementComponent
   ],
-  imports: [
-    CommonModule,
-    MaterialModule,
-    ReactiveFormsModule,
-    RouterModule
-  ],
+    imports: [
+        CommonModule,
+        MaterialModule,
+        ReactiveFormsModule,
+        RouterModule,
+        SharedModule
+    ],
   exports: [
     LoginComponent,
     RegistrationComponent,

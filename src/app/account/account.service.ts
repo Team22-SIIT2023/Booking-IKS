@@ -37,7 +37,10 @@ export class UserService {
     return this.httpClient.get<User>(environment.apiHost + 'users/' + id)
   }
 
-  
+  getUserByUsername(username: number): Observable<User> {
+    return this.httpClient.get<User>(environment.apiHost + 'users/userEmail/' + username)
+  }
+
   delete(id: number): Observable<void> {
     console.log("Uslo")
     const url = `${environment.apiHost}users/${id}`;
@@ -51,7 +54,7 @@ export class UserService {
   sendEmail(user: User): Observable<string> {
     const userId = user.id;
     // @ts-ignore
-    let params = new HttpParams().set('userId', 3);
+    let params = new HttpParams().set('username', user.account.username);
     const options = { params };
     return this.httpClient.get<string>(environment.apiHost + 'email/send', options);
 

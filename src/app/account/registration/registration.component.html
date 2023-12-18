@@ -19,17 +19,35 @@
               <mat-label>Address</mat-label>
               <input type="address" formControlName="address" matInput >
             </mat-form-field>
+
+          <mat-form-field class="example-full-width">
+            <mat-label>City</mat-label>
+            <input type="address" formControlName="city" matInput >
+          </mat-form-field>
+
+          <mat-form-field class="example-full-width">
+            <mat-label>Country</mat-label>
+            <input type="address" formControlName="country" matInput >
+          </mat-form-field>
 <!--        </form>-->
 <!--        <form class="example-form">-->
             <mat-form-field class="example-full-width">
               <mat-label>Username</mat-label>
               <input type="email" formControlName="username" matInput>
             </mat-form-field>
+
+            <mat-form-field class="example-full-width">
+              <mat-label>Password</mat-label>
+              <input type="password" formControlName="password" matInput >
+            </mat-form-field>
 <!--        </form>-->
 <!--        <form class="example-form">-->
             <mat-form-field class="example-full-width">
               <mat-label>Confirm password</mat-label>
               <input type="password" formControlName="confirmPassword" matInput >
+              <div *ngIf="registrationForm.get('confirmPassword')?.hasError('mismatchedValues')">
+                <span  class="error-message">Passwords do not match.</span>
+              </div>
             </mat-form-field>
 <!--        </form>-->
     </div>
@@ -47,17 +65,13 @@
             </mat-form-field>
 <!--        </form>-->
 <!--        <form class="example-form">-->
-            <mat-form-field class="example-full-width">
-              <mat-label>Password</mat-label>
-              <input type="password" formControlName="password" matInput >
-            </mat-form-field>
 <!--        </form>-->
 <!--        <form class="role-combobox">-->
-        <mat-form-field>
+         <mat-form-field class="role">
             <mat-label>Select role</mat-label>
                 <mat-select formControlName="role">
-                    <mat-option value="GUEST"> Guest </mat-option>
-                    <mat-option value="HOST"> Host </mat-option>
+                    <mat-option value="ROLE_GUEST"> Guest </mat-option>
+                    <mat-option value="ROLE_HOST"> Host </mat-option>
                 </mat-select>
             </mat-form-field>
 <!--        </form>-->

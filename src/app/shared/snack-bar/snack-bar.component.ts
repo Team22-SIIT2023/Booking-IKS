@@ -10,8 +10,8 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 export class SnackBarComponent {
   constructor(private snackBar: MatSnackBar, private sharedService: SharedService) {
     this.sharedService.newSnackMessage.subscribe((message: string) => {
-      if(message !== '') {
-        this.openSnackBar(message, "OK")
+      if(message !== "") {
+        this.openSnackBar(message, "OK");
       }
     })
   }

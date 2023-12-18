@@ -11,6 +11,9 @@ import {
 } from "../accommodation/model/model.module";
 import {DatePipe} from "@angular/common";
 import {AmenityService} from "../../amenity/amenity.service";
+import {UserService} from "../../account/account.service";
+import {JwtHelperService} from "@auth0/angular-jwt";
+import { User } from 'src/app/account/model/model.module';
 
 @Component({
   selector: 'app-create-accommodation',
@@ -28,9 +31,13 @@ export class CreateAccommodationComponent {
   todayDate:Date = new Date();
   // @ts-ignore
   newAccommodation: Accommodation;
+  public role: string| undefined;
+
+  host1: User | undefined;
   constructor(private accommodationService: AccommodationsService, private router: Router,
               private amenityService: AmenityService,
-              private fb: FormBuilder) {
+              private fb: FormBuilder,
+              private userService: UserService) {
   }
 
 
@@ -50,15 +57,33 @@ export class CreateAccommodationComponent {
   });
 
   ngOnInit(): void {
+    const item = localStorage.getItem('user');
+    const jwt: JwtHelperService = new JwtHelperService();
+    console.log("JWTTTTTTTTTTTTTTTTTTTTTTTTT")
+    // @ts-ignore
+    console.log(jwt.decodeToken(item));
+    // @ts-ignore
+    console.log(jwt.decodeToken(item).sub)
+
     this.amenityService.getAll().subscribe({
       next: (data: Amenity[]) => {
         this.allAmenities2 = data
+      },
+      error: (_) => {console.log("Greska!")}
+    });
+
+    // @ts-ignore
+    this.userService.getUserByUsername(jwt.decodeToken(item).sub).subscribe({
+      next: (data: User) => {
+        this.host1 = data;
+        console.log(this.host1)
       },
       error: (_) => {console.log("Greska!")}
     })
   }
 
   create() {
+
     this.submitted=true;
 
     console.log("vanja ", this.createAccommodationForm.value.name);
@@ -103,7 +128,9 @@ export class CreateAccommodationComponent {
         type: <AccommodationType> this.createAccommodationForm.value.selectType,
         pricePerGuest: this.createAccommodationForm.value.checkPrice,
         automaticConfirmation: this.createAccommodationForm.value.checkReservation,
-        host: Host(),
+        // host: Host(),
+        // @ts-ignore
+        host:this.host1,
         // @ts-ignore
         reservationDeadline: this.createAccommodationForm.value.deadline,
         amenities: this.selectedAmenities,
@@ -124,13 +151,9 @@ export class CreateAccommodationComponent {
           },
           error: (_) => {
           }
-        }
-      );
-
+        });
     }
-    else {
-
-    }
+    else {}
   }
   url: string|null|ArrayBuffer = '../../../assets/images/addpicture.png'
 
@@ -149,7 +172,7 @@ export class CreateAccommodationComponent {
               file: files[i]
             }
             this.selectedImages.push(image);
-            console.log(files[i]); // ovde ispise undefined
+            console.log(files[i]);
           }
         };
         reader.readAsDataURL(files[i]);

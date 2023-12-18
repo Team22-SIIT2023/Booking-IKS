@@ -82,9 +82,7 @@ export class AccommodationDetailsComponent implements OnInit{
         }
       })
       }
-
     )
-
   }
     dateFilter = (date: Date): boolean => {
         return this.isDateInAvailableRange(date);
