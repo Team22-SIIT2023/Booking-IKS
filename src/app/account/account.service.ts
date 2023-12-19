@@ -73,6 +73,14 @@ export class UserService {
     }
     return null;
   }
+  getRoleName(): any {
+    if (this.isLoggedIn()) {
+      const accessToken: any = localStorage.getItem('user');
+      const helper = new JwtHelperService();
+      return helper.decodeToken(accessToken).role.name;
+    }
+    return null;
+  }
   getUserId(): any {
     if (this.isLoggedIn()) {
       const accessToken: any = localStorage.getItem('user');

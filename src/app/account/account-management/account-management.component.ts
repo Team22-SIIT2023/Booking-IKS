@@ -3,6 +3,7 @@ import { UserService } from "../account.service";
 import { Account, Address, Role, Status, User } from "../model/model.module";
 import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { JWT_OPTIONS, JwtInterceptor } from '@auth0/angular-jwt';
 
 @Component({
   selector: 'app-account-management',
@@ -11,6 +12,7 @@ import { Router } from '@angular/router';
 })
 export class AccountManagementComponent implements OnInit {
   user: User | undefined;
+  role: string ;
   url: string | null | ArrayBuffer = '../../../assets/images/addpicture.png';
 
   passwordMatchValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
@@ -36,7 +38,11 @@ export class AccountManagementComponent implements OnInit {
   constructor(private service: UserService,private router: Router,private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
-    this.service.getUser(1).subscribe({
+    const deleteButton = document.getElementById('deleteButton') as HTMLButtonElement;
+    if (this.service.getRole() == 'ROLE_ADMIN') {
+        deleteButton.style.visibility = 'hidden';
+    }
+    this.service.getUser(this.service.getUserId()).subscribe({
       next: (data: User) => {
         this.user = data;
         if (this.user.picturePath !== "") {
@@ -117,8 +123,9 @@ export class AccountManagementComponent implements OnInit {
     this.service.delete(this.user?.id as number).subscribe(
       () => {
         console.log('User deleted successfully.');
-        this.cdr.detectChanges();
-        this.router.navigate(['home']);
+        localStorage.removeItem('user');
+        // this.toastr.success(result);
+        this.router.navigate(['logIn']);
       },
       (error) => {
         console.error('Error deleting user:', error);
