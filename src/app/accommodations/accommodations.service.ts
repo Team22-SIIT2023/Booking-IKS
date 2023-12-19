@@ -69,7 +69,8 @@ export class AccommodationsService {
   }
 
   getUpdatedAndNew(): Observable<Accommodation[]> {
-    return this.httpClient.get<Accommodation[]>(environment.apiHost + 'accommodations?status=created')
+    const url = `${environment.apiHost}accommodations?status=CREATED`;
+    return this.httpClient.get<Accommodation[]>(url);
   }
 
   getAccommodationPrice(id?:number,guestNum?:number,
@@ -90,8 +91,8 @@ export class AccommodationsService {
     return this.httpClient.post<CreateAccommodation>(environment.apiHost + "accommodations", accommodation)
   }
 
-  update(accommodation: EditAccommodation): Observable<EditAccommodation> {
-    return this.httpClient.put<EditAccommodation>(environment.apiHost + "accommodations/1", accommodation)
+  update(accommodation: Accommodation): Observable<Accommodation> {
+    return this.httpClient.put<Accommodation>(environment.apiHost + "accommodations/" + accommodation.id, accommodation)
   }
 
   getAllFavorites(id:number): Observable<Accommodation[]> {
@@ -121,6 +122,7 @@ export class AccommodationsService {
     }
     return this.httpClient.post<Accommodation>(environment.apiHost + "accommodations/" + id + "/upload-picture", data)
   }
+
   getImages(id: number | undefined): Observable<string[]> {
     return this.httpClient.get<string[]>(environment.apiHost + 'accommodations/' + id + '/images');
   }

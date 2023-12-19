@@ -15,6 +15,7 @@
     <p>{{accommodation.description}}</p>
     <p id="price">Price:{{currentPrice}}</p>
     <p id="unitPrice">{{unitText}}{{unitPrice}}</p>
-    <button mat-raised-button (click)="onAccommodationClicked()" [routerLink]="['accommodationDetails',accommodation.id]" class="details-btn">Details</button>
+    <button mat-raised-button (click)="onAccommodationClicked()" [routerLink]="['accommodationDetails',accommodation?.id]" class="details-btn">Details</button>
+    <button mat-raised-button (click)="onAccommodationClicked()" [routerLink]="['accommodationUpdate',accommodation?.id]" class="details-btn">Update</button>
   </div>
 </div>

@@ -13,6 +13,7 @@ import {CommentCardComponent} from "../comments/comment-card/comment-card.compon
 import {CommentsModule} from "../comments/comments.module";
 import {MapModule} from "../map/map.module";
 import {SharedModule} from "../shared/shared.module";
+import { AccommodationUpdateComponent } from './accommodation-update/accommodation-update.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import {SharedModule} from "../shared/shared.module";
     AccommodationComponent,
     AccommodationCardComponent,
     CreateAccommodationComponent,
-    EditAccommodationsDatesComponent
+    EditAccommodationsDatesComponent,
+    AccommodationUpdateComponent
   ],
     imports: [
         CommonModule,
@@ -36,7 +38,8 @@ import {SharedModule} from "../shared/shared.module";
   exports: [
     ViewAccommodationsComponent,
     AccommodationDetailsComponent,
-    AccommodationCardComponent
+    AccommodationCardComponent,
+    AccommodationUpdateComponent
   ]
 })
 export class AccommodationsModule { }

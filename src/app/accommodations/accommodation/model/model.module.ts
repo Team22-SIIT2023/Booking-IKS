@@ -17,6 +17,7 @@ export interface Accommodation {
   amenities: Amenity[];
   priceList: PriceListItem[];
   freeTimeSlots:TimeSlot[];
+  
 }
 export enum AccommodationStatus {
   ACCEPTED,
@@ -27,9 +28,9 @@ export enum AccommodationStatus {
 
 export interface Address {
   id?: number;
-  country:String;
-  city:String;
-  address:String;
+  country?:string;
+  city?:string;
+  address?:string;
 }
 
 export interface Amenity {
