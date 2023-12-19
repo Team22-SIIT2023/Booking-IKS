@@ -4,7 +4,7 @@ import {
     QueryList,
     ViewChildren
 } from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, GuardsCheckEnd} from "@angular/router";
 import {AccommodationsService} from "../accommodations.service";
 import * as L from 'leaflet';
 
@@ -20,7 +20,7 @@ import {FormControl, FormGroup} from "@angular/forms";
 import {MatOption} from "@angular/material/core";
 import {Observable, range, toArray} from "rxjs";
 import {transformMenu} from "@angular/material/menu";
-import {CommentAndGrade} from "../../administrator/comments-and-grades/model/model.module";
+import {CommentAndGrade, Guest} from "../../administrator/comments-and-grades/model/model.module";
 import {CommentsService} from "../../comments/comments.service";
 import {MapService} from "../../map/map.service";
 import {DomSanitizer} from "@angular/platform-browser";
@@ -46,6 +46,7 @@ export class AccommodationDetailsComponent implements OnInit{
   address: string;
   images: string[] = [];
   role: string = '';
+  guest:Guest;
 
   form:FormGroup=new FormGroup({
         numberSelect:new FormControl(),
@@ -138,6 +139,7 @@ export class AccommodationDetailsComponent implements OnInit{
         const request: ReservationRequest={
           timeSlot: this.timeSlot,
           price:price,
+          guest:this.guest,
           accommodation:this.accommodation,
           status:RequestStatus.WAITING,
           guestNumber:this.guestNum
@@ -210,6 +212,14 @@ export class AccommodationDetailsComponent implements OnInit{
             startDate:this.getFormattedDate(new Date(dateRangeStart.value)),
             endDate: this.getFormattedDate(new Date(dateRangeEnd.value)),
         };
+        const guestId=this.userService.getUserId();
+        this.userService.getUser(guestId).subscribe(
+        (data) => {
+          this.guest=data;
+        },
+        (error) => {
+          console.error('Error fetching guest:', error);
+        });
 
     }
 
