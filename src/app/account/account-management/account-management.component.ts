@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./account-management.component.css']
 })
 export class AccountManagementComponent implements OnInit {
-  user: User | any;
+  user: User | undefined;
   url: string | null | ArrayBuffer = '../../../assets/images/addpicture.png';
 
   passwordMatchValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
@@ -40,7 +40,9 @@ export class AccountManagementComponent implements OnInit {
       next: (data: User) => {
         this.user = data;
         if (this.user.picturePath !== "") {
+          if(this.user.picturePath){
           this.url = this.user.picturePath;
+        }
         }
         this.updateUserForm.patchValue({
           firstName: this.user.firstName,
@@ -83,19 +85,20 @@ export class AccountManagementComponent implements OnInit {
       console.log(this.user)
 
       const account: Account = {
+        id: this.user?.account?.id,
         username: this.updateUserForm.value.username as string || '',
         password: this.updateUserForm.value.password as string || '',
-        status: this.user.account?.status,
-        roles: this.user.account?.roles
+        status: this.user?.account?.status as Status,
+        roles: this.user?.account?.roles as Role[],
       };
 
       const updatedUser: User = {
         firstName: this.updateUserForm.value.firstName as string || '',
         lastName: this.updateUserForm.value.lastName as string || '',
         address: address,
-        phoneNumber: this.updateUserForm.value.phoneNumber as unknown as number || 0,
+        phoneNumber: this.updateUserForm.value.phoneNumber as string || '',
         account: account,
-        id: this.user.id,
+        id: this.user?.id as number,
         picturePath: this.updateUserForm.value.picturePath as string || '',
       };
 
@@ -111,7 +114,7 @@ export class AccountManagementComponent implements OnInit {
   }
 
   deleteUser() {
-    this.service.delete(this.user.id).subscribe(
+    this.service.delete(this.user?.id as number).subscribe(
       () => {
         console.log('User deleted successfully.');
         this.cdr.detectChanges();
