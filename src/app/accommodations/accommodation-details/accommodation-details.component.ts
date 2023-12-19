@@ -1,5 +1,5 @@
 import {
-    Component,
+    Component, Host, Input,
     OnInit,
     QueryList,
     ViewChildren
@@ -23,6 +23,10 @@ import {transformMenu} from "@angular/material/menu";
 import {CommentAndGrade} from "../../administrator/comments-and-grades/model/model.module";
 import {CommentsService} from "../../comments/comments.service";
 import {MapService} from "../../map/map.service";
+import {DomSanitizer} from "@angular/platform-browser";
+import {AppComponent} from "../../app.component";
+import {UserService} from "../../account/account.service";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-accommodation-details',
@@ -31,15 +35,17 @@ import {MapService} from "../../map/map.service";
 })
 export class AccommodationDetailsComponent implements OnInit{
   protected readonly Array = Array;
-  accommodation:Accommodation| undefined;
-  numberOptions: Observable<number[]> | undefined;
-  @ViewChildren(MatOption) options: QueryList<MatOption> | undefined;
+  accommodation:Accommodation;
+  numberOptions: Observable<number[]>;
+  @ViewChildren(MatOption) options: QueryList<MatOption>;
   availableDateRanges: { start: Date, end: Date }[] = [];
-  timeSlot: TimeSlot | undefined;
-  guestNum: number | undefined;
+  timeSlot: TimeSlot;
+  guestNum: number;
   price:number=0;
   comments: CommentAndGrade[] = [];
-  address: string | undefined;
+  address: string;
+  images: string[] = [];
+  role: string = '';
 
   form:FormGroup=new FormGroup({
         numberSelect:new FormControl(),
@@ -48,28 +54,31 @@ export class AccommodationDetailsComponent implements OnInit{
 
   constructor(private root:ActivatedRoute,private acommodationsService:AccommodationsService,
               private reservationService:ReservationsService,
-              private commentService:CommentsService, private mapService:MapService) {
+              private commentService:CommentsService, private mapService:MapService,
+              private sanitizer: DomSanitizer,private userService:UserService,
+              private snackBar: MatSnackBar) {
   }
 
   ngOnInit(): void {
+    this.userService.userState.subscribe((result) => {
+      this.role = result;
+    });
     this.root.params.subscribe((params) =>{
       const id=+params['id']
       this.acommodationsService.getAccommodation(id).subscribe({
         next:(data:Accommodation)=>{
           this.accommodation=data;
-          // @ts-ignore
-            this.address=this.accommodation.address?.address+','+
+
+          this.address=this.accommodation.address?.address+','+
                 this.accommodation.address?.city;
-          const min=this.accommodation?.minGuests;
-          const max=this.accommodation?.maxGuests;
-          if (min != null) {
-            // @ts-ignore
+          const min=this.accommodation.minGuests;
+          const max=this.accommodation.maxGuests;
+          if (min != null && max!=null) {
             this.numberOptions=range(min,max+1-min).pipe(toArray());
           }
             const timeSlots=this.accommodation?.freeTimeSlots;
             if(timeSlots){
                 timeSlots.forEach(timeSlot => {
-                    // @ts-ignore
                     this.availableDateRanges.push({ start: timeSlot.startDate, end: timeSlot.endDate });
                 });
             }
@@ -79,12 +88,24 @@ export class AccommodationDetailsComponent implements OnInit{
             },
             error: (_) => {console.log("Greska!")}
           })
+          this.acommodationsService.getImages(this.accommodation.id).subscribe(
+            (images) => {
+              this.images = images;
+            },
+            (error) => {
+              console.error('Error fetching images:', error);
+            }
+          );
         }
       })
       }
-
     )
-
+  }
+  decodeBase64AndSanitize(image: string): string {
+    const decodedImage = atob(image);
+    const blob = new Blob([new Uint8Array([...decodedImage].map(char => char.charCodeAt(0)))], { type: 'image/png' });
+    const imageUrl = URL.createObjectURL(blob);
+    return this.sanitizer.bypassSecurityTrustUrl(imageUrl) as string;
   }
     dateFilter = (date: Date): boolean => {
         return this.isDateInAvailableRange(date);
@@ -109,47 +130,59 @@ export class AccommodationDetailsComponent implements OnInit{
 
   createReservation(dateRangeStart: HTMLInputElement, dateRangeEnd: HTMLInputElement) {
 
-      // @ts-ignore
-      this.setValues(dateRangeStart, dateRangeEnd);
-      // @ts-ignore
-      const price = this.form.get('priceInput').value;
+    if(dateRangeStart.value && dateRangeEnd.value && this.form.value.numberSelect){
+
+        this.setValues(dateRangeStart, dateRangeEnd);
+
+        const price = this.form.value.priceInput;
         const request: ReservationRequest={
-            timeSlot: this.timeSlot,
-            price:price,
-            // @ts-ignore
-            accommodation:this.accommodation,
-            status:RequestStatus.WAITING,
-            guestNumber:this.guestNum
+          timeSlot: this.timeSlot,
+          price:price,
+          accommodation:this.accommodation,
+          status:RequestStatus.WAITING,
+          guestNumber:this.guestNum
         };
-        if (this.form.value.priceInput==0){
-          console.log("No price for this date range");
+        if (price==0){
+          this.snackBar.open("No prices for this date range!", 'Close', {
+            duration: 3000,
+          });
         }
-      else {
+        else {
           this.reservationService.add(request).subscribe(
             {
               next: (data: ReservationRequest) => {
+                this.snackBar.open("Request created!", 'Close', {
+                  duration: 3000,
+                });
               },
               error: (_) => {
               }
             }
+
           );
         }
+      }else {
+              this.snackBar.open("Select date range and guest number!", 'Close', {
+                duration: 3000,
+              });
+    }
+
   }
 
   protected readonly transformMenu = transformMenu;
 
 
     calculateTotalPrice(dateRangeStart: HTMLInputElement, dateRangeEnd: HTMLInputElement) {
-        // @ts-ignore
-        const selectedValue = this.form.get('numberSelect').value;
 
-        if(selectedValue && dateRangeEnd!=null && dateRangeStart!=null){
+        const selectedValue = this.form.value.numberSelect;
+
+        if(selectedValue && dateRangeEnd.value && dateRangeStart.value){
             this.setValues(dateRangeStart, dateRangeEnd);
 
             const timeDifference = this.getFormattedDate(new Date(dateRangeEnd.value)).getTime() - this.getFormattedDate(new Date(dateRangeStart.value)).getTime();
             const nights = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
 
-          // @ts-ignore
+
           this.acommodationsService.getAccommodationPrice(this.accommodation.id, this.guestNum, this.timeSlot?.startDate, this.timeSlot?.endDate)
             .subscribe((price: number) => {
                 this.price = price;
@@ -166,18 +199,20 @@ export class AccommodationDetailsComponent implements OnInit{
     }
 
     private setValues(dateRangeStart: HTMLInputElement,dateRangeEnd:HTMLInputElement) {
-        // @ts-ignore
-        const selectedValue = this.form.get('numberSelect').value;
-        // @ts-ignore
-        const selectedOption = this.options.find(option => option.value === selectedValue);
-        // @ts-ignore
-        const stringValue: string = selectedOption.viewValue;
-        this.guestNum = parseInt(stringValue, 10);
 
+        const selectedValue = this.form.value.numberSelect;
+        const selectedOption = this.options.find(option => option.value === selectedValue);
+        if(selectedOption){
+          const stringValue: string = selectedOption.viewValue;
+          this.guestNum = parseInt(stringValue, 10);
+        }
          this.timeSlot= {
             startDate:this.getFormattedDate(new Date(dateRangeStart.value)),
             endDate: this.getFormattedDate(new Date(dateRangeEnd.value)),
         };
 
     }
+
+  protected readonly Host = Host;
+
 }

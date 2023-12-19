@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {CommonModule, NgOptimizedImage} from '@angular/common';
 import {ViewAccommodationsComponent} from "./view-accommodations/view-accommodations.component";
 import {MaterialModule} from "../infrastructure/material/material.module";
 import { AccommodationDetailsComponent } from './accommodation-details/accommodation-details.component';
@@ -25,15 +25,16 @@ import { AccommodationUpdateComponent } from './accommodation-update/accommodati
     EditAccommodationsDatesComponent,
     AccommodationUpdateComponent
   ],
-  imports: [
-    CommonModule,
-    CommentsModule,
-    MapModule,
-    MaterialModule,
-    RouterLink,
-    LayoutModule,
-    SharedModule
-  ],
+    imports: [
+        CommonModule,
+        CommentsModule,
+        MapModule,
+        MaterialModule,
+        RouterLink,
+        LayoutModule,
+        SharedModule,
+        NgOptimizedImage
+    ],
   exports: [
     ViewAccommodationsComponent,
     AccommodationDetailsComponent,

@@ -19,10 +19,13 @@ import {ToastrModule} from "ngx-toastr";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { CommentsModule } from './comments/comments.module';
 import {MapModule} from "./map/map.module";
+import { AccountActivationComponent } from './account-activation/account-activation.component';
+import {MatButtonModule} from "@angular/material/button";
 
 @NgModule({
   declarations: [
     AppComponent,
+    AccountActivationComponent,
   ],
   imports: [
     BrowserModule,
@@ -40,6 +43,7 @@ import {MapModule} from "./map/map.module";
     HttpClientModule,
     AdministratorModule,
     ToastrModule.forRoot(),
+    MatButtonModule,
   ],
   providers: [{provide: HTTP_INTERCEPTORS, useClass: InterceptService, multi: true}],
   bootstrap: [AppComponent]

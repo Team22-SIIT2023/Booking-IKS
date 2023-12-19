@@ -1,4 +1,4 @@
 export interface Amenity {
-  id?:Number;
-  name:String;
+  id?:number;
+  name:string;
 }

@@ -15,6 +15,7 @@ import {EditAccommodationsDatesComponent} from "./accommodations/edit-accommodat
 import {AccommodationComponent} from "./accommodations/accommodation/accommodation.component";
 import {ReservationComponent} from "./reservations/tabsView/reservation.component";
 import { AccommodationUpdateComponent } from './accommodations/accommodation-update/accommodation-update.component';
+import {AccountActivationComponent} from "./account-activation/account-activation.component";
 
 
 const routes: Routes = [
@@ -27,6 +28,7 @@ const routes: Routes = [
   {component: AccommodationDetailsComponent, path:"reservations/accommodationDetails/:id"},
   {component: ReservationComponent, path:"reservations"},
   {component: LoginComponent, path:"logIn"},
+  {component: AccountActivationComponent, path:"account-activation/:accessToken/:username"},
   {component: RegistrationComponent, path:"signIn"},
   {component: AccountManagementComponent, path:"myAccount"},
   {component: CommentsAndGradesCardsComponent, path:'commentsAndRatings'},
