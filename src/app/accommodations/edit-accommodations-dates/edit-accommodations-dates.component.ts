@@ -11,6 +11,7 @@ import {
 import {DatePipe} from "@angular/common";
 import {MatTableDataSource} from "@angular/material/table";
 import {SharedService} from "../../shared/shared.service";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-edit-accommodations-dates',
@@ -48,7 +49,7 @@ export class EditAccommodationsDatesComponent implements  OnInit, AfterViewInit{
   });
 
   constructor(private accommodationService: AccommodationsService, private router: Router,
-              private route:ActivatedRoute, private sharedService: SharedService) {}
+              private route:ActivatedRoute, private snackBar:MatSnackBar) {}
 
   ngAfterViewInit(): void {
     //ne razumemm
@@ -116,8 +117,11 @@ export class EditAccommodationsDatesComponent implements  OnInit, AfterViewInit{
             this.editTimeSlotsAccommodationForm.reset();  // proveriti
           },
           error: (_) => {
-              this.sharedService.openSnack("Already has reservations in that period.")
-              console.log("Already has reservations");
+            this.snackBar.open("Already has reservations in that period!", 'Close', {
+              duration: 3000,
+            });
+              // this.sharedService.openSnack("Already has reservations in that period.")
+              // console.log("Already has reservations");
           }
         });
     }

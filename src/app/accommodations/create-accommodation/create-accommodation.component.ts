@@ -14,6 +14,7 @@ import {AmenityService} from "../../amenity/amenity.service";
 import {UserService} from "../../account/account.service";
 import {JwtHelperService} from "@auth0/angular-jwt";
 import { User } from 'src/app/account/model/model.module';
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-create-accommodation',
@@ -37,7 +38,7 @@ export class CreateAccommodationComponent {
   constructor(private accommodationService: AccommodationsService, private router: Router,
               private amenityService: AmenityService,
               private fb: FormBuilder,
-              private userService: UserService) {
+              private userService: UserService, private snackBar:MatSnackBar) {
   }
 
 
@@ -145,7 +146,9 @@ export class CreateAccommodationComponent {
         {
           next: (data: CreateAccommodation) => {
             this.newAccommodation = data;
-            console.log("IDDD" + this.newAccommodation.id);
+            this.snackBar.open("Accommodation created!", 'Close', {
+              duration: 3000,
+            });
             // @ts-ignore
             this.uploadPicture(this.newAccommodation.id);
 
