@@ -1,9 +1,10 @@
 .accommodation {
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1), 0 -4px 8px rgba(0, 0, 0, 0.1);   margin-left: 30px;
   display: flex;
-  padding: 18px;
+  padding: 10px;
   margin-left: 12%;
-  width: 70%;
+  height: 450px;
+  width: 72%;
   background-color: #f5e6fc;
   margin-bottom: 3%;
 }
@@ -45,7 +46,7 @@ h2{
   width: 150px;
   border-radius: 10px;
   border:1px solid #b6b5b5;
-  padding: 10px;
+  padding: 7px;
   margin-top: 0;
   background-color: whitesmoke;
 }
@@ -53,7 +54,7 @@ h2{
   width: 150px;
   border-radius: 10px;
   border:1px solid #b6b5b5;
-  padding: 10px;
+  padding: 7px;
   margin-top: 0;
   background-color: whitesmoke;
 }
@@ -62,28 +63,40 @@ h2{
     display: flex;
     width: 100px;
     padding: 10px;
-    margin-top: 10px;
-    margin-bottom: 20px;
+    margin-top: 7px;
+    margin-bottom: 15px;
     background-color: whitesmoke;
     border-radius: 10px;
     border:none;
+    margin-right: 10px;
 }
 
-.updateAccommodaiton{
+.updateAccommodation{
     display: flex;
     width: 100px;
     padding: 10px;
-    margin-top: 10px;
-    margin-bottom: 20px;
+    margin-top: 7px;
+    margin-bottom: 15px;
     background-color: whitesmoke;
     border-radius: 10px;
     border:none;
+
 }
 .button-container {
   display: flex;
 }
 
-#button {
+#declineButton{
+  padding: 10px 20px;
+  margin: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: #664269;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+}
+#acceptButton{
   padding: 10px 20px;
   margin: 5px;
   font-size: 16px;
@@ -94,7 +107,10 @@ h2{
   border-radius: 5px;
 }
 
-#button:hover {
+#acceptButton:hover {
+  background-color: darkslateblue;
+}
+#declineButton:hover {
   background-color: darkslateblue;
 }
 
