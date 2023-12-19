@@ -21,6 +21,8 @@ body {
   /*justify-content: center;*/
   align-items: center;
   border-top: 1px solid #664269;
+  min-height: 100%;
+
 }
 
 .center-container {

@@ -16,4 +16,5 @@ export class AmenityService {
   getAll(): Observable<Amenity[]> {
     return this.httpClient.get<Amenity[]>(environment.apiHost + 'amenities')
   }
+
 }

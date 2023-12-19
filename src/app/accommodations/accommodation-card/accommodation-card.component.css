@@ -2,8 +2,9 @@
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1), 0 -4px 8px rgba(0, 0, 0, 0.1);   margin-left: 30px;
   display: flex;
   padding: 18px;
-  margin-left: 60px;
+  margin-left: 12%;
   width: 70%;
+  background-color: #f5e6fc;
   margin-bottom: 3%;
 }
 #accommodation-image{
@@ -12,13 +13,7 @@
 h2{
   margin: 0;
 }
-/*.stars {*/
-/*  color: yellow;*/
-/*  margin-right: 0;*/
-/*  padding-right: 0;*/
-/*  padding-left: 0;*/
-/*  margin-left: 0;*/
-/*}*/
+
 .star-container {
   display: flex;
 }
@@ -68,10 +63,41 @@ h2{
     width: 100px;
     padding: 10px;
     margin-top: 10px;
+    margin-bottom: 20px;
     background-color: whitesmoke;
     border-radius: 10px;
     border:none;
 }
+
+.updateAccommodaiton{
+    display: flex;
+    width: 100px;
+    padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    background-color: whitesmoke;
+    border-radius: 10px;
+    border:none;
+}
+.button-container {
+  display: flex;
+}
+
+#button {
+  padding: 10px 20px;
+  margin: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: #664269;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+}
+
+#button:hover {
+  background-color: darkslateblue;
+}
+
 .favorite-icon{
   padding-left: 10px;
   padding-top:10px ;

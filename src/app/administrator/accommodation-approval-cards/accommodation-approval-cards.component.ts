@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { forkJoin } from 'rxjs';
 import { Accommodation } from 'src/app/accommodations/accommodation/model/model.module';
 import { AccommodationsService } from 'src/app/accommodations/accommodations.service';
 
@@ -18,13 +19,20 @@ export class AccommodationApprovalCardsComponent implements OnInit {
   constructor(private service: AccommodationsService) {
   }
 
-  ngOnInit(): void {
-    this.service.getUpdatedAndNew().subscribe({
-      next:(data: Accommodation[]) => {
-        this.accommdations = data
-      },
-      error: (_) => {console.log("Greska!")}
-    })
+  ngOnInit(): void { 
+    const updated$ = this.service.getAll(undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 'UPDATED');
+    const created$ = this.service.getAll(undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 'CREATED');
+    
+    forkJoin([updated$, created$])
+      .subscribe({
+        next: ([updatedAccommodations, createdAccommodations]: [Accommodation[], Accommodation[]]) => {
+          this.accommdations = [...updatedAccommodations, ...createdAccommodations];
+        },
+        error: (_) => {
+          console.log("Error!");
+        }
+      });
+
   }
 
   onNewAccommodationClick(accommdations: Accommodation): void {

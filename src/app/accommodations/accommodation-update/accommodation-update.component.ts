@@ -1,11 +1,12 @@
 import { DatePipe } from '@angular/common';
-import { Component, Host } from '@angular/core';
+import { Component, Host, QueryList, ViewChildren } from '@angular/core';
 import { FormBuilder, Validators, FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AmenityService } from 'src/app/amenity/amenity.service';
 import { Amenity, Address, TimeSlot, PriceListItem, CreateAccommodation, Accommodation, Image, AccommodationType } from '../accommodation/model/model.module';
 import { AccommodationsService } from '../accommodations.service';
 import { CommentAndGrade } from 'src/app/administrator/comments-and-grades/model/model.module';
+import { MatCheckbox } from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-accommodation-update',
@@ -59,7 +60,7 @@ export class AccommodationUpdateComponent {
             checkReservation: this.accommodation.automaticConfirmation,
           });
           if(this.accommodation.amenities){
-          this.selectedAmenities = this.accommodation?.amenities;
+          // this.selectedAmenities = this.accommodation?.amenities;
           }
         }
       })
@@ -75,14 +76,40 @@ export class AccommodationUpdateComponent {
 
   }
 
-  onChange(amenity: Amenity) {
-    if(this.selectedAmenities){
-      this.selectedAmenities.push(amenity)
+  // onChange(amenity: Amenity) {
+  //   if(this.selectedAmenities){
+  //     if(!this.selectedAmenities.includes(amenity)){
+  //       this.selectedAmenities.push(amenity)
+  //     }
+  //   }
+
+  // }
+
+  @ViewChildren(MatCheckbox) checkboxes: QueryList<MatCheckbox>;
+
+  getCheckedAmenities(): string[] {
+    const checkedAmenities: string[] = [];
+
+    this.checkboxes.forEach(checkbox => {
+      if (checkbox.checked) {
+        if(checkbox.name){
+          checkedAmenities.push(checkbox.name); // or use another property of your amenity object
+      }}
+    });
+    for (let checkedAmenity of checkedAmenities) {
+      for (let amenity of this.allAmenities2) {
+        if (amenity.name === checkedAmenity) {
+          this.selectedAmenities.push(amenity);
+        }
+      }
     }
 
+    return checkedAmenities;
   }
 
+  
   update() {
+    console.log(this.getCheckedAmenities())
     this.submitted=true;
 
     if (this.updateAccommodationFormGroup.valid) {

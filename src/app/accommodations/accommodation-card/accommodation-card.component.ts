@@ -5,6 +5,8 @@ import {DataService} from "../data.service";
 import {CommentsService} from "../../comments/comments.service";
 import {AccommodationsService} from "../accommodations.service";
 import {DomSanitizer} from "@angular/platform-browser";
+import { UserService } from 'src/app/account/account.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-accommodation-card',
@@ -12,6 +14,7 @@ import {DomSanitizer} from "@angular/platform-browser";
   styleUrls: ['./accommodation-card.component.css']
 })
 export class AccommodationCardComponent {
+
   currentPrice: number;
   unitPrice: number;
   unitText: string;
@@ -26,11 +29,33 @@ export class AccommodationCardComponent {
 
 
   constructor(private dataService: DataService, private commentService:CommentsService,
-              private accommodationService:AccommodationsService,private sanitizer:DomSanitizer) {}
+              private accommodationService:AccommodationsService,private sanitizer:DomSanitizer,
+              private userService: UserService, private router:Router) {}
 
 
   ngOnInit() {
-
+    const updateButtons = document.getElementsByClassName('updateAccommodation') as HTMLCollectionOf<HTMLButtonElement>;
+    const acceptButtons = document.getElementsByClassName('acceptButton') as HTMLCollectionOf<HTMLButtonElement>;
+    const declineButtons = document.getElementsByClassName('declineButton') as HTMLCollectionOf<HTMLButtonElement>;
+    for (let i = 0; i < updateButtons.length; i++) {
+        const updateButton = updateButtons[i];
+        if (this.userService.getRole() != 'ROLE_HOST') {
+            updateButton.style.visibility = 'hidden';
+        }
+    }
+    for (let i = 0; i < acceptButtons.length; i++) {
+      const acceptButton = acceptButtons[i];
+      if (this.userService.getRole() != 'ROLE_ADMIN') {
+          acceptButton.style.visibility = 'hidden';
+      }
+    }
+    for (let i = 0; i < declineButtons.length; i++) {
+      const declineButton = declineButtons[i];
+      if (this.userService.getRole() != 'ROLE_ADMIN') {
+          declineButton.style.visibility = 'hidden';
+      }
+    }
+    
     this.subscription = this.dataService.currentPrice.subscribe(price => {
       this.currentPrice = price;
     });
@@ -87,5 +112,31 @@ export class AccommodationCardComponent {
   getStarColor(starIndex: number): string {
     return starIndex <= this.rating ? 'filled-star' : 'empty-star';
   }
+
+  acceptAccommodation() {
+    this.accommodationService.accept(this.accommodation).subscribe(
+      {
+        next: (data: Accommodation) => {
+          this.accommodation = data;
+          this.router.navigate(['home']);
+        },
+        error: (_) => {
+        }
+      }
+    );
+  }
+  declineAccommodation() {
+    this.accommodationService.decline(this.accommodation).subscribe(
+      {
+        next: (data: Accommodation) => {
+          this.accommodation = data;
+          this.router.navigate(['home']);
+        },
+        error: (_) => {
+        }
+      }
+    );
+  }
+
 
 }

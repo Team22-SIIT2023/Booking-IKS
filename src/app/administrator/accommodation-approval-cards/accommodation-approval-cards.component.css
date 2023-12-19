@@ -1,10 +1,12 @@
 body{
-    margin: 0;
+  padding-top: 10%;
     background-color: #D3CBE0;
     border-top: 1px solid #664269;
     justify-content: center; 
-    height: 100%;
+    height: auto;
+    min-height: 100%;
   }
+
   .pagination {
       display: flex;
       padding: 2%;

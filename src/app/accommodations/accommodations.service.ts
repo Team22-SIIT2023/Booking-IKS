@@ -18,6 +18,7 @@ import {DatePipe} from "@angular/common";
 })
 
 export class AccommodationsService {
+  
   accommodations: Accommodation[] = [];
   private headers = new HttpHeaders({'Content-Type': 'application/json'});
 
@@ -28,49 +29,56 @@ export class AccommodationsService {
   private formatDate(date: Date): string {
     return <string>new DatePipe('en-US').transform(date, 'yyyy-MM-dd');
   }
-  getAll(hostId?:number,country?:string,city?:string,type?:AccommodationType,guestNum?:number,
-         startDate?:Date,endDate?:Date,amenities?:string[],
-         minPrice?:number,maxPrice?:number): Observable<Accommodation[]> {
-    // let queryParams = {};
-
-    let params=new HttpParams();
-    if(type){
-      params=params.set('type', type);
+  getAll(
+    hostId?: number,
+    country?: string,
+    city?: string,
+    type?: AccommodationType,
+    guestNum?: number,
+    startDate?: Date,
+    endDate?: Date,
+    amenities?: string[],
+    minPrice?: number,
+    maxPrice?: number,
+    status?: string
+  ): Observable<Accommodation[]> {
+    let params = new HttpParams();
+  
+    if (type) {
+      params = params.set('type', type);
     }
-    if(hostId){
-      params=params.set('hostId', hostId);
+    if (hostId) {
+      params = params.set('hostId', hostId.toString());
     }
-    if(startDate && endDate){
-      params=params.set('begin',this.formatDate(startDate));
-      params=params.set('end',this.formatDate(endDate));
+    if (startDate && endDate) {
+      params = params.set('begin', this.formatDate(startDate));
+      params = params.set('end', this.formatDate(endDate));
     }
     if (country && city) {
-        params = params.set('country', country);
-        params=params.set('city',city);
-      }else if(country){
-        params=params.set('country',country);
+      params = params.set('country', country);
+      params = params.set('city', city);
+    } else if (country) {
+      params = params.set('country', country);
     }
-    if(guestNum){
-      params=params.set("guestNumber",guestNum);
+    if (guestNum) {
+      params = params.set('guestNumber', guestNum.toString());
     }
-    if(amenities){
-      amenities.forEach(amenity => {
+    if (amenities) {
+      amenities.forEach((amenity) => {
         params = params.append('amenities', amenity);
       });
     }
-    if(minPrice && maxPrice){
-      params = params.append('start_price', minPrice);
-      params = params.append('end_price', maxPrice);
+    if (minPrice !== undefined && maxPrice !== undefined) {
+      params = params.set('start_price', minPrice.toString());
+      params = params.set('end_price', maxPrice.toString());
     }
-
+    if (status) {
+      params = params.set('status', status);
+    }
+  
     const options = { params: params };
-
-    return this.httpClient.get<Accommodation[]>(environment.apiHost + 'accommodations', options)
-  }
-
-  getUpdatedAndNew(): Observable<Accommodation[]> {
-    const url = `${environment.apiHost}accommodations?status=CREATED`;
-    return this.httpClient.get<Accommodation[]>(url);
+  
+    return this.httpClient.get<Accommodation[]>(environment.apiHost + 'accommodations', options);
   }
 
   getAccommodationPrice(id?:number,guestNum?:number,
@@ -89,6 +97,14 @@ export class AccommodationsService {
 
   add(accommodation: CreateAccommodation): Observable<CreateAccommodation> {
     return this.httpClient.post<CreateAccommodation>(environment.apiHost + "accommodations", accommodation)
+  }
+
+  accept(accommodation: Accommodation): Observable<Accommodation>{
+    return this.httpClient.put<Accommodation>(environment.apiHost + "accommodations/accept/" + accommodation.id, accommodation)
+  }
+
+  decline(accommodation: Accommodation): Observable<Accommodation>{
+    return this.httpClient.put<Accommodation>(environment.apiHost + "accommodations/decline/" + accommodation.id, accommodation)
   }
 
   update(accommodation: Accommodation): Observable<Accommodation> {
