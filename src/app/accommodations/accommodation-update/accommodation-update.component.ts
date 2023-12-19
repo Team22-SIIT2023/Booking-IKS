@@ -24,7 +24,7 @@ export class AccommodationUpdateComponent {
               private amenityService: AmenityService,
               private fb: FormBuilder) {
   }
-  
+
 
   updateAccommodationFormGroup = this.fb.group({
     name: ['',[Validators.required]],
@@ -79,7 +79,7 @@ export class AccommodationUpdateComponent {
     if(this.selectedAmenities){
       this.selectedAmenities.push(amenity)
     }
-  
+
   }
 
   update() {
@@ -136,7 +136,7 @@ export class AccommodationUpdateComponent {
     }
     return false;
   }
-  
+
   onFileSelected(event: any):void {
     const files: FileList | null = event.target.files;
     if (files) {

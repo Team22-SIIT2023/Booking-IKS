@@ -14,10 +14,10 @@ export interface Accommodation {
   status?: AccommodationStatus;
   host: Host;
   reservationDeadline: number;
-  amenities: Amenity[];
-  priceList: PriceListItem[];
-  freeTimeSlots:TimeSlot[];
-  
+  amenities?: Amenity[];
+  priceList?: PriceListItem[];
+  freeTimeSlots?:TimeSlot[];
+
 }
 export enum AccommodationStatus {
   ACCEPTED,

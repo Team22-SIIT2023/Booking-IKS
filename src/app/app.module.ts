@@ -43,7 +43,7 @@ import {MatButtonModule} from "@angular/material/button";
     HttpClientModule,
     AdministratorModule,
     ToastrModule.forRoot(),
-    MatButtonModule,
+    // MatButtonModule,
   ],
   providers: [{provide: HTTP_INTERCEPTORS, useClass: InterceptService, multi: true}],
   bootstrap: [AppComponent]

@@ -14,8 +14,8 @@ import {CreateAccommodationComponent} from "./accommodations/create-accommodatio
 import {EditAccommodationsDatesComponent} from "./accommodations/edit-accommodations-dates/edit-accommodations-dates.component";
 import {AccommodationComponent} from "./accommodations/accommodation/accommodation.component";
 import {ReservationComponent} from "./reservations/tabsView/reservation.component";
-import { AccommodationUpdateComponent } from './accommodations/accommodation-update/accommodation-update.component';
 import {AccountActivationComponent} from "./account-activation/account-activation.component";
+import {AccommodationUpdateComponent} from "./accommodations/accommodation-update/accommodation-update.component";
 
 
 const routes: Routes = [
