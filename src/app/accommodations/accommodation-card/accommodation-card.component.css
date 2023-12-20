@@ -43,7 +43,7 @@ h2{
   margin: 0;
 }
 #price {
-  width: 150px;
+  width: 180px;
   border-radius: 10px;
   border:1px solid #b6b5b5;
   padding: 7px;
@@ -51,7 +51,7 @@ h2{
   background-color: whitesmoke;
 }
 #unitPrice {
-  width: 150px;
+  width: 180px;
   border-radius: 10px;
   border:1px solid #b6b5b5;
   padding: 7px;
