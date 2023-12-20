@@ -17,6 +17,8 @@ export interface Accommodation {
   amenities?: Amenity[];
   priceList?: PriceListItem[];
   freeTimeSlots?:TimeSlot[];
+  price?:number;
+  unitPrice?:number;
 
 }
 export enum AccommodationStatus {

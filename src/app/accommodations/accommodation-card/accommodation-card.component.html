@@ -16,8 +16,8 @@
         {{accommodation.address.address}}</p>
     </div>
     <p>{{accommodation.description}}</p>
-    <p id="price">Price:{{currentPrice}}</p>
-    <p id="unitPrice">{{unitText}}{{unitPrice}}</p>
+    <p id="price">Price:{{accommodation.price}}</p>
+    <p id="unitPrice">Unit price:{{accommodation.unitPrice}}<span *ngIf="accommodation.pricePerGuest">/per guest</span></p>
     <div class="button-container">
       <button mat-raised-button (click)="onAccommodationClicked()" [routerLink]="['accommodationDetails',accommodation.id]" class="details-btn">Details</button>
       <button mat-raised-button (click)="onAccommodationClicked()" [routerLink]="['accommodationUpdate',accommodation.id]" class="updateAccommodation">Update</button>

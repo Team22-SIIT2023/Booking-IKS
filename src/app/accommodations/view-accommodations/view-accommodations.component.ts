@@ -5,10 +5,10 @@ import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
 import {DatePipe, formatDate} from "@angular/common";
 import {AmenitiesService} from "../../amenities/amenities.service";
 import {MatOption} from "@angular/material/core";
-import {DataService} from "../data.service";
 import {MatCheckbox} from "@angular/material/checkbox";
 import {UserService} from "../../account/account.service";
 import {MatDateRangePicker} from "@angular/material/datepicker";
+import {forkJoin} from "rxjs";
 
 @Component({
   selector: 'app-view-accommodations',
@@ -33,6 +33,7 @@ export class ViewAccommodationsComponent implements  OnInit{
   minValue=5000;
   maxValue=20000;
   role: string = '';
+  accommodationPricesMap: Map<number, number> = new Map<number, number>();
   @ViewChildren(MatOption) options: QueryList<MatOption>;
   @ViewChildren(MatCheckbox) checkboxes: QueryList<MatCheckbox>;
   filterFrom = new FormGroup({
@@ -46,7 +47,7 @@ export class ViewAccommodationsComponent implements  OnInit{
   amenities: Amenity[]=[];
   selectedAmenities:string[]=[];
   typeOptions: string[]=[];
-  constructor(private service: AccommodationsService,private dataService: DataService,
+  constructor(private service: AccommodationsService,
               private amenityService:AmenitiesService,private fb: FormBuilder,
               private userService:UserService) {
   }
@@ -135,21 +136,21 @@ export class ViewAccommodationsComponent implements  OnInit{
       this.setValues(dateRangeStart, dateRangeEnd);
       const timeDifference = this.getFormattedDate(new Date(dateRangeEnd.value)).getTime() - this.getFormattedDate(new Date(dateRangeStart.value)).getTime();
       const nights = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-      for (const accommodation of this.accommodations) {
+
+      for (let accommodation of this.accommodations) {
         this.service.getAccommodationPrice(accommodation.id, this.guestNum, this.startDate, this.endDate)
           .subscribe((price: number) => {
-              this.finalPrice = price;
-              if ( accommodation.pricePerGuest) {
-                this.dataService.updatePrice(this.finalPrice, this.finalPrice/this.guestNum/nights);
-              }else{
-                this.dataService.updatePrice(this.finalPrice, this.finalPrice/nights);
-              }
-              this.dataService.updateIsPerGuest(accommodation.pricePerGuest);
+            accommodation.price=price;
+            if(accommodation.pricePerGuest){
+              accommodation.unitPrice=price/this.guestNum/nights;
+            }else{
+              accommodation.unitPrice=price/nights;
+            }
+
             },
             (error) => {
               console.error('Error fetching average rating:', error);
             });
-
       }
     }
 
@@ -220,4 +221,5 @@ export class ViewAccommodationsComponent implements  OnInit{
     const totalPages = Math.ceil(totalItems / this.itemsPerPage);
     return Array.from({ length: totalPages }, (_, index) => index + 1);
   }
+
 }

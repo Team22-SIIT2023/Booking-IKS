@@ -18,7 +18,7 @@ import {DatePipe} from "@angular/common";
 })
 
 export class AccommodationsService {
-  
+
   accommodations: Accommodation[] = [];
   private headers = new HttpHeaders({'Content-Type': 'application/json'});
 
@@ -43,7 +43,7 @@ export class AccommodationsService {
     status?: string
   ): Observable<Accommodation[]> {
     let params = new HttpParams();
-  
+
     if (type) {
       params = params.set('type', type);
     }
@@ -75,9 +75,9 @@ export class AccommodationsService {
     if (status) {
       params = params.set('status', status);
     }
-  
+
     const options = { params: params };
-  
+
     return this.httpClient.get<Accommodation[]>(environment.apiHost + 'accommodations', options);
   }
 

@@ -1,7 +1,6 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {Accommodation, Address, Amenity, RequestStatus, ReservationRequest} from "../accommodation/model/model.module";
 import {Subscription} from "rxjs";
-import {DataService} from "../data.service";
 import {CommentsService} from "../../comments/comments.service";
 import {AccommodationsService} from "../accommodations.service";
 import {DomSanitizer} from "@angular/platform-browser";
@@ -16,11 +15,8 @@ import { ReservationsService } from 'src/app/reservations/reservations.service';
 })
 export class AccommodationCardComponent {
 
-  currentPrice: number;
   role: string;
   activeReservations:ReservationRequest[];
-  unitPrice: number;
-  unitText: string;
   rating: number = 0;
   images: string[] =[];
   image:string;
@@ -32,13 +28,15 @@ export class AccommodationCardComponent {
   reservations: any;
 
 
-  constructor(private dataService: DataService, private commentService:CommentsService,
+  constructor(private commentService:CommentsService,
               private accommodationService:AccommodationsService,private sanitizer:DomSanitizer,
               private userService: UserService, private router:Router, private reservationService:ReservationsService) {}
 
 
   ngOnInit() {
     this.role = this.userService.getRole();
+    this.accommodation.unitPrice=0;
+    this.accommodation.price=0;
     const updateButtons = document.getElementsByClassName('updateAccommodation') as HTMLCollectionOf<HTMLButtonElement>;
     const acceptButtons = document.getElementsByClassName('acceptButton') as HTMLCollectionOf<HTMLButtonElement>;
     const declineButtons = document.getElementsByClassName('declineButton') as HTMLCollectionOf<HTMLButtonElement>;
@@ -60,21 +58,6 @@ export class AccommodationCardComponent {
           declineButton.style.visibility = 'hidden';
       }
     }
-    
-    this.subscription = this.dataService.currentPrice.subscribe(price => {
-      this.currentPrice = price;
-    });
-
-    this.subscription.add(this.dataService.unitPrice.subscribe(price => {
-      this.unitPrice = price;
-    }));
-    this.subscription?.add(this.dataService.isPerGuest.subscribe(isPerGuest => {
-      if(isPerGuest){
-        this.unitText=" Price per guest:"
-      }else{
-        this.unitText=" Accommodation price:"
-      }
-    }));
 
     // @ts-ignore
     this.commentService.getAverageAccommodationRating(this.accommodation.id)
@@ -103,9 +86,6 @@ export class AccommodationCardComponent {
     const blob = new Blob([new Uint8Array([...decodedImage].map(char => char.charCodeAt(0)))], { type: 'image/png' });
     const imageUrl = URL.createObjectURL(blob);
     return this.sanitizer.bypassSecurityTrustUrl(imageUrl) as string;
-  }
-  ngOnDestroy() {
-    this.subscription.unsubscribe();
   }
   onAccommodationClicked():void{
     this.clicked.emit(this.accommodation);
