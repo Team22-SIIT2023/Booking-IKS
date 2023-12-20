@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {Accommodation, Address, Amenity} from "../accommodation/model/model.module";
+import {Accommodation, Address, Amenity, RequestStatus, ReservationRequest} from "../accommodation/model/model.module";
 import {Subscription} from "rxjs";
 import {DataService} from "../data.service";
 import {CommentsService} from "../../comments/comments.service";
@@ -7,6 +7,7 @@ import {AccommodationsService} from "../accommodations.service";
 import {DomSanitizer} from "@angular/platform-browser";
 import { UserService } from 'src/app/account/account.service';
 import { Router } from '@angular/router';
+import { ReservationsService } from 'src/app/reservations/reservations.service';
 
 @Component({
   selector: 'app-accommodation-card',
@@ -16,6 +17,8 @@ import { Router } from '@angular/router';
 export class AccommodationCardComponent {
 
   currentPrice: number;
+  role: string;
+  activeReservations:ReservationRequest[];
   unitPrice: number;
   unitText: string;
   rating: number = 0;
@@ -26,14 +29,16 @@ export class AccommodationCardComponent {
   accommodation: Accommodation;
   @Output()
   clicked:EventEmitter<Accommodation>=new EventEmitter<Accommodation>();
+  reservations: any;
 
 
   constructor(private dataService: DataService, private commentService:CommentsService,
               private accommodationService:AccommodationsService,private sanitizer:DomSanitizer,
-              private userService: UserService, private router:Router) {}
+              private userService: UserService, private router:Router, private reservationService:ReservationsService) {}
 
 
   ngOnInit() {
+    this.role = this.userService.getRole();
     const updateButtons = document.getElementsByClassName('updateAccommodation') as HTMLCollectionOf<HTMLButtonElement>;
     const acceptButtons = document.getElementsByClassName('acceptButton') as HTMLCollectionOf<HTMLButtonElement>;
     const declineButtons = document.getElementsByClassName('declineButton') as HTMLCollectionOf<HTMLButtonElement>;
@@ -140,3 +145,5 @@ export class AccommodationCardComponent {
 
 
 }
+
+

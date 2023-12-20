@@ -3,10 +3,11 @@ import { Component, Host, QueryList, ViewChildren } from '@angular/core';
 import { FormBuilder, Validators, FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AmenityService } from 'src/app/amenity/amenity.service';
-import { Amenity, Address, TimeSlot, PriceListItem, CreateAccommodation, Accommodation, Image, AccommodationType } from '../accommodation/model/model.module';
+import { Amenity, Address, TimeSlot, PriceListItem, CreateAccommodation, Accommodation, Image, AccommodationType, RequestStatus, ReservationRequest } from '../accommodation/model/model.module';
 import { AccommodationsService } from '../accommodations.service';
 import { CommentAndGrade } from 'src/app/administrator/comments-and-grades/model/model.module';
 import { MatCheckbox } from '@angular/material/checkbox';
+import { ReservationsService } from 'src/app/reservations/reservations.service';
 
 @Component({
   selector: 'app-accommodation-update',
@@ -16,6 +17,7 @@ import { MatCheckbox } from '@angular/material/checkbox';
 
 export class AccommodationUpdateComponent {
   accommodation: Accommodation | undefined;
+  activeReservations: ReservationRequest[];
   events: string[] = [];
   selectedAmenities: Amenity[]=[];
   allAmenities2: Amenity[] = []
@@ -23,7 +25,8 @@ export class AccommodationUpdateComponent {
 
   constructor(private root:ActivatedRoute,private accommodationService: AccommodationsService, private router: Router,
               private amenityService: AmenityService,
-              private fb: FormBuilder) {
+              private fb: FormBuilder,
+              private reservationService: ReservationsService) {
   }
 
 
@@ -62,6 +65,7 @@ export class AccommodationUpdateComponent {
           if(this.accommodation.amenities){
           // this.selectedAmenities = this.accommodation?.amenities;
           }
+          this.haveActiveReservation();
         }
       })
       this.amenityService.getAll().subscribe({
@@ -107,7 +111,24 @@ export class AccommodationUpdateComponent {
     return checkedAmenities;
   }
 
-  
+  haveActiveReservation(){
+    const today: Date = new Date();
+    console.log(this.updateAccommodationFormGroup.value.name)
+    this.reservationService.getAll(RequestStatus.ACCEPTED,this.updateAccommodationFormGroup.value.name as string,'','').subscribe({
+      next: (data: ReservationRequest[]) => {
+        this.activeReservations = data;
+        console.log(this.activeReservations)
+        if(this.activeReservations.length>0){
+          const updateButton = document.getElementById('updateAccommodation') as HTMLButtonElement;
+          updateButton.style.visibility = 'hidden';
+        }
+      },
+      error: (_) => {
+        console.log("Error fetching data from ReservationsService");
+      }
+    });
+  }
+
   update() {
     console.log(this.getCheckedAmenities())
     this.submitted=true;

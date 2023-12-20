@@ -1,5 +1,8 @@
 <div class="accommodation">
   <img id="accommodation-image" [src]="image" alt="Accommodation 1">
+  <div *ngIf="role=='ROLE_HOST' || role=='ROLE_ADMIN'" class="accommodation-status">
+    <p>{{ accommodation.status }}</p>
+  </div>
   <div class="accommodation-card">
     <div class="star-container">
       <mat-icon *ngFor="let star of Array(5); let i = index" class="stars" [ngClass]="getStarColor(i + 1)">star</mat-icon>
