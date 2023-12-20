@@ -78,6 +78,9 @@
             <div *ngIf="updateUserForm.get('password')?.hasError('minlength')">
                 Minimum length is 6 characters.
             </div>
+            <div *ngIf="updateUserForm.get('confirmPassword')?.hasError('mismatchedValues')">
+                <span  class="error-message">Passwords do not match.</span>
+            </div>
 
             <label for="password">Confirm password:</label>
             <input type="password" id="password1" name="confirmPassword" formControlName="confirmPassword" [value]="user?.account?.password" required>
@@ -86,6 +89,9 @@
             </div>
             <div *ngIf="updateUserForm.get('confirmPassword')?.hasError('minlength')">
                 Minimum length is 6 characters.
+            </div>
+            <div *ngIf="updateUserForm.get('confirmPassword')?.hasError('mismatchedValues')">
+                <span  class="error-message">Passwords do not match.</span>
             </div>
 
 

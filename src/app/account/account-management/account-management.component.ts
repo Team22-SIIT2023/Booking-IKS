@@ -31,9 +31,21 @@ export class AccountManagementComponent implements OnInit {
     phoneNumber: new FormControl('', [Validators.required, Validators.pattern(/^\d+$/)]),
     username: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required, Validators.minLength(6)]),
-    confirmPassword: new FormControl('', [Validators.required, Validators.minLength(6), this.passwordMatchValidator]),
+    confirmPassword: new FormControl('', [Validators.required, Validators.minLength(6), this.matchValues('password')]),
     picturePath: new FormControl('')
   });
+
+  matchValues(field: string) {
+    return (control: AbstractControl) => {
+      const fieldValue = control.value;
+      const matchingControl = control.root.get(field);
+
+      if (matchingControl && fieldValue !== matchingControl.value) {
+        return { mismatchedValues: true };
+      }
+      return null;
+    };
+  }
 
   constructor(private service: UserService,private router: Router,private cdr: ChangeDetectorRef) {}
 
@@ -124,8 +136,8 @@ export class AccountManagementComponent implements OnInit {
       () => {
         console.log('User deleted successfully.');
         localStorage.removeItem('user');
-        // this.toastr.success(result);
         this.router.navigate(['logIn']);
+        this.service.setUser();
       },
       (error) => {
         console.error('Error deleting user:', error);
