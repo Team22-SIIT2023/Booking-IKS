@@ -61,6 +61,7 @@ export class AccommodationDetailsComponent implements OnInit{
   }
 
   ngOnInit(): void {
+    //moze i userServie.getRole()?
     this.userService.userState.subscribe((result) => {
       this.role = result;
     });

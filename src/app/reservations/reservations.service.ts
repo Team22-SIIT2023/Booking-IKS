@@ -38,4 +38,40 @@ export class ReservationsService {
     return this.httpClient.post<ReservationRequest>(environment.apiHost + "requests", request);
   }
 
+  getAllForHost(userId: number, status: RequestStatus, accommodationName: string, startDate: string, endDate: string) {
+    let params = new HttpParams();
+      if(status){
+          params= params.set('status', status);
+      }
+    if(startDate && endDate){
+      params=params.set('begin',startDate);
+      params=params.set('end',endDate);
+    }
+    if (accommodationName) {
+      params = params.set('accommodationName', accommodationName);
+    }
+
+    const options = { params };
+
+    return this.httpClient.get<ReservationRequest[]>(environment.apiHost + 'requests/host/'+userId, options);
+  }
+
+  getAllForGuest(userId: number, status: RequestStatus, accommodationName: string, startDate: string, endDate: string) {
+    let params = new HttpParams();
+    if(status){
+      params= params.set('status', status);
+    }
+
+    if(startDate && endDate){
+      params=params.set('begin',startDate);
+      params=params.set('end',endDate);
+    }
+    if (accommodationName) {
+      params = params.set('accommodationName', accommodationName);
+    }
+
+    const options = { params };
+
+    return this.httpClient.get<ReservationRequest[]>(environment.apiHost + 'requests/guest/'+userId, options);
+  }
 }

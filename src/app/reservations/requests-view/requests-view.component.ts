@@ -11,6 +11,7 @@ import {ReservationsService} from "../reservations.service";
 import {FormControl, FormGroup} from "@angular/forms";
 import {MatOption} from "@angular/material/core";
 import {DatePipe} from "@angular/common";
+import {UserService} from "../../account/account.service";
 
 
 @Component({
@@ -28,33 +29,56 @@ export class RequestsViewComponent implements OnInit {
 
   startDate:string="";
   endDate:string="";
+  userId:number;
+  statusOptions: string[]=[];
   filterRequestsForm:FormGroup=new FormGroup({
     accommodationName:new FormControl(),
+    requestStatus:new FormControl()
   });
 
-  constructor(private service: ReservationsService) {
+  constructor(private service: ReservationsService,private userService:UserService) {
   }
   ngOnInit(): void {
-   this.fetchData();
+      this.statusOptions=Object.values(RequestStatus).map(item => String(item));
+      this.fetchData();
   }
 
   filterClicked() {
    this.fetchData();
   }
   fetchData(){
+    this.userId=this.userService.getUserId();
     const selectedName=<string>this.filterRequestsForm.value.accommodationName;
-    console.log(selectedName);
-    this.service.getAll(RequestStatus.WAITING,selectedName,this.startDate,this.endDate).subscribe({
-      next: (data: ReservationRequest[]) => {
-        this.requests = data;
-        this.dataSource = new MatTableDataSource<ReservationRequest>(this.requests);
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-      },
-      error: (_) => {
-        console.log("Error fetching data from ReservationsService");
-      }
-    });
+    const selectedStatus=<RequestStatus>this.filterRequestsForm.value.requestStatus;
+    if(this.userService.getRole()=="ROLE_GUEST"){
+      this.service.getAllForGuest(this.userId,selectedStatus,selectedName,this.startDate,this.endDate).subscribe({
+        next: (data: ReservationRequest[]) => {
+          this.requests = data;
+          this.dataSource = new MatTableDataSource<ReservationRequest>(this.requests);
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sort = this.sort;
+        },
+        error: (_) => {
+          console.log("Error fetching data from ReservationsService");
+        }
+      });
+
+    }else if(this.userService.getRole()=="ROLE_HOST"){
+      const selectedName=<string>this.filterRequestsForm.value.accommodationName;
+      const selectedStatus=<RequestStatus>this.filterRequestsForm.value.requestStatus;
+      this.service.getAllForHost(this.userId,selectedStatus,selectedName,this.startDate,this.endDate).subscribe({
+        next: (data: ReservationRequest[]) => {
+          this.requests = data;
+          this.dataSource = new MatTableDataSource<ReservationRequest>(this.requests);
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sort = this.sort;
+        },
+        error: (_) => {
+          console.log("Error fetching data from ReservationsService");
+        }
+      });
+
+    }
 
   }
   getFormatedDate(date: Date, format: string) {
