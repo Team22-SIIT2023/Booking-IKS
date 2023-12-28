@@ -4,6 +4,7 @@ import {environment} from "../../env/env";
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {CommentAndGrade} from "../administrator/comments-and-grades/model/model.module";
 import {Status} from "../account/model/model.module";
+import {CreateAccommodation} from "../accommodations/accommodation/model/model.module";
 
 @Injectable({
   providedIn: 'root'
@@ -21,6 +22,9 @@ export class CommentsService {
     params=params.set('status','ACTIVE');
     const options={params}
     return this.httpClient.get<CommentAndGrade[]>(environment.apiHost+'comments/accommodation/'+id,options);
+  }
 
+  createHostComment(id: number , comment: CommentAndGrade): Observable<CommentAndGrade> {
+    return this.httpClient.post<CommentAndGrade>(environment.apiHost+'comments/host/'+id, comment)
   }
 }

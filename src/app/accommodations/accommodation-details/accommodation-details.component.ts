@@ -1,21 +1,10 @@
-import {
-    Component, Host, Input,
-    OnInit,
-    QueryList,
-    ViewChildren
-} from '@angular/core';
-import {ActivatedRoute, GuardsCheckEnd} from "@angular/router";
+import {Component, Host, Input, OnInit, QueryList, ViewChildren} from '@angular/core';
+import {ActivatedRoute} from "@angular/router";
 import {AccommodationsService} from "../accommodations.service";
-import * as L from 'leaflet';
 
-import {
-    Accommodation,
-    RequestStatus,
-    ReservationRequest,
-    TimeSlot
-} from "../accommodation/model/model.module";
+import {Accommodation, RequestStatus, ReservationRequest, TimeSlot} from "../accommodation/model/model.module";
 import {ReservationsService} from "../../reservations/reservations.service";
-import {formatDate, Time} from "@angular/common";
+import {formatDate} from "@angular/common";
 import {FormControl, FormGroup} from "@angular/forms";
 import {MatOption} from "@angular/material/core";
 import {Observable, range, toArray} from "rxjs";
@@ -24,9 +13,9 @@ import {CommentAndGrade, Guest} from "../../administrator/comments-and-grades/mo
 import {CommentsService} from "../../comments/comments.service";
 import {MapService} from "../../map/map.service";
 import {DomSanitizer} from "@angular/platform-browser";
-import {AppComponent} from "../../app.component";
 import {UserService} from "../../account/account.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {Status} from "../../account/model/model.module";
 
 @Component({
   selector: 'app-accommodation-details',
@@ -34,6 +23,13 @@ import {MatSnackBar} from "@angular/material/snack-bar";
   styleUrls: ['./accommodation-details.component.css']
 })
 export class AccommodationDetailsComponent implements OnInit{
+  @Input() maxRating =5;
+  @Input() SelectedStar=0;
+  maxRatingArr=[];
+  previouseSelected = 0;
+  hostComment: string = '';
+
+
   protected readonly Array = Array;
   accommodation:Accommodation;
   numberOptions: Observable<number[]>;
@@ -61,6 +57,20 @@ export class AccommodationDetailsComponent implements OnInit{
   }
 
   ngOnInit(): void {
+
+      const guestId=this.userService.getUserId();
+      this.userService.getUser(guestId).subscribe(
+          (data) => {
+              this.guest=data;
+              console.log(this.guest)
+          },
+          (error) => {
+              console.error('Error fetching guest:', error);
+          });
+
+    // @ts-ignore
+    this.maxRatingArr = Array(this.maxRating).fill(0);
+
     //moze i userServie.getRole()?
     this.userService.userState.subscribe((result) => {
       this.role = result;
@@ -161,7 +171,6 @@ export class AccommodationDetailsComponent implements OnInit{
               error: (_) => {
               }
             }
-
           );
         }
       }else {
@@ -169,7 +178,6 @@ export class AccommodationDetailsComponent implements OnInit{
                 duration: 3000,
               });
     }
-
   }
 
   protected readonly transformMenu = transformMenu;
@@ -196,9 +204,7 @@ export class AccommodationDetailsComponent implements OnInit{
               (error) => {
                 console.error('Error:', error);
               });
-
         }
-
     }
 
     private setValues(dateRangeStart: HTMLInputElement,dateRangeEnd:HTMLInputElement) {
@@ -214,6 +220,11 @@ export class AccommodationDetailsComponent implements OnInit{
             endDate: this.getFormattedDate(new Date(dateRangeEnd.value)),
         };
         const guestId=this.userService.getUserId();
+
+
+
+        //ovo ne moraaaaaa!
+
         this.userService.getUser(guestId).subscribe(
         (data) => {
           this.guest=data;
@@ -221,9 +232,52 @@ export class AccommodationDetailsComponent implements OnInit{
         (error) => {
           console.error('Error fetching guest:', error);
         });
-
     }
 
   protected readonly Host = Host;
 
-}
+  HandleMouseEnter(index:number){
+    this.SelectedStar=index+1;
+  }
+
+  HandeMouseLeave() {
+    if (this.previouseSelected!==0){
+      this.SelectedStar = this.previouseSelected;
+    }
+    else{ this.SelectedStar=0; }
+  }
+
+  Rating(index:number) {
+    this.SelectedStar=index+1;
+    this.previouseSelected=this.SelectedStar;
+  }
+
+
+  commentHost() {
+
+    let rate=this.SelectedStar;
+    let comment = this.hostComment;
+
+    console.log(this.accommodation.host.id);
+
+    const commentAndGrade : CommentAndGrade = {
+        text: comment,
+        rating: rate,
+        date: new Date(),
+        status: Status.PENDING,
+        guest:this.guest,
+    }
+
+    this.commentService.createHostComment(this.accommodation.host.id, commentAndGrade).subscribe({
+      next: (data: CommentAndGrade) => {
+        // this.comments = data
+      },
+      error: (err) => {
+          if (err.status===400) {
+              console.log(err);
+              console.log("Nema rezervacija kod hosta")
+          }
+      }
+    })
+  }
+ }
