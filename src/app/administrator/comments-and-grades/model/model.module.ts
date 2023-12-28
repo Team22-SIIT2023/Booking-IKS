@@ -1,12 +1,13 @@
-import { Status, User } from "src/app/account/model/model.module";
+import { Status, User, Host } from "src/app/account/model/model.module";
 
 export interface CommentAndGrade{
-  id: number;
+  id?: number;
   text: string;
   date: Date;
   rating: number;
   status: Status;
   guest: Guest;
+  host?:Host;
 }
 
 export interface Guest extends User {}

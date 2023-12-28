@@ -9,6 +9,10 @@ export interface User {
   lastPasswordResetDate?: Date
 }
 
+export interface Host extends User{
+
+}
+
 export interface Address{
   country?: string;
   city?: string;
@@ -35,4 +39,3 @@ export enum Status {
   BLOCKED,
   REPORTED
 }
-

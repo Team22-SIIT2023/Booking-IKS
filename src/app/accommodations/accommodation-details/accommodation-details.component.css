@@ -229,6 +229,7 @@ h3 {
 
 .hostDescription {
   display: flex;
+  margin-right: 0;
 }
 
 .hostInformation {
@@ -240,3 +241,41 @@ h3 {
   width: 200px;
 }
 
+.addComment {
+  margin-left: 150px;
+}
+
+.hostComment {
+  width: 100%;
+  height: 90px;
+  padding-right: 0;
+  margin-right: 0;
+}
+
+.addHostComment {
+  display: block;
+
+}
+
+.commentInput {
+  padding-right: 0;
+  margin-right: 0;
+}
+
+.checked {
+  color: yellow;
+}
+
+.hostStarsInput {
+  margin-right: 1px;
+  padding-right: 0;
+  padding-left: 0;
+  margin-left: 0;
+  padding-top: 0;
+  margin-top: 0;
+}
+
+
+/*.inputStar {*/
+/*  margin-left: 5px;*/
+/*}*/

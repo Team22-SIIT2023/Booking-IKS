@@ -26,6 +26,18 @@
       <mat-card-title class="hostTitle">Host of accommodation</mat-card-title>
       <mat-card-subtitle>{{accommodation.host.account.username}}</mat-card-subtitle>
       <mat-icon *ngFor="let star of Array(5)" class="stars">star</mat-icon>
+<!--      <button class="addComment" mat-button>Comment<mat-icon matListItemIcon>add</mat-icon></button>-->
+    </div>
+    <div class="addHostComment">
+    <mat-form-field class="hostComment">
+      <mat-label>Commentt</mat-label>
+      <input matInput class="commentInput" required name="commentHost" [(ngModel)]="hostComment"/>
+    </mat-form-field>
+<!--    <div class="inputStar">-->
+      <mat-icon class="hostStarsInput" *ngFor="let icon of maxRatingArr; let index=index" (mouseenter)="HandleMouseEnter(index)"
+      [ngClass]="{checked:SelectedStar>index}" (mouseleave)="HandeMouseLeave()" (click)="Rating(index)" >star</mat-icon>
+<!--      </div>-->
+    <button mat-raised-button class="addComment" (click)="commentHost()" mat-button>Comment</button>
     </div>
   </mat-card-footer>
 </mat-card>
