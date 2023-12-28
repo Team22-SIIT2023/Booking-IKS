@@ -103,9 +103,9 @@ export interface ReservationRequest {
 }
 
 export enum RequestStatus {
-  ACCEPTED,
-  CANCELLED,
-  WAITING
+  ACCEPTED="ACCEPTED",
+  CANCELLED="CANCELLED",
+  WAITING="WAITING"
 
 }
 

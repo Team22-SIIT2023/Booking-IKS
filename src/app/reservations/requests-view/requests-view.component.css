@@ -17,6 +17,11 @@
   margin-left: 20px;
   margin-right: 20px;
 }
+#status-select{
+  margin-top: 20px;
+  margin-left: 20px;
+  margin-right: 20px;
+}
 #filter-btn{
   width: 100px;
   padding: 4px;
