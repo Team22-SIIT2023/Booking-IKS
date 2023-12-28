@@ -6,6 +6,17 @@
       <mat-option value="Another name">Another name</mat-option>
     </mat-select>
   </mat-form-field>
+  <mat-form-field id="status-select">
+    <mat-label>Status</mat-label>
+    <mat-select formControlName="requestStatus">
+      <mat-option *ngFor="let option of statusOptions" [value]="option">
+        {{ option}}
+      </mat-option>
+<!--      <mat-option value="ACCEPTED">ACCEPTED</mat-option>-->
+<!--      <mat-option value="WAITING">WAITING</mat-option>-->
+<!--      <mat-option value="CANCELLED">CANCELLED</mat-option>-->
+    </mat-select>
+  </mat-form-field>
   <mat-form-field class="date-picker">
     <mat-date-range-input [rangePicker]="rangePicker">
       <input matStartDate placeholder="Start date" #dateRangeStart>

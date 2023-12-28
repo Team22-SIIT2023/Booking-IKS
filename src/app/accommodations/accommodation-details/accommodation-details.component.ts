@@ -71,6 +71,7 @@ export class AccommodationDetailsComponent implements OnInit{
     // @ts-ignore
     this.maxRatingArr = Array(this.maxRating).fill(0);
 
+    //moze i userServie.getRole()?
     this.userService.userState.subscribe((result) => {
       this.role = result;
     });
