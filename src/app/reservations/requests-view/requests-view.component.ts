@@ -1,17 +1,13 @@
-import {Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {MatTableDataSource} from "@angular/material/table";
-import {
-  AccommodationType,
-  RequestStatus,
-  ReservationRequest
-} from "../../accommodations/accommodation/model/model.module";
+import {RequestStatus, ReservationRequest} from "../../accommodations/accommodation/model/model.module";
 import {ReservationsService} from "../reservations.service";
 import {FormControl, FormGroup} from "@angular/forms";
-import {MatOption} from "@angular/material/core";
 import {DatePipe} from "@angular/common";
 import {UserService} from "../../account/account.service";
+import {of} from "rxjs";
 
 
 @Component({
@@ -22,7 +18,8 @@ import {UserService} from "../../account/account.service";
 export class RequestsViewComponent implements OnInit {
   requests: ReservationRequest[] = [];
   dataSource = new MatTableDataSource<ReservationRequest>([]); // Initialize with an empty array
-  displayedColumns: string[] = ['timeSlot','price', 'accommodation','status','cancel'];
+  displayedColumns: string[] =[];
+  numberOfCancellations: number;
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -30,15 +27,24 @@ export class RequestsViewComponent implements OnInit {
   startDate:string="";
   endDate:string="";
   userId:number;
+  role:string;
   statusOptions: string[]=[];
   filterRequestsForm:FormGroup=new FormGroup({
     accommodationName:new FormControl(),
     requestStatus:new FormControl()
   });
 
-  constructor(private service: ReservationsService,private userService:UserService) {
+
+  constructor(private requestService: ReservationsService,private userService:UserService) {
   }
   ngOnInit(): void {
+      this.role=this.userService.getRole();
+      this.userId=this.userService.getUserId();
+      if(this.role=="ROLE_HOST"){
+       this.displayedColumns=['timeSlot','price', 'guest','cancellations','accommodation','status','accept','deny']
+      }else{
+        this.displayedColumns=['timeSlot','price','host','accommodation','status','delete']
+      }
       this.statusOptions=Object.values(RequestStatus).map(item => String(item));
       this.fetchData();
   }
@@ -47,11 +53,10 @@ export class RequestsViewComponent implements OnInit {
    this.fetchData();
   }
   fetchData(){
-    this.userId=this.userService.getUserId();
-    const selectedName=<string>this.filterRequestsForm.value.accommodationName;
+    const selectedName=this.filterRequestsForm.value.accommodationName;
     const selectedStatus=<RequestStatus>this.filterRequestsForm.value.requestStatus;
-    if(this.userService.getRole()=="ROLE_GUEST"){
-      this.service.getAllForGuest(this.userId,selectedStatus,selectedName,this.startDate,this.endDate).subscribe({
+    if(this.role=="ROLE_GUEST"){
+      this.requestService.getAllForGuest(this.userId,selectedStatus,selectedName,this.startDate,this.endDate).subscribe({
         next: (data: ReservationRequest[]) => {
           this.requests = data;
           this.dataSource = new MatTableDataSource<ReservationRequest>(this.requests);
@@ -63,12 +68,13 @@ export class RequestsViewComponent implements OnInit {
         }
       });
 
-    }else if(this.userService.getRole()=="ROLE_HOST"){
-      const selectedName=<string>this.filterRequestsForm.value.accommodationName;
+    }else if(this.role=="ROLE_HOST"){
+      const selectedName=this.filterRequestsForm.value.accommodationName;
       const selectedStatus=<RequestStatus>this.filterRequestsForm.value.requestStatus;
-      this.service.getAllForHost(this.userId,selectedStatus,selectedName,this.startDate,this.endDate).subscribe({
+      this.requestService.getAllForHost(this.userId,selectedStatus,selectedName,this.startDate,this.endDate).subscribe({
         next: (data: ReservationRequest[]) => {
           this.requests = data;
+          this.getCancellationsForGuest();
           this.dataSource = new MatTableDataSource<ReservationRequest>(this.requests);
           this.dataSource.paginator = this.paginator;
           this.dataSource.sort = this.sort;
@@ -91,6 +97,34 @@ export class RequestsViewComponent implements OnInit {
     // @ts-ignore
     this.endDate=this.getFormatedDate(new Date(dateRangeEnd.value),"yyyy-MM-dd");
   }
-  //promeniti na drugi nacin kao sto je kod accommodations-view za datume
 
+  deleteRequest(request:ReservationRequest) {
+    //the guest deletes the request if request status is pending
+    if (request.status==RequestStatus.PENDING){
+      this.requestService.delete(request.id).subscribe(
+        {
+          next: (data: ReservationRequest) => {
+            this.fetchData();
+            },
+            error: (_) => {
+            }
+          }
+        );
+      }
+  }
+
+  private getCancellationsForGuest() {
+    for(const request of this.requests){
+      // @ts-ignore
+      this.requestService.getCancellations(request.guest.id).subscribe({
+        next: (data: number) => {
+          // @ts-ignore
+          request.guest.cancellations = data;
+        },
+        error: (_) => {
+          console.log("Error fetching cancellation count for a guest from ReservationsService");
+        }
+      });
+    }
+  }
 }
