@@ -9,7 +9,11 @@
     </div>
     <p id="rating">Average rating:</p>
     <p>{{ rating }}</p>
-    <h2>{{accommodation.name}}<mat-icon class="favorite-icon" color="warn">favorite</mat-icon></h2>
+    <h2>{{accommodation.name}}
+      <button  id="favoriteButton" mat-icon-button  [ngClass]="{ 'warn-color': buttonColor === 'warn', 'primary-color': buttonColor === 'primary' }"  (click)="addFavorite(accommodation)" aria-label="Example icon button with a heart icon">
+        <mat-icon>favorite</mat-icon>
+      </button>
+    </h2>
     <div class="accommodation-address">
       <p><mat-icon class="address-icon"> location_on</mat-icon>
       {{accommodation.address.country}},{{accommodation.address.city}},

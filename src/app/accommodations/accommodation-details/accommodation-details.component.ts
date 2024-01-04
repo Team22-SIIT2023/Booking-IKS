@@ -2,7 +2,13 @@ import {Component, Host, Input, OnInit, QueryList, ViewChildren} from '@angular/
 import {ActivatedRoute} from "@angular/router";
 import {AccommodationsService} from "../accommodations.service";
 
-import {Accommodation, RequestStatus, ReservationRequest, TimeSlot} from "../accommodation/model/model.module";
+import {
+  Accommodation,
+  AccommodationType,
+  RequestStatus,
+  ReservationRequest,
+  TimeSlot
+} from "../accommodation/model/model.module";
 import {ReservationsService} from "../../reservations/reservations.service";
 import {formatDate} from "@angular/common";
 import {FormControl, FormGroup} from "@angular/forms";
@@ -26,7 +32,7 @@ export class AccommodationDetailsComponent implements OnInit{
   @Input() maxRating =5;
   @Input() SelectedStar=0;
   maxRatingArr=[];
-  previouseSelected = 0;
+  previousSelected = 0;
   hostComment: string = '';
 
 
@@ -46,8 +52,11 @@ export class AccommodationDetailsComponent implements OnInit{
 
   form:FormGroup=new FormGroup({
         numberSelect:new FormControl(),
-        priceInput:new FormControl()
+        priceInput:new FormControl(),
     });
+  approvalType: FormGroup=new FormGroup({
+    approvalTypeRbt:new FormControl()
+  });
 
   constructor(private root:ActivatedRoute,private acommodationsService:AccommodationsService,
               private reservationService:ReservationsService,
@@ -57,7 +66,6 @@ export class AccommodationDetailsComponent implements OnInit{
   }
 
   ngOnInit(): void {
-
       const guestId=this.userService.getUserId();
       this.userService.getUser(guestId).subscribe(
           (data) => {
@@ -71,7 +79,6 @@ export class AccommodationDetailsComponent implements OnInit{
     // @ts-ignore
     this.maxRatingArr = Array(this.maxRating).fill(0);
 
-    //moze i userServie.getRole()?
     this.userService.userState.subscribe((result) => {
       this.role = result;
     });
@@ -80,7 +87,6 @@ export class AccommodationDetailsComponent implements OnInit{
       this.acommodationsService.getAccommodation(id).subscribe({
         next:(data:Accommodation)=>{
           this.accommodation=data;
-
           this.address=this.accommodation.address?.address+','+
                 this.accommodation.address?.city;
           const min=this.accommodation.minGuests;
@@ -108,6 +114,10 @@ export class AccommodationDetailsComponent implements OnInit{
               console.error('Error fetching images:', error);
             }
           );
+          const initialApprovalType = this.accommodation.automaticConfirmation ? 'automatic' : 'manual';
+          this.approvalType.patchValue({
+            approvalTypeRbt: initialApprovalType
+          });
         }
       })
       }
@@ -123,6 +133,12 @@ export class AccommodationDetailsComponent implements OnInit{
         return this.isDateInAvailableRange(date);
     };
     isDateInAvailableRange(date: Date): boolean {
+      const currentDate = new Date();
+      currentDate.setHours(0, 0, 0, 0);
+
+      if (date < currentDate) {
+        return false;
+      }
         for (const range of this.availableDateRanges) {
             const startDate = new Date(range.start);
             const endDate = new Date(range.end);
@@ -152,7 +168,7 @@ export class AccommodationDetailsComponent implements OnInit{
           price:price,
           guest:this.guest,
           accommodation:this.accommodation,
-          status:RequestStatus.WAITING,
+          status:RequestStatus.PENDING,
           guestNumber:this.guestNum
         };
         if (price==0){
@@ -241,15 +257,15 @@ export class AccommodationDetailsComponent implements OnInit{
   }
 
   HandeMouseLeave() {
-    if (this.previouseSelected!==0){
-      this.SelectedStar = this.previouseSelected;
+    if (this.previousSelected!==0){
+      this.SelectedStar = this.previousSelected;
     }
     else{ this.SelectedStar=0; }
   }
 
   Rating(index:number) {
     this.SelectedStar=index+1;
-    this.previouseSelected=this.SelectedStar;
+    this.previousSelected=this.SelectedStar;
   }
 
 
@@ -280,4 +296,29 @@ export class AccommodationDetailsComponent implements OnInit{
       }
     })
   }
- }
+
+  changeApprovalType() {
+    const selectedValue = this.approvalType.value.approvalTypeRbt;
+    if(selectedValue){
+      if(selectedValue=="manual"){
+        this.accommodation.automaticConfirmation=false;
+      }else{
+        this.accommodation.automaticConfirmation=true;
+      }
+      this.updateAccommodation();
+    }
+
+  }
+  updateAccommodation(){
+    this.acommodationsService.update(this.accommodation).subscribe(
+      {
+        next: (data: Accommodation) => {
+          this.accommodation = data;
+        },
+        error: (_) => {
+        }
+      }
+    );
+
+  }
+}
