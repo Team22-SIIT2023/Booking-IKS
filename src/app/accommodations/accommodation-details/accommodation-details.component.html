@@ -32,7 +32,8 @@
       <button class="viewComments" mat-raised-button [routerLink]="['commentsAndRatings']" mat-button>View comments</button>
 
     </div>
-    <span *ngIf="role == 'ROLE_GUEST'" (click)="reportHost()"><mat-icon class="iconReportHost">report</mat-icon></span>
+<!--    <span *ngIf="role == 'ROLE_GUEST'" (click)="reportHost()"><mat-icon class="iconReportHost">report</mat-icon></span>-->
+    <span *ngIf="role == 'ROLE_GUEST'"><mat-icon class="iconReportHost">report</mat-icon></span>
 
     <div *ngIf="role == 'ROLE_GUEST'" class="addHostComment">
     <mat-form-field appearance="outline" class="hostComment">
