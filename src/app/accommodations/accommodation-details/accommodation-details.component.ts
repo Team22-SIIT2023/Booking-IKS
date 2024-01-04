@@ -16,6 +16,8 @@ import {DomSanitizer} from "@angular/platform-browser";
 import {UserService} from "../../account/account.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {Status} from "../../account/model/model.module";
+// import { Host } from "src/app/account/model/model.module";
+
 
 @Component({
   selector: 'app-accommodation-details',
@@ -23,11 +25,17 @@ import {Status} from "../../account/model/model.module";
   styleUrls: ['./accommodation-details.component.css']
 })
 export class AccommodationDetailsComponent implements OnInit{
-  @Input() maxRating =5;
-  @Input() SelectedStar=0;
-  maxRatingArr=[];
-  previouseSelected = 0;
+  @Input() maxRatingHost =5;
+  @Input() SelectedStarHost=0;
+  @Input() maxRatingAccommodation =5;
+  @Input() SelectedStarAccommodation=0;
+  maxRatingArrAccommodation=[];
+  previouseSelectedAccommodation = 0;
+  maxRatingArrHost=[];
+  previouseSelectedHost = 0;
   hostComment: string = '';
+  accommodationComment: string = '';
+  hostAverageRating:number;
 
 
   protected readonly Array = Array;
@@ -68,8 +76,12 @@ export class AccommodationDetailsComponent implements OnInit{
               console.error('Error fetching guest:', error);
           });
 
+
     // @ts-ignore
-    this.maxRatingArr = Array(this.maxRating).fill(0);
+    this.maxRatingArrHost = Array(this.maxRatingHost).fill(0);
+
+    // @ts-ignore
+    this.maxRatingArrAccommodation = Array(this.maxRatingAccommodation).fill(0);
 
     //moze i userServie.getRole()?
     this.userService.userState.subscribe((result) => {
@@ -108,37 +120,49 @@ export class AccommodationDetailsComponent implements OnInit{
               console.error('Error fetching images:', error);
             }
           );
+        this.commentService.getAverageHostRating(this.accommodation.host.id)
+            .subscribe(
+                (averageRating: number) => {
+                    this.hostAverageRating = averageRating;
+                },
+                (error) => {
+                    console.error('Error fetching average rating:', error);
+                }
+            );
         }
       })
-      }
-    )
+      })
   }
+
   decodeBase64AndSanitize(image: string): string {
     const decodedImage = atob(image);
     const blob = new Blob([new Uint8Array([...decodedImage].map(char => char.charCodeAt(0)))], { type: 'image/png' });
     const imageUrl = URL.createObjectURL(blob);
     return this.sanitizer.bypassSecurityTrustUrl(imageUrl) as string;
   }
-    dateFilter = (date: Date): boolean => {
-        return this.isDateInAvailableRange(date);
-    };
-    isDateInAvailableRange(date: Date): boolean {
-        for (const range of this.availableDateRanges) {
-            const startDate = new Date(range.start);
-            const endDate = new Date(range.end);
-            startDate.setHours(0, 0, 0, 0);
-            endDate.setHours(23, 59, 59, 999);
 
-            if (date >= startDate && date <= endDate) {
-                return true;
-            }
-        }
-        return false;
-    }
-    getFormattedDate(date: Date): Date {
-        const formattedDate = formatDate(date, 'yyyy-MM-dd', 'en-US');
-        return new Date(formattedDate);
-    }
+  dateFilter = (date: Date): boolean => {
+      return this.isDateInAvailableRange(date);
+  };
+
+  isDateInAvailableRange(date: Date): boolean {
+      for (const range of this.availableDateRanges) {
+          const startDate = new Date(range.start);
+          const endDate = new Date(range.end);
+          startDate.setHours(0, 0, 0, 0);
+          endDate.setHours(23, 59, 59, 999);
+
+          if (date >= startDate && date <= endDate) {
+              return true;
+          }
+      }
+      return false;
+  }
+
+  getFormattedDate(date: Date): Date {
+      const formattedDate = formatDate(date, 'yyyy-MM-dd', 'en-US');
+      return new Date(formattedDate);
+  }
 
   createReservation(dateRangeStart: HTMLInputElement, dateRangeEnd: HTMLInputElement) {
 
@@ -170,8 +194,7 @@ export class AccommodationDetailsComponent implements OnInit{
               },
               error: (_) => {
               }
-            }
-          );
+            });
         }
       }else {
               this.snackBar.open("Select date range and guest number!", 'Close', {
@@ -183,79 +206,94 @@ export class AccommodationDetailsComponent implements OnInit{
   protected readonly transformMenu = transformMenu;
 
 
-    calculateTotalPrice(dateRangeStart: HTMLInputElement, dateRangeEnd: HTMLInputElement) {
+  calculateTotalPrice(dateRangeStart: HTMLInputElement, dateRangeEnd: HTMLInputElement) {
 
-        const selectedValue = this.form.value.numberSelect;
+      const selectedValue = this.form.value.numberSelect;
 
-        if(selectedValue && dateRangeEnd.value && dateRangeStart.value){
-            this.setValues(dateRangeStart, dateRangeEnd);
+      if(selectedValue && dateRangeEnd.value && dateRangeStart.value){
+          this.setValues(dateRangeStart, dateRangeEnd);
 
-            const timeDifference = this.getFormattedDate(new Date(dateRangeEnd.value)).getTime() - this.getFormattedDate(new Date(dateRangeStart.value)).getTime();
-            const nights = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+          const timeDifference = this.getFormattedDate(new Date(dateRangeEnd.value)).getTime() - this.getFormattedDate(new Date(dateRangeStart.value)).getTime();
+          const nights = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
 
 
-          this.acommodationsService.getAccommodationPrice(this.accommodation.id, this.guestNum, this.timeSlot?.startDate, this.timeSlot?.endDate)
-            .subscribe((price: number) => {
-                this.price = price;
-                this.form.patchValue({
-                  priceInput: price !== null ? price : ''
-                });
-              },
-              (error) => {
-                console.error('Error:', error);
+        this.acommodationsService.getAccommodationPrice(this.accommodation.id, this.guestNum, this.timeSlot?.startDate, this.timeSlot?.endDate)
+          .subscribe((price: number) => {
+              this.price = price;
+              this.form.patchValue({
+                priceInput: price !== null ? price : ''
               });
-        }
-    }
+            },
+            (error) => {
+              console.error('Error:', error);
+            });
+      }
+  }
 
-    private setValues(dateRangeStart: HTMLInputElement,dateRangeEnd:HTMLInputElement) {
+  private setValues(dateRangeStart: HTMLInputElement,dateRangeEnd:HTMLInputElement) {
 
-        const selectedValue = this.form.value.numberSelect;
-        const selectedOption = this.options.find(option => option.value === selectedValue);
-        if(selectedOption){
-          const stringValue: string = selectedOption.viewValue;
-          this.guestNum = parseInt(stringValue, 10);
-        }
-         this.timeSlot= {
-            startDate:this.getFormattedDate(new Date(dateRangeStart.value)),
-            endDate: this.getFormattedDate(new Date(dateRangeEnd.value)),
-        };
-        const guestId=this.userService.getUserId();
+      const selectedValue = this.form.value.numberSelect;
+      const selectedOption = this.options.find(option => option.value === selectedValue);
+      if(selectedOption){
+        const stringValue: string = selectedOption.viewValue;
+        this.guestNum = parseInt(stringValue, 10);
+      }
+       this.timeSlot= {
+          startDate:this.getFormattedDate(new Date(dateRangeStart.value)),
+          endDate: this.getFormattedDate(new Date(dateRangeEnd.value)),
+      };
+      const guestId=this.userService.getUserId();
 
 
 
         //ovo ne moraaaaaa!
-
-        this.userService.getUser(guestId).subscribe(
-        (data) => {
-          this.guest=data;
-        },
-        (error) => {
-          console.error('Error fetching guest:', error);
-        });
-    }
+      this.userService.getUser(guestId).subscribe(
+      (data) => {
+        this.guest=data;
+      },
+      (error) => {
+        console.error('Error fetching guest:', error);
+      });
+  }
 
   protected readonly Host = Host;
 
-  HandleMouseEnter(index:number){
-    this.SelectedStar=index+1;
+  HandleMouseEnterHost(index:number){
+    this.SelectedStarHost=index+1;
   }
 
-  HandeMouseLeave() {
-    if (this.previouseSelected!==0){
-      this.SelectedStar = this.previouseSelected;
+  HandleMouseEnterAccommodation(index:number){
+    this.SelectedStarAccommodation=index+1;
+  }
+
+  HandeMouseLeaveHost() {
+    if (this.previouseSelectedHost!==0){
+      this.SelectedStarHost = this.previouseSelectedHost;
     }
-    else{ this.SelectedStar=0; }
+    else{ this.SelectedStarHost=0; }
   }
 
-  Rating(index:number) {
-    this.SelectedStar=index+1;
-    this.previouseSelected=this.SelectedStar;
+  HandeMouseLeaveAccommodation() {
+    if (this.previouseSelectedAccommodation!==0){
+      this.SelectedStarAccommodation = this.previouseSelectedAccommodation;
+    }
+    else{ this.SelectedStarAccommodation=0; }
+  }
+
+  RatingHost(index:number) {
+    this.SelectedStarHost=index+1;
+    this.previouseSelectedHost=this.SelectedStarHost;
+  }
+
+  RatingAccommodation(index:number) {
+      this.SelectedStarAccommodation=index+1;
+      this.previouseSelectedAccommodation=this.SelectedStarAccommodation;
   }
 
 
   commentHost() {
 
-    let rate=this.SelectedStar;
+    let rate=this.SelectedStarHost;
     let comment = this.hostComment;
 
     console.log(this.accommodation.host.id);
@@ -270,14 +308,71 @@ export class AccommodationDetailsComponent implements OnInit{
 
     this.commentService.createHostComment(this.accommodation.host.id, commentAndGrade).subscribe({
       next: (data: CommentAndGrade) => {
-        // this.comments = data
+        this.snackBar.open("Comment is created", 'Close', {
+          duration: 3000,
+        });
       },
       error: (err) => {
           if (err.status===400) {
               console.log(err);
-              console.log("Nema rezervacija kod hosta")
+            this.snackBar.open("You cannot comment on the host", 'Close', {
+              duration: 3000,
+            });
           }
       }
     })
   }
- }
+
+
+  commentAccommodation() {
+
+      let rate=this.SelectedStarAccommodation;
+      let comment = this.accommodationComment;
+
+      console.log(this.accommodation.host.id);
+
+      const commentAndGrade : CommentAndGrade = {
+          text: comment,
+          rating: rate,
+          date: new Date(),
+          status: Status.PENDING,
+          guest:this.guest,
+      }
+
+      this.commentService.createAccommodationComment(this.accommodation.id, commentAndGrade).subscribe({
+          next: (data: CommentAndGrade) => {
+            this.snackBar.open("Comment is created", 'Close', {
+              duration: 3000,
+            });
+          },
+          error: (err) => {
+              if (err.status===400) {
+                  console.log(err);
+                  this.snackBar.open("You cannot comment on the accommodation", 'Close', {
+                    duration: 3000,
+                  });
+              }
+              console.log("Greska");
+          }
+      })
+    }
+
+    public reportHost() {
+        this.userService.reportHost(this.guest.id, this.accommodation.host).subscribe(
+        (data) => {
+          console.log(data)
+          this.snackBar.open("Host has been reported", 'Close', {
+            duration: 3000,
+          });
+        },
+        (error) => {
+          this.snackBar.open("You cannot report the host", 'Close', {
+            duration: 3000,
+          });
+        });
+    }
+
+    getHostStarColor(starIndex: number): string {
+        return starIndex <= this.hostAverageRating ? 'filled-star' : 'empty-star';
+    }
+}

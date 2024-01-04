@@ -20,22 +20,28 @@
   <mat-card-actions align="end">
     <button mat-button>Add to favorite<mat-icon matListItemIcon>favorite</mat-icon></button>
   </mat-card-actions>
+
   <mat-card-footer class="hostDescription">
     <div mat-card-avatar class="example-header-image"></div>
     <div class="hostInformation">
       <mat-card-title class="hostTitle">Host of accommodation</mat-card-title>
       <mat-card-subtitle>{{accommodation.host.account.username}}</mat-card-subtitle>
-      <mat-icon *ngFor="let star of Array(5)" class="stars">star</mat-icon>
+<!--      <mat-icon *ngFor="let star of Array(5)" class="stars">star</mat-icon>-->
+      <mat-icon *ngFor="let star of Array(5); let i = index" class="stars" [ngClass]="getHostStarColor(i + 1)">star</mat-icon>
 <!--      <button class="addComment" mat-button>Comment<mat-icon matListItemIcon>add</mat-icon></button>-->
+      <button class="viewComments" mat-raised-button [routerLink]="['commentsAndRatings']" mat-button>View comments</button>
+
     </div>
-    <div class="addHostComment">
-    <mat-form-field class="hostComment">
-      <mat-label>Commentt</mat-label>
-      <input matInput class="commentInput" required name="commentHost" [(ngModel)]="hostComment"/>
+    <span *ngIf="role == 'ROLE_GUEST'" (click)="reportHost()"><mat-icon class="iconReportHost">report</mat-icon></span>
+
+    <div *ngIf="role == 'ROLE_GUEST'" class="addHostComment">
+    <mat-form-field appearance="outline" class="hostComment">
+      <mat-label>Write comment for host</mat-label>
+      <input matInput class="commentInput" name="commentHost" [(ngModel)]="hostComment"/>
     </mat-form-field>
 <!--    <div class="inputStar">-->
-      <mat-icon class="hostStarsInput" *ngFor="let icon of maxRatingArr; let index=index" (mouseenter)="HandleMouseEnter(index)"
-      [ngClass]="{checked:SelectedStar>index}" (mouseleave)="HandeMouseLeave()" (click)="Rating(index)" >star</mat-icon>
+      <mat-icon class="hostStarsInput" *ngFor="let icon of maxRatingArrHost; let index=index" (mouseenter)="HandleMouseEnterHost(index)"
+      [ngClass]="{checked:SelectedStarHost>index}" (mouseleave)="HandeMouseLeaveHost()" (click)="RatingHost(index)" >star</mat-icon>
 <!--      </div>-->
     <button mat-raised-button class="addComment" (click)="commentHost()" mat-button>Comment</button>
     </div>
@@ -56,6 +62,7 @@
     <div class="mapa">
       <app-map *ngIf="address" [address]="address"></app-map>
     </div>
+
   </div>
 </div>
 
@@ -93,11 +100,24 @@
 </div>
 
 
-<h3>Comments</h3>
-<div class="comments">
-  <div *ngFor="let comment of comments">
-    <app-comment-card [comment]="comment"></app-comment-card>
+  <h3>Comments</h3>
+  <div *ngIf="role == 'ROLE_GUEST'"  class="writeCommentForAcc">
+      <div class="starsForAcc">
+        <mat-icon class="hostStarsInput" *ngFor="let icon of maxRatingArrAccommodation; let index=index" (mouseenter)="HandleMouseEnterAccommodation(index)"
+                [ngClass]="{checked:SelectedStarAccommodation>index}" (mouseleave)="HandeMouseLeaveAccommodation()" (click)="RatingAccommodation(index)" >star</mat-icon>
+      </div>
+    <div class="addHostComment">
+      <mat-form-field appearance="outline" class="accommodationComment">
+        <mat-label>Write comment for accommodation</mat-label>
+        <input matInput class="commentAccommodationInput" name="commentAccommodation" [(ngModel)]="accommodationComment"/>
+      </mat-form-field>
+    </div>
+    <button mat-raised-button class="addAccommodationComment" (click)="commentAccommodation()" mat-button>Comment</button>
   </div>
+  <div class="comments">
+    <div *ngFor="let comment of comments">
+      <app-comment-card [comment]="comment"></app-comment-card>
+    </div>
 </div>
 
 
