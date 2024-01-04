@@ -98,7 +98,13 @@
   </div>
   <button mat-raised-button class="reserveButton" (click)="createReservation(dateRangeStart,dateRangeEnd)">Reserve</button>
 </div>
-
+<div *ngIf="role == 'ROLE_HOST'" id="approvalDiv" [formGroup]="approvalType">
+  <mat-radio-group formControlName="approvalTypeRbt">
+    <mat-radio-button class="approvalRbt" value="automatic">automatic reservation approval</mat-radio-button>
+    <mat-radio-button class="approvalRbt" value="manual">manual reservation approval</mat-radio-button>
+  </mat-radio-group>
+  <button mat-raised-button id="saveApproval" (click)="changeApprovalType()">Save approval type</button>
+</div>
 
   <h3>Comments</h3>
   <div *ngIf="role == 'ROLE_GUEST'"  class="writeCommentForAcc">

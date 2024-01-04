@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
-import {Observable} from "rxjs";
+import {Observable, Subject} from "rxjs";
 import {
   Accommodation,
   AccommodationType,
@@ -113,7 +113,10 @@ export class AccommodationsService {
 
   getAllFavorites(id:number): Observable<Accommodation[]> {
     return this.httpClient.get<Accommodation[]>(environment.apiHost + 'users/guest/'+id)
-  } //u koji servis ovo da se stavi?
+  }
+  updateFavoriteAccommodation(guestId: number, accommodationId?: number): Observable<String> {
+    return this.httpClient.put(environment.apiHost + 'users/'+guestId+"/favoriteAccommodations/"+accommodationId,{},{ responseType: 'text' });
+  }
 
   getAccommodation(id: number): Observable<Accommodation> {
     return this.httpClient.get<Accommodation>(environment.apiHost + 'accommodations/' + id)

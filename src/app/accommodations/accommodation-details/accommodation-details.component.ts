@@ -2,7 +2,13 @@ import {Component, Host, Input, OnInit, QueryList, ViewChildren} from '@angular/
 import {ActivatedRoute} from "@angular/router";
 import {AccommodationsService} from "../accommodations.service";
 
-import {Accommodation, RequestStatus, ReservationRequest, TimeSlot} from "../accommodation/model/model.module";
+import {
+  Accommodation,
+  AccommodationType,
+  RequestStatus,
+  ReservationRequest,
+  TimeSlot
+} from "../accommodation/model/model.module";
 import {ReservationsService} from "../../reservations/reservations.service";
 import {formatDate} from "@angular/common";
 import {FormControl, FormGroup} from "@angular/forms";
@@ -33,6 +39,7 @@ export class AccommodationDetailsComponent implements OnInit{
   previouseSelectedAccommodation = 0;
   maxRatingArrHost=[];
   previouseSelectedHost = 0;
+
   hostComment: string = '';
   accommodationComment: string = '';
   hostAverageRating:number;
@@ -54,8 +61,11 @@ export class AccommodationDetailsComponent implements OnInit{
 
   form:FormGroup=new FormGroup({
         numberSelect:new FormControl(),
-        priceInput:new FormControl()
+        priceInput:new FormControl(),
     });
+  approvalType: FormGroup=new FormGroup({
+    approvalTypeRbt:new FormControl()
+  });
 
   constructor(private root:ActivatedRoute,private acommodationsService:AccommodationsService,
               private reservationService:ReservationsService,
@@ -65,7 +75,6 @@ export class AccommodationDetailsComponent implements OnInit{
   }
 
   ngOnInit(): void {
-
       const guestId=this.userService.getUserId();
       this.userService.getUser(guestId).subscribe(
           (data) => {
@@ -83,7 +92,6 @@ export class AccommodationDetailsComponent implements OnInit{
     // @ts-ignore
     this.maxRatingArrAccommodation = Array(this.maxRatingAccommodation).fill(0);
 
-    //moze i userServie.getRole()?
     this.userService.userState.subscribe((result) => {
       this.role = result;
     });
@@ -92,7 +100,6 @@ export class AccommodationDetailsComponent implements OnInit{
       this.acommodationsService.getAccommodation(id).subscribe({
         next:(data:Accommodation)=>{
           this.accommodation=data;
-
           this.address=this.accommodation.address?.address+','+
                 this.accommodation.address?.city;
           const min=this.accommodation.minGuests;
@@ -120,6 +127,7 @@ export class AccommodationDetailsComponent implements OnInit{
               console.error('Error fetching images:', error);
             }
           );
+
         this.commentService.getAverageHostRating(this.accommodation.host.id)
             .subscribe(
                 (averageRating: number) => {
@@ -129,6 +137,11 @@ export class AccommodationDetailsComponent implements OnInit{
                     console.error('Error fetching average rating:', error);
                 }
             );
+
+        const initialApprovalType = this.accommodation.automaticConfirmation ? 'automatic' : 'manual';
+        this.approvalType.patchValue({
+          approvalTypeRbt: initialApprovalType
+        });
         }
       })
       })
@@ -164,6 +177,34 @@ export class AccommodationDetailsComponent implements OnInit{
       return new Date(formattedDate);
   }
 
+    dateFilter = (date: Date): boolean => {
+        return this.isDateInAvailableRange(date);
+    };
+    isDateInAvailableRange(date: Date): boolean {
+      const currentDate = new Date();
+      currentDate.setHours(0, 0, 0, 0);
+
+      if (date < currentDate) {
+        return false;
+      }
+        for (const range of this.availableDateRanges) {
+            const startDate = new Date(range.start);
+            const endDate = new Date(range.end);
+            startDate.setHours(0, 0, 0, 0);
+            endDate.setHours(23, 59, 59, 999);
+
+            if (date >= startDate && date <= endDate) {
+                return true;
+            }
+        }
+        return false;
+    }
+    getFormattedDate(date: Date): Date {
+        const formattedDate = formatDate(date, 'yyyy-MM-dd', 'en-US');
+        return new Date(formattedDate);
+    }
+
+
   createReservation(dateRangeStart: HTMLInputElement, dateRangeEnd: HTMLInputElement) {
 
     if(dateRangeStart.value && dateRangeEnd.value && this.form.value.numberSelect){
@@ -176,7 +217,7 @@ export class AccommodationDetailsComponent implements OnInit{
           price:price,
           guest:this.guest,
           accommodation:this.accommodation,
-          status:RequestStatus.WAITING,
+          status:RequestStatus.PENDING,
           guestNumber:this.guestNum
         };
         if (price==0){
@@ -266,12 +307,19 @@ export class AccommodationDetailsComponent implements OnInit{
     this.SelectedStarAccommodation=index+1;
   }
 
+
   HandeMouseLeaveHost() {
     if (this.previouseSelectedHost!==0){
       this.SelectedStarHost = this.previouseSelectedHost;
-    }
-    else{ this.SelectedStarHost=0; }
+   }
   }
+  
+//   HandeMouseLeave() {
+//     if (this.previousSelected!==0){
+//       this.SelectedStar = this.previousSelected;
+//     }
+//     else{ this.SelectedStarHost=0; }
+//   }
 
   HandeMouseLeaveAccommodation() {
     if (this.previouseSelectedAccommodation!==0){
@@ -289,6 +337,11 @@ export class AccommodationDetailsComponent implements OnInit{
       this.SelectedStarAccommodation=index+1;
       this.previouseSelectedAccommodation=this.SelectedStarAccommodation;
   }
+    
+//   Rating(index:number) {
+//     this.SelectedStar=index+1;
+//     this.previousSelected=this.SelectedStar;
+//   }
 
 
   commentHost() {
@@ -322,7 +375,6 @@ export class AccommodationDetailsComponent implements OnInit{
       }
     })
   }
-
 
   commentAccommodation() {
 
@@ -375,4 +427,29 @@ export class AccommodationDetailsComponent implements OnInit{
     getHostStarColor(starIndex: number): string {
         return starIndex <= this.hostAverageRating ? 'filled-star' : 'empty-star';
     }
+
+  changeApprovalType() {
+    const selectedValue = this.approvalType.value.approvalTypeRbt;
+    if(selectedValue){
+      if(selectedValue=="manual"){
+        this.accommodation.automaticConfirmation=false;
+      }else{
+        this.accommodation.automaticConfirmation=true;
+      }
+      this.updateAccommodation();
+    }
+  }
+    
+  updateAccommodation(){
+    this.acommodationsService.update(this.accommodation).subscribe(
+      {
+        next: (data: Accommodation) => {
+          this.accommodation = data;
+        },
+        error: (_) => {
+        }
+      }
+    );
+
+  }
 }
