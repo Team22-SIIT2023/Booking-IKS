@@ -15,11 +15,13 @@
 
 .accommodationCard {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 -2px 4px rgba(0, 0, 0, 0.1);
-  width: 90%;
+  width: 92%;
   height: 70%;
   margin-bottom: 0;
   padding-bottom: 0;
   stroke: #D3CBE0;
+  margin-right: 0;
+  /*padding-right: 0;*/
 }
 
 .address {
@@ -44,9 +46,10 @@
 
 .amenityList {
   height: 5%;
-  margin-bottom: 40px;
+  margin-bottom: 15px;
   margin-top: 0;
   padding-top: 0;
+  margin-left: 0;
 }
 .container {
   display: flex;
@@ -172,6 +175,13 @@ h3 {
   padding-bottom: 0;
 }
 
+.starsForAcc {
+  margin-left: 28px;
+  padding-top: 15px;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
 .images {
   margin-top: 5px;
   margin-bottom: 5%;
@@ -187,8 +197,9 @@ h3 {
 .images-container img {
   padding:0;
   margin: 0;
-  width: 300px;   /* Set a fixed width for the images */
-  height: 250px;  /* Set a fixed height for the images */
+  margin-top: 10px;
+  width: 305px;   /* Set a fixed width for the images */
+  height: 270px;  /* Set a fixed height for the images */
   object-fit: cover; /* Maintain aspect ratio and cover the container */
 }
 
@@ -199,6 +210,8 @@ h3 {
   padding-left: 0;
   margin-left: 0;
   margin-top: 0;
+  margin-bottom: 0;
+  padding-bottom: 0;
 }
 
 
@@ -225,6 +238,16 @@ h3 {
 .example-header-image {
   background-image: url('../../../assets/images/host.png');
   background-size: cover;
+  margin-right: 0;
+  margin-left: 0;
+  /*padding-left: 0;*/
+  /*margin-top: 50px;*/
+  /*padding-right: 0;*/
+}
+
+.iconReportHost {
+    margin: 0;
+    padding: 0;
 }
 
 .hostDescription {
@@ -233,8 +256,10 @@ h3 {
 }
 
 .hostInformation {
-  width: 200px;
+  width: 185px;
   display: block;
+  padding-right: 0;
+  margin-right: 0;
 }
 
 .hostTitle {
@@ -242,7 +267,9 @@ h3 {
 }
 
 .addComment {
-  margin-left: 150px;
+  /*margin-left: 140px;*/
+  float: right;
+  /*  margin-top: 50px;*/
 }
 
 .hostComment {
@@ -250,16 +277,38 @@ h3 {
   height: 90px;
   padding-right: 0;
   margin-right: 0;
+  margin-left: 0;
+  padding-left: 0;
 }
+
+.accommodationComment {
+  width: 50%;
+  height: 100px;
+  padding-right: 0;
+  margin-right: 0;
+  margin-top: 0;
+  padding-top: 0;
+  margin-left: 0;
+  padding-left: 15px;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
 
 .addHostComment {
   display: block;
-
+  padding-top: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-bottom: 0;
 }
 
 .commentInput {
   padding-right: 0;
   margin-right: 0;
+  margin-left: 0;
+  padding-left: 0;
+  margin-bottom: 0;
 }
 
 .checked {
@@ -274,6 +323,11 @@ h3 {
   padding-top: 0;
   margin-top: 0;
 }
+
+.commentAccommodationInput {
+  margin-bottom: 0;
+}
+
 #approvalDiv{
   background-color: whitesmoke;
   width: auto;
@@ -281,12 +335,41 @@ h3 {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 -2px 4px rgba(0, 0, 0, 0.1);
   border-radius: 25px;
 }
+
 #saveApproval{
   margin-left: 8%;
 }
+
 .approvalRbt{
   margin-right: 3%;
 }
 /*.inputStar {*/
 /*  margin-left: 5px;*/
 /*}*/
+
+.addAccommodationComment {
+  /*margin-top: 3%;*/
+  /*padding-top: 3%;*/
+  width: auto;
+  margin-top: 0;
+  margin-left: 4%;
+  margin-bottom: 4%;
+}
+
+.filled-star {
+  color: gold; /* or any color you prefer for filled stars */
+}
+
+.empty-star {
+  color: #ddd; /* or any color you prefer for empty stars */
+}
+
+.viewComments {
+  margin-top: 4px;
+  margin-left: 0;
+}
+
+.writeCommentForAcc {
+  margin: 0;
+  padding: 0;
+}

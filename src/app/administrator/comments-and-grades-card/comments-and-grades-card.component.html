@@ -1,19 +1,22 @@
 <mat-card>
     <mat-card-content>
       <div class="user-section">
-        <img class="user-picture" [src]="commentAndGrade?.guest?.picturePath" alt="User Profile Picture">
+<!--        <img class="user-picture" [src]="commentAndGrade?.guest?.picturePath" alt="User Profile Picture">-->
         <div>
-          <p class="username">{{commentAndGrade?.guest?.account?.email}}</p>
+          <p class="username">{{commentAndGrade?.guest?.account?.username}}</p>
         </div>
       </div>
-      <mat-icon *ngFor="let star of Array(5).fill(0); let i = index" class="stars" [style.color]="getColorForStar(i, commentAndGrade?.rating)">star</mat-icon>
+      <mat-icon *ngFor="let star of Array(5); let i = index" class="stars" [ngClass]="getStarColor(i + 1)">star</mat-icon>
+
+<!--      <mat-icon *ngFor="let star of Array(5).fill(0); let i = index" class="stars" [style.color]="getColorForStar(i, commentAndGrade?.rating)">star</mat-icon>-->
       <p class="comment-text">{{commentAndGrade?.text}}</p>
-  
+
       <!-- Add Approve and Decline buttons -->
       <div class="action-buttons">
-        <button class = "approve" >Approve</button>
-        <button class = "decline">Decline</button>
+        <button *ngIf="role=='ROLE_ADMIN'"  class = "approve" >Approve</button>
+        <button *ngIf="role=='ROLE_ADMIN'" class = "decline">Decline</button>
+        <button (click)="deleteHostComment(commentAndGrade?.id)" *ngIf="role=='ROLE_GUEST'" class = "decline">Delete</button>
+        <button (click)="reportHostComment(commentAndGrade?.id)" *ngIf="role=='ROLE_HOST'" class = "decline">Report</button>
       </div>
     </mat-card-content>
   </mat-card>
-  
