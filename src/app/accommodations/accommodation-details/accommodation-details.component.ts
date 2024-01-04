@@ -154,29 +154,6 @@ export class AccommodationDetailsComponent implements OnInit{
     return this.sanitizer.bypassSecurityTrustUrl(imageUrl) as string;
   }
 
-  dateFilter = (date: Date): boolean => {
-      return this.isDateInAvailableRange(date);
-  };
-
-  isDateInAvailableRange(date: Date): boolean {
-      for (const range of this.availableDateRanges) {
-          const startDate = new Date(range.start);
-          const endDate = new Date(range.end);
-          startDate.setHours(0, 0, 0, 0);
-          endDate.setHours(23, 59, 59, 999);
-
-          if (date >= startDate && date <= endDate) {
-              return true;
-          }
-      }
-      return false;
-  }
-
-  getFormattedDate(date: Date): Date {
-      const formattedDate = formatDate(date, 'yyyy-MM-dd', 'en-US');
-      return new Date(formattedDate);
-  }
-
     dateFilter = (date: Date): boolean => {
         return this.isDateInAvailableRange(date);
     };
@@ -203,7 +180,6 @@ export class AccommodationDetailsComponent implements OnInit{
         const formattedDate = formatDate(date, 'yyyy-MM-dd', 'en-US');
         return new Date(formattedDate);
     }
-
 
   createReservation(dateRangeStart: HTMLInputElement, dateRangeEnd: HTMLInputElement) {
 
@@ -313,7 +289,7 @@ export class AccommodationDetailsComponent implements OnInit{
       this.SelectedStarHost = this.previouseSelectedHost;
    }
   }
-  
+
 //   HandeMouseLeave() {
 //     if (this.previousSelected!==0){
 //       this.SelectedStar = this.previousSelected;
@@ -337,7 +313,7 @@ export class AccommodationDetailsComponent implements OnInit{
       this.SelectedStarAccommodation=index+1;
       this.previouseSelectedAccommodation=this.SelectedStarAccommodation;
   }
-    
+
 //   Rating(index:number) {
 //     this.SelectedStar=index+1;
 //     this.previousSelected=this.SelectedStar;
@@ -409,20 +385,20 @@ export class AccommodationDetailsComponent implements OnInit{
       })
     }
 
-    public reportHost() {
-        this.userService.reportHost(this.guest.id, this.accommodation.host).subscribe(
-        (data) => {
-          console.log(data)
-          this.snackBar.open("Host has been reported", 'Close', {
-            duration: 3000,
-          });
-        },
-        (error) => {
-          this.snackBar.open("You cannot report the host", 'Close', {
-            duration: 3000,
-          });
-        });
-    }
+    // public reportHost() {
+    //     this.userService.reportHost(this.guest.id, this.accommodation.host).subscribe(
+    //     (data) => {
+    //       console.log(data)
+    //       this.snackBar.open("Host has been reported", 'Close', {
+    //         duration: 3000,
+    //       });
+    //     },
+    //     (error) => {
+    //       this.snackBar.open("You cannot report the host", 'Close', {
+    //         duration: 3000,
+    //       });
+    //     });
+    // }
 
     getHostStarColor(starIndex: number): string {
         return starIndex <= this.hostAverageRating ? 'filled-star' : 'empty-star';
@@ -439,7 +415,7 @@ export class AccommodationDetailsComponent implements OnInit{
       this.updateAccommodation();
     }
   }
-    
+
   updateAccommodation(){
     this.acommodationsService.update(this.accommodation).subscribe(
       {
