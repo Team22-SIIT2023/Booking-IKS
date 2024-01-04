@@ -3,6 +3,7 @@ import {Accommodation, FavoriteAccommodations} from "../../accommodations/accomm
 import {AccommodationsService} from "../../accommodations/accommodations.service";
 import {FavoritesService} from "./favorites.service";
 import {forkJoin} from "rxjs";
+import {UserService} from "../../account/account.service";
 
 @Component({
   selector: 'app-favorites-view',
@@ -11,22 +12,22 @@ import {forkJoin} from "rxjs";
 })
 export class FavoritesViewComponent implements OnInit{
 
-  clickedAccommodation:number|undefined
+  // clickedAccommodation:number|undefined
   accommodations: Accommodation[] = []
-  constructor(private service: AccommodationsService) {
+  constructor(private service: AccommodationsService,private userService:UserService) {
   }
 
   ngOnInit(): void {
-    this.service.getAllFavorites(1).subscribe({
+    this.service.getAllFavorites(this.userService.getUserId()).subscribe({
       next: (data: Accommodation[]) => {
         this.accommodations = data
       },
       error: (_) => {console.log("Greska!")}
-    })
+    });
   }
-  onAccommodationClicked(accommodation:Accommodation){
-    this.clickedAccommodation=accommodation.id;
-
-  }
+  // onAccommodationClicked(accommodation:Accommodation){
+  //   this.clickedAccommodation=accommodation.id;
+  //
+  // }
 
 }

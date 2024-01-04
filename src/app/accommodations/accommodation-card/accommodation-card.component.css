@@ -125,4 +125,10 @@ h2{
   padding-left: 10px;
   padding-top:10px ;
 }
+.warn-color {
+  color: red;
+}
 
+.primary-color {
+  color: grey; /* Adjust the color as needed */
+}
