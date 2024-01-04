@@ -53,7 +53,7 @@ mat-card {
     display: flex;
     margin-top: 10px; /* Adjust the margin as needed */
   }
-  
+
   .action-buttons button.approve {
     padding: 8px 12px;
     cursor: pointer;
@@ -62,7 +62,7 @@ mat-card {
     border: none;
     border-radius: 4px;
   }
-  
+
   .action-buttons button.decline {
     padding: 8px 12px;
     cursor: pointer;
@@ -72,7 +72,7 @@ mat-card {
     margin-left: 10px;
     border-radius: 4px;
   }
-  
+
   mat-icon{
     color: grey;
   margin-right: 0;
@@ -81,3 +81,19 @@ mat-card {
   margin-left: 0;
   margin-top: 0;
   }
+
+.filled-star {
+      color: gold;
+  }
+.stars{
+    padding-top: 13px;
+}
+.empty-star {
+    color: #ddd;
+}
+#rating{
+    display: flex;
+}
+#rating p{
+    margin-right: 10px;
+}

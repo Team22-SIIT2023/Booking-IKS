@@ -32,6 +32,7 @@ const routes: Routes = [
   {component: RegistrationComponent, path:"signIn"},
   {component: AccountManagementComponent, path:"myAccount"},
   {component: CommentsAndGradesCardsComponent, path:'commentsAndRatings'},
+  {component: CommentsAndGradesCardsComponent, path:'home/accommodations/accommodationDetails/:id/commentsAndRatings'},
   {component: ReportedUserCardsComponent, path:'reportedUsers'},
   {component: AccommodationApprovalCardsComponent, path:'accommodationApproval'},
   {component: AccommodationUpdateComponent, path:'home/accommodations/accommodationUpdate/:id'},
