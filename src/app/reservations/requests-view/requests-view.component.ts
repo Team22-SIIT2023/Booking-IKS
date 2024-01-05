@@ -1,12 +1,17 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild, ViewChildren} from '@angular/core';
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {MatTableDataSource} from "@angular/material/table";
-import {RequestStatus, ReservationRequest} from "../../accommodations/accommodation/model/model.module";
+import {
+  RequestStatus,
+  ReservationRequest
+} from "../../accommodations/accommodation/model/model.module";
 import {ReservationsService} from "../reservations.service";
 import {FormControl, FormGroup} from "@angular/forms";
 import {DatePipe} from "@angular/common";
 import {UserService} from "../../account/account.service";
+import {Host, User} from "src/app/account/model/model.module";
+import {MatSnackBar} from "@angular/material/snack-bar";
 import {of} from "rxjs";
 
 
@@ -24,6 +29,8 @@ export class RequestsViewComponent implements OnInit {
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
+  guest:User;
+  host:Host;
   startDate:string="";
   endDate:string="";
   userId:number;
@@ -34,14 +41,26 @@ export class RequestsViewComponent implements OnInit {
     requestStatus:new FormControl()
   });
 
-
-  constructor(private requestService: ReservationsService,private userService:UserService) {
+  constructor(private requestService: Reservations,private userService:UserService, private snackBar: MatSnackBar) {
   }
+
   ngOnInit(): void {
       this.role=this.userService.getRole();
       this.userId=this.userService.getUserId();
       if(this.role=="ROLE_HOST"){
-       this.displayedColumns=['timeSlot','price', 'guest','cancellations','accommodation','status','accept','deny']
+        
+         const hostId=this.userService.getUserId();
+         this.userService.getUser(hostId).subscribe(
+         (data) => {
+          this.host=data;
+          console.log(this.host)
+        },
+        (error) => {
+          console.error('Error fetching guest:', error);
+        });
+        
+        
+       this.displayedColumns=['timeSlot','price', 'guest', 'report','cancellations','accommodation','status','accept','deny']
       }else{
         this.displayedColumns=['timeSlot','price','host','accommodation','status','delete']
       }
@@ -52,6 +71,7 @@ export class RequestsViewComponent implements OnInit {
   filterClicked() {
    this.fetchData();
   }
+
   fetchData(){
     const selectedName=this.filterRequestsForm.value.accommodationName;
     const selectedStatus=<RequestStatus>this.filterRequestsForm.value.requestStatus;
@@ -83,14 +103,14 @@ export class RequestsViewComponent implements OnInit {
           console.log("Error fetching data from ReservationsService");
         }
       });
-
     }
-
   }
+
   getFormatedDate(date: Date, format: string) {
     const datePipe = new DatePipe('en-US');
     return datePipe.transform(date, format);
   }
+
   dateRangeChange(dateRangeStart: HTMLInputElement, dateRangeEnd: HTMLInputElement) {
     // @ts-ignore
     this.startDate=this.getFormatedDate(new Date(dateRangeStart.value),"yyyy-MM-dd");
@@ -98,6 +118,30 @@ export class RequestsViewComponent implements OnInit {
     this.endDate=this.getFormatedDate(new Date(dateRangeEnd.value),"yyyy-MM-dd");
   }
 
+
+  public reportGuest(guestId: number) {
+    this.userService.getUser(guestId).subscribe(
+        (data) => {
+          this.guest=data;
+
+          this.userService.reportGuest(this.host.id, this.guest).subscribe(
+              (data) => {
+                this.snackBar.open("Comment is created", 'Close', {
+                  duration: 3000,
+                });
+              },
+              (error) => {
+                this.snackBar.open("Comment is created", 'Close', {
+                  duration: 3000,
+                });
+                console.error('Error fetching guest:', error);
+              });
+        },
+        (error) => {
+          console.error('Error fetching guest:', error);
+        });
+  }
+  
   deleteRequest(request:ReservationRequest) {
     //the guest deletes the request if request status is pending
     if (request.status==RequestStatus.PENDING){

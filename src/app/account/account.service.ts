@@ -1,9 +1,10 @@
-import { Injectable } from '@angular/core';
-import { Account, User ,Address} from './model/model.module';
+import {Injectable} from '@angular/core';
+import {Account, User, Address, Status} from './model/model.module';
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {BehaviorSubject, Observable} from 'rxjs';
 import { environment } from 'src/env/env';
 import {JwtHelperService} from "@auth0/angular-jwt";
+import {Guest} from "../administrator/comments-and-grades/model/model.module";
 
 @Injectable({
   providedIn: 'root'
@@ -91,5 +92,13 @@ export class UserService {
   }
   setUser(): void {
     this.user$.next(this.getRole());
+  }
+
+  reportHost(guestId: number|undefined, reportedHost: User): Observable<User> {
+    return this.httpClient.put<User>(environment.apiHost + 'users/reportUser/' + guestId, reportedHost);
+  }
+
+  reportGuest(hostId: number|undefined, reportedGuest: User): Observable<User> {
+    return this.httpClient.put<User>(environment.apiHost + 'users/reportUser/' + hostId, reportedGuest);
   }
 }
