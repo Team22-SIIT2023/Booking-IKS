@@ -23,60 +23,59 @@ import {of} from "rxjs";
 export class RequestsViewComponent implements OnInit {
   requests: ReservationRequest[] = [];
   dataSource = new MatTableDataSource<ReservationRequest>([]); // Initialize with an empty array
-  displayedColumns: string[] =[];
+  displayedColumns: string[] = [];
   numberOfCancellations: number;
 
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+  @ViewChild(MatSort, {static: true}) sort: MatSort;
 
-  guest:User;
-  host:Host;
-  startDate:string="";
-  endDate:string="";
-  userId:number;
-  role:string;
-  statusOptions: string[]=[];
-  filterRequestsForm:FormGroup=new FormGroup({
-    accommodationName:new FormControl(),
-    requestStatus:new FormControl()
+  guest: User;
+  host: Host;
+  startDate: string = "";
+  endDate: string = "";
+  userId: number;
+  role: string;
+  statusOptions: string[] = [];
+  filterRequestsForm: FormGroup = new FormGroup({
+    accommodationName: new FormControl(),
+    requestStatus: new FormControl()
   });
 
-  constructor(private requestService: Reservations,private userService:UserService, private snackBar: MatSnackBar) {
+  constructor(private requestService: ReservationsService, private userService: UserService, private snackBar: MatSnackBar) {
   }
 
   ngOnInit(): void {
-      this.role=this.userService.getRole();
-      this.userId=this.userService.getUserId();
-      if(this.role=="ROLE_HOST"){
-        
-         const hostId=this.userService.getUserId();
-         this.userService.getUser(hostId).subscribe(
-         (data) => {
-          this.host=data;
+    this.role = this.userService.getRole();
+    this.userId = this.userService.getUserId();
+    if (this.role == "ROLE_HOST") {
+
+      const hostId = this.userService.getUserId();
+      this.userService.getUser(hostId).subscribe(
+        (data) => {
+          this.host = data;
           console.log(this.host)
         },
         (error) => {
           console.error('Error fetching guest:', error);
         });
-        
-        
-       this.displayedColumns=['timeSlot','price', 'guest', 'report','cancellations','accommodation','status','accept','deny']
-      }else{
-        this.displayedColumns=['timeSlot','price','host','accommodation','status','delete']
-      }
-      this.statusOptions=Object.values(RequestStatus).map(item => String(item));
-      this.fetchData();
+
+      this.displayedColumns = ['timeSlot', 'price', 'guest', 'report', 'cancellations', 'accommodation', 'status', 'accept', 'deny']
+    } else {
+      this.displayedColumns = ['timeSlot', 'price', 'host', 'accommodation', 'status', 'delete']
+    }
+    this.statusOptions = Object.values(RequestStatus).map(item => String(item));
+    this.fetchData();
   }
 
   filterClicked() {
-   this.fetchData();
+    this.fetchData();
   }
 
-  fetchData(){
-    const selectedName=this.filterRequestsForm.value.accommodationName;
-    const selectedStatus=<RequestStatus>this.filterRequestsForm.value.requestStatus;
-    if(this.role=="ROLE_GUEST"){
-      this.requestService.getAllForGuest(this.userId,selectedStatus,selectedName,this.startDate,this.endDate).subscribe({
+  fetchData() {
+    const selectedName = this.filterRequestsForm.value.accommodationName;
+    const selectedStatus = <RequestStatus>this.filterRequestsForm.value.requestStatus;
+    if (this.role == "ROLE_GUEST") {
+      this.requestService.getAllForGuest(this.userId, selectedStatus, selectedName, this.startDate, this.endDate).subscribe({
         next: (data: ReservationRequest[]) => {
           this.requests = data;
           this.dataSource = new MatTableDataSource<ReservationRequest>(this.requests);
@@ -88,10 +87,10 @@ export class RequestsViewComponent implements OnInit {
         }
       });
 
-    }else if(this.role=="ROLE_HOST"){
-      const selectedName=this.filterRequestsForm.value.accommodationName;
-      const selectedStatus=<RequestStatus>this.filterRequestsForm.value.requestStatus;
-      this.requestService.getAllForHost(this.userId,selectedStatus,selectedName,this.startDate,this.endDate).subscribe({
+    } else if (this.role == "ROLE_HOST") {
+      const selectedName = this.filterRequestsForm.value.accommodationName;
+      const selectedStatus = <RequestStatus>this.filterRequestsForm.value.requestStatus;
+      this.requestService.getAllForHost(this.userId, selectedStatus, selectedName, this.startDate, this.endDate).subscribe({
         next: (data: ReservationRequest[]) => {
           this.requests = data;
           this.getCancellationsForGuest();
@@ -113,52 +112,56 @@ export class RequestsViewComponent implements OnInit {
 
   dateRangeChange(dateRangeStart: HTMLInputElement, dateRangeEnd: HTMLInputElement) {
     // @ts-ignore
-    this.startDate=this.getFormatedDate(new Date(dateRangeStart.value),"yyyy-MM-dd");
+    this.startDate = this.getFormatedDate(new Date(dateRangeStart.value), "yyyy-MM-dd");
     // @ts-ignore
-    this.endDate=this.getFormatedDate(new Date(dateRangeEnd.value),"yyyy-MM-dd");
+    this.endDate = this.getFormatedDate(new Date(dateRangeEnd.value), "yyyy-MM-dd");
   }
 
 
   public reportGuest(guestId: number) {
     this.userService.getUser(guestId).subscribe(
-        (data) => {
-          this.guest=data;
+      (data) => {
+        this.guest = data;
 
-          this.userService.reportGuest(this.host.id, this.guest).subscribe(
-              (data) => {
-                this.snackBar.open("Comment is created", 'Close', {
-                  duration: 3000,
-                });
-              },
-              (error) => {
-                this.snackBar.open("Comment is created", 'Close', {
-                  duration: 3000,
-                });
-                console.error('Error fetching guest:', error);
-              });
-        },
-        (error) => {
-          console.error('Error fetching guest:', error);
-        });
+        this.userService.reportGuest(this.host.id, this.guest).subscribe(
+          (data) => {
+            this.snackBar.open("Guest is reported!", 'Close', {
+              duration: 3000,
+            });
+          },
+          (error) => {
+            this.snackBar.open("You can't report guest!", 'Close', {
+              duration: 3000,
+            });
+          });
+      },
+      (error) => {
+        console.error('Error fetching guest:', error);
+      });
   }
-  
-  deleteRequest(request:ReservationRequest) {
+
+  deleteRequest(request: ReservationRequest) {
     //the guest deletes the request if request status is pending
-    if (request.status==RequestStatus.PENDING){
+    if (request.status == RequestStatus.PENDING) {
       this.requestService.delete(request.id).subscribe(
         {
           next: (data: ReservationRequest) => {
+            this.snackBar.open("Request deleted!", 'Close', {
+              duration: 3000,
+            });
             this.fetchData();
-            },
-            error: (_) => {
-            }
+          },
+          error: (_) => {
+            this.snackBar.open("Request can't be deleted!", 'Close', {
+              duration: 3000,
+            });
           }
-        );
-      }
+        });
+    }
   }
 
   private getCancellationsForGuest() {
-    for(const request of this.requests){
+    for (const request of this.requests) {
       // @ts-ignore
       this.requestService.getCancellations(request.guest.id).subscribe({
         next: (data: number) => {

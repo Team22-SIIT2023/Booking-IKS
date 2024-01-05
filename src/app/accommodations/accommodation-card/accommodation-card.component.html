@@ -24,11 +24,11 @@
     <p id="unitPrice">Unit price:{{accommodation.unitPrice}}<span *ngIf="accommodation.pricePerGuest">/per guest</span></p>
     <div class="button-container">
       <button mat-raised-button (click)="onAccommodationClicked()" [routerLink]="['accommodationDetails',accommodation.id]" class="details-btn">Details</button>
-      <button mat-raised-button (click)="onAccommodationClicked()" [routerLink]="['accommodationUpdate',accommodation.id]" class="updateAccommodation">Update</button>
+      <button *ngIf="role=='ROLE_HOST'" mat-raised-button (click)="onAccommodationClicked()" [routerLink]="['accommodationUpdate',accommodation.id]" class="updateAccommodation">Update</button>
     </div>
     <div class="button-container">
-      <button class="acceptButton" id="acceptButton" (click)="acceptAccommodation()">Accept</button>
-      <button class="declineButton" id="declineButton" (click)="declineAccommodation()">Decline</button>
+      <button *ngIf="role=='ROLE_ADMIN'" class="acceptButton" id="acceptButton" (click)="acceptAccommodation()">Accept</button>
+      <button *ngIf="role=='ROLE_ADMIN'" class="declineButton" id="declineButton" (click)="declineAccommodation()">Decline</button>
     </div>
   </div>
 </div>

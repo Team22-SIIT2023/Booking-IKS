@@ -344,7 +344,7 @@ export class AccommodationDetailsComponent implements OnInit{
       error: (err) => {
           if (err.status===400) {
               console.log(err);
-            this.snackBar.open("You cannot comment on the host", 'Close', {
+            this.snackBar.open("You can't comment on the host", 'Close', {
               duration: 3000,
             });
           }
@@ -376,7 +376,7 @@ export class AccommodationDetailsComponent implements OnInit{
           error: (err) => {
               if (err.status===400) {
                   console.log(err);
-                  this.snackBar.open("You cannot comment on the accommodation", 'Close', {
+                  this.snackBar.open("You can't comment on the accommodation", 'Close', {
                     duration: 3000,
                   });
               }
@@ -385,20 +385,20 @@ export class AccommodationDetailsComponent implements OnInit{
       })
     }
 
-    // public reportHost() {
-    //     this.userService.reportHost(this.guest.id, this.accommodation.host).subscribe(
-    //     (data) => {
-    //       console.log(data)
-    //       this.snackBar.open("Host has been reported", 'Close', {
-    //         duration: 3000,
-    //       });
-    //     },
-    //     (error) => {
-    //       this.snackBar.open("You cannot report the host", 'Close', {
-    //         duration: 3000,
-    //       });
-    //     });
-    // }
+    public reportHost() {
+        this.userService.reportHost(this.guest.id, this.accommodation.host).subscribe(
+        (data) => {
+          console.log(data)
+          this.snackBar.open("Host has been reported", 'Close', {
+            duration: 3000,
+          });
+        },
+        (error) => {
+          this.snackBar.open("You can't report the host", 'Close', {
+            duration: 3000,
+          });
+        });
+    }
 
     getHostStarColor(starIndex: number): string {
         return starIndex <= this.hostAverageRating ? 'filled-star' : 'empty-star';
