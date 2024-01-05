@@ -3,6 +3,7 @@ import {environment} from "../../env/env";
 import {Observable} from "rxjs";
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {
+  Accommodation,
   CreateAccommodation,
   RequestStatus,
   ReservationRequest
@@ -73,5 +74,15 @@ export class ReservationsService {
     const options = { params };
 
     return this.httpClient.get<ReservationRequest[]>(environment.apiHost + 'requests/guest/'+userId, options);
+  }
+  update(request: ReservationRequest): Observable<ReservationRequest> {
+    return this.httpClient.put<ReservationRequest>(environment.apiHost + "requests/" + request.id, request)
+  }
+  delete(requestId?: number): Observable<ReservationRequest> {
+    return this.httpClient.delete<ReservationRequest>(environment.apiHost + "requests/" +requestId)
+  }
+  getCancellations(guestId:number){
+    return this.httpClient.get<number>(environment.apiHost + "requests/" +guestId+"/cancelledReservations")
+
   }
 }

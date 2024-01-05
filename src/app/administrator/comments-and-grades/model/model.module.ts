@@ -1,4 +1,5 @@
 import { Status, User, Host } from "src/app/account/model/model.module";
+import {Accommodation} from "../../../accommodations/accommodation/model/model.module";
 
 export interface CommentAndGrade{
   id?: number;
@@ -10,4 +11,7 @@ export interface CommentAndGrade{
   host?:Host;
 }
 
-export interface Guest extends User {}
+export interface Guest extends User {
+  favoriteAccommodations?:Accommodation[];
+  cancellations?:number;
+}

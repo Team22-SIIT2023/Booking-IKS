@@ -12,10 +12,10 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 -2px 4px rgba(0, 0, 0, 0.1);
   background-color: #D3CBE0;
 }
-#accommodation-select{
+#accommodationNameInput{
   margin-top: 20px;
   margin-left: 20px;
-  margin-right: 20px;
+  margin-right: 10px;
 }
 #status-select{
   margin-top: 20px;
@@ -41,7 +41,21 @@
 mat-paginator{
   background-color: rgba(210, 207, 222, 0.71);
 }
-#cancelBtn{
+#denyRequestBtn{
+  width: 100px;
+  padding: 4px;
+  background-color: #D3CBE0;
+  border-radius: 10px;
+  border:1px black solid;
+}
+#deleteRequestBtn{
+  width: 100px;
+  padding: 4px;
+  background-color: #D3CBE0;
+  border-radius: 10px;
+  border:1px black solid;
+}
+#acceptRequestBtn{
   width: 100px;
   padding: 4px;
   background-color: #D3CBE0;

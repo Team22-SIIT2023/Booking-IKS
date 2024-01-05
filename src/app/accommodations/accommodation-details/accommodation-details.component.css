@@ -124,7 +124,7 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 -2px 4px rgba(0, 0, 0, 0.1);
 
   text-align: center;
-  border-radius: 25px; /* <---------- use this to round all corners in div */
+  border-radius: 25px;
   background-color: whitesmoke;
 }
 
@@ -326,6 +326,22 @@ h3 {
 
 .commentAccommodationInput {
   margin-bottom: 0;
+}
+
+#approvalDiv{
+  background-color: whitesmoke;
+  width: auto;
+  margin: 50px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 -2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 25px;
+}
+
+#saveApproval{
+  margin-left: 8%;
+}
+
+.approvalRbt{
+  margin-right: 3%;
 }
 /*.inputStar {*/
 /*  margin-left: 5px;*/

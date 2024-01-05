@@ -21,6 +21,9 @@
     <button  *ngIf="role == 'ROLE_ADMIN'"  [routerLink]="['accommodationApproval']" mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
       <mat-icon>fiber_new</mat-icon>
     </button>
+    <button  *ngIf="role == 'ROLE_HOST'"  [routerLink]="['reports']" mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
+      <mat-icon>bar_chart</mat-icon>
+    </button>
 <!--    <button *ngIf="role == 'ROLE_HOST' || role == 'ROLE_GUEST'" mat-icon-button [matMenuTriggerFor]="menu" class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">-->
 <!--      <mat-icon matBadge="15" matBadgeColor="warn">notifications</mat-icon>-->
 <!--    </button>-->

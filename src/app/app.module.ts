@@ -21,6 +21,8 @@ import { CommentsModule } from './comments/comments.module';
 import {MapModule} from "./map/map.module";
 import { AccountActivationComponent } from './account-activation/account-activation.component';
 import {MatButtonModule} from "@angular/material/button";
+import {ReportsModule} from "./reports/reports.module";
+import {NgChartsModule } from 'ng2-charts';
 
 @NgModule({
   declarations: [
@@ -28,6 +30,8 @@ import {MatButtonModule} from "@angular/material/button";
     AccountActivationComponent,
   ],
   imports: [
+    NgChartsModule,
+    ReportsModule,
     BrowserModule,
     FormsModule,
     AppRoutingModule,

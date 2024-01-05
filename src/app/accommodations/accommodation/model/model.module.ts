@@ -105,8 +105,8 @@ export interface ReservationRequest {
 export enum RequestStatus {
   ACCEPTED="ACCEPTED",
   CANCELLED="CANCELLED",
-  WAITING="WAITING"
-
+  PENDING="PENDING",
+  DENIED="DENIED"
 }
 
 export interface Image {
