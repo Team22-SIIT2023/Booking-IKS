@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { User } from 'src/app/account/model/model.module';
+import { Status, User } from 'src/app/account/model/model.module';
 import { ReportedUserService } from './reported-user-cards.service';
 
 @Component({
@@ -19,7 +19,7 @@ export class ReportedUserCardsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.service.getAll().subscribe({
+    this.service.getUsersByStatus('REPORTED').subscribe({
       next:(data: User[]) => {
         this.reportedUsers = data
       },

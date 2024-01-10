@@ -1,18 +1,29 @@
 <mat-card>
     <mat-card-content>
       <div class="user-section">
-        <img class="user-picture" [src]="commentAndGrade?.guest?.picturePath" alt="User Profile Picture">
+        <!-- <img class="user-picture" [src]="commentAndGrade?.guest?.picturePath" alt="User Profile Picture"> -->
+        <img class="user-picture" id="accommodation-image" [src]="image" alt="Profile picture">
         <div>
-          <p class="username">{{commentAndGrade?.guest?.account?.email}}</p>
+          <p class="username">
+            {{commentAndGrade?.guest?.account?.username}}
+            <mat-icon id="arrow">trending_flat</mat-icon>
+            <span> {{commentAndGrade?.host?.account?.username}}</span>
+            <span> {{commentAndGrade?.accommodation?.name}}</span>
+         </p>
         </div>
       </div>
-      <mat-icon *ngFor="let star of Array(5).fill(0); let i = index" class="stars" [style.color]="getColorForStar(i, commentAndGrade?.rating)">star</mat-icon>
+      <p class="grades">
+        <span>
+        <mat-icon *ngFor="let star of Array(5).fill(0); let i = index" class="stars" [style.color]="getColorForStar(i, commentAndGrade?.rating)">star</mat-icon>
+        </span>
+      <span>({{commentAndGrade.rating}})</span>
+      </p>
       <p class="comment-text">{{commentAndGrade?.text}}</p>
   
       <!-- Add Approve and Decline buttons -->
       <div class="action-buttons">
-        <button class = "approve" >Approve</button>
-        <button class = "decline">Decline</button>
+        <button class="approve" (click)="approveComment()"> Approve </button>
+        <button *ngIf="commentAndGrade?.status === 'REPORTED'" class="decline" (click)="declineComment()">Decline</button>
       </div>
     </mat-card-content>
   </mat-card>

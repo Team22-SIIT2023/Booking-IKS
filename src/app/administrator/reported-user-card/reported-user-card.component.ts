@@ -1,14 +1,21 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { User } from 'src/app/account/model/model.module';
 import { CommentAndGrade } from '../comments-and-grades/model/model.module';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { CommentAndGradeService } from '../administrator.service';
+import { Router } from '@angular/router';
+import { Location } from '@angular/common';
+import { UserService } from 'src/app/account/account.service';
 
 @Component({
   selector: 'app-reported-user-card',
   templateUrl: './reported-user-card.component.html',
-  styleUrls: ['./reported-user-card.component.css']
+  styleUrls: ['./reported-user-card.component.css'],
+  providers: [Location],
 })
-export class ReportedUserCardComponent {
-
+export class ReportedUserCardComponent implements OnInit {
+  images: string[] =[];
+  image:SafeUrl= '../../../assets/images/addpicture.png';
   protected readonly Array = Array;
 
   @Input()
@@ -21,6 +28,34 @@ export class ReportedUserCardComponent {
     this.clicked.emit(this.reportedUser);
     
   }
+
+  constructor(private service: CommentAndGradeService,  private router:Router, private location: Location, private userService: UserService, 
+    private sanitizer: DomSanitizer) {
+  }
+
+  ngOnInit(): void {
+    console.log(this.reportedUser.id);
+    this.userService.getImages(this.reportedUser.id).subscribe(
+      (images) => { 
+        this.images = images;
+        if(this.images.length>0){
+          this.image=this.decodeBase64AndSanitize(this.images[0])
+        }  
+      },
+      (error) => {
+        console.error('Error fetching images:', error);
+      }
+    );
+  }
+   
+  
+  decodeBase64AndSanitize(image: string): SafeUrl {
+    const decodedImage = atob(image);
+    const blob = new Blob([new Uint8Array([...decodedImage].map(char => char.charCodeAt(0)))], { type: 'image/png' });
+    const imageUrl = URL.createObjectURL(blob);
+    return this.sanitizer.bypassSecurityTrustUrl(imageUrl);
+  }
+  
 
   // rating = this.commentAndGrade?.rating; // Replace with your actual rating
   // rating : number = 4.2

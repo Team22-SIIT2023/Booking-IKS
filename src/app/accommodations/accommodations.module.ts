@@ -14,6 +14,7 @@ import {CommentsModule} from "../comments/comments.module";
 import {MapModule} from "../map/map.module";
 import {SharedModule} from "../shared/shared.module";
 import { AccommodationUpdateComponent } from './accommodation-update/accommodation-update.component';
+import { AccountManagementComponent } from '../account/account-management/account-management.component';
 
 @NgModule({
   declarations: [

@@ -13,6 +13,11 @@ export interface Host extends User{
 
 }
 
+export interface Image {
+  url: string,
+  file: File
+}
+
 export interface Address{
   country?: string;
   city?: string;
