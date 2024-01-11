@@ -23,11 +23,10 @@ export class CommentsAndGradesCardsComponent implements OnInit {
   itemsPerPage: number = 5;
   clickedCommentAndGrade: string='';
   sanitizer: any;
-  accommodation:Accommodation;
 
   constructor(private service: CommentAndGradeService, private userService:UserService,
               private commentService: CommentsService, private root:ActivatedRoute,
-              private acommodationsService:AccommodationsService) {
+              private accommodationService:AccommodationsService) {
   }
 
  
@@ -37,7 +36,7 @@ export class CommentsAndGradesCardsComponent implements OnInit {
 
       this.root.params.subscribe((params) =>{
         const id=+params['id']
-        this.acommodationsService.getAccommodation(id).subscribe({
+        this.accommodationService.getAccommodation(id).subscribe({
           next:(data:Accommodation)=>{
             this.accommodation=data;
 
