@@ -7,6 +7,7 @@ import {DomSanitizer} from "@angular/platform-browser";
 import { UserService } from 'src/app/account/account.service';
 import { Router } from '@angular/router';
 import { ReservationsService } from 'src/app/reservations/reservations.service';
+import {Guest} from "../../administrator/comments-and-grades/model/model.module";
 
 @Component({
   selector: 'app-accommodation-card',
@@ -19,14 +20,16 @@ export class AccommodationCardComponent {
   activeReservations:ReservationRequest[];
   rating: number = 0;
   images: string[] =[];
+  favorites:Accommodation[]=[];
   image:string;
+  guest:Guest;
   private subscription: Subscription;
   @Input()
   accommodation: Accommodation;
   @Output()
   clicked:EventEmitter<Accommodation>=new EventEmitter<Accommodation>();
   reservations: any;
-
+  buttonColor: string = 'primary'
 
   constructor(private commentService:CommentsService,
               private accommodationService:AccommodationsService,private sanitizer:DomSanitizer,
@@ -35,6 +38,16 @@ export class AccommodationCardComponent {
 
   ngOnInit() {
     this.role = this.userService.getRole();
+    const guestId=this.userService.getUserId();
+    this.userService.getUser(guestId).subscribe(
+      (data) => {
+        this.guest=data;
+        console.log(this.guest)
+      },
+      (error) => {
+        console.error('Error fetching guest:', error);
+      });
+    this.colorFavorites();
     this.accommodation.unitPrice=0;
     this.accommodation.price=0;
     const updateButtons = document.getElementsByClassName('updateAccommodation') as HTMLCollectionOf<HTMLButtonElement>;
@@ -124,6 +137,28 @@ export class AccommodationCardComponent {
   }
 
 
+  addFavorite(accommodation: Accommodation) {
+    this.buttonColor = this.buttonColor === 'warn' ? 'primary' : 'warn';
+    this.accommodationService.updateFavoriteAccommodation(this.guest.id, accommodation.id).subscribe(
+      (response) => {
+        console.log('Favorite added successfully:', response);
+      },
+      (error) => {
+        console.log('Error adding favorite:', error)
+      }
+    );
+  }
+  private colorFavorites() {
+    this.accommodationService.getAllFavorites(this.userService.getUserId()).subscribe({
+      next: (data: Accommodation[]) => {
+        this.favorites = data
+        if (this.favorites.some(favorite => favorite.id === this.accommodation.id)) {
+          this.buttonColor = 'warn';
+        }
+      },
+      error: (_) => {console.log("Greska!")}
+    });
+  }
 }
 
 

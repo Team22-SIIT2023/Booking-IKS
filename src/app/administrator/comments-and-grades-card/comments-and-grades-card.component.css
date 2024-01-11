@@ -65,7 +65,6 @@ mat-card {
     margin-top: 10px; /* Adjust the margin as needed */
   }
 
-  
   .action-buttons button.approve {
     padding: 8px 12px;
     cursor: pointer;
@@ -92,7 +91,7 @@ mat-card {
     margin-left: 10px;
     border-radius: 4px;
   }
-  
+
   mat-icon{
     color: white;
   margin-right: 0;
@@ -110,3 +109,19 @@ mat-card {
     margin-left: 10px;
     margin-top: 0;
   }
+
+.filled-star {
+      color: gold;
+  }
+.stars{
+    padding-top: 13px;
+}
+.empty-star {
+    color: #ddd;
+}
+#rating{
+    display: flex;
+}
+#rating p{
+    margin-right: 10px;
+}

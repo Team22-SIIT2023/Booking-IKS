@@ -5,6 +5,9 @@ import { AccommodationsService } from 'src/app/accommodations/accommodations.ser
 import { Accommodation } from 'src/app/accommodations/accommodation/model/model.module';
 import { Observable } from 'rxjs';
 import { UserService } from 'src/app/account/account.service';
+import {Host, User} from "src/app/account/model/model.module";
+import {CommentsService} from "../../comments/comments.service";
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
   selector: 'app-comments-and-grades-cards',
@@ -20,13 +23,37 @@ export class CommentsAndGradesCardsComponent implements OnInit {
   itemsPerPage: number = 5;
   clickedCommentAndGrade: string='';
   sanitizer: any;
-  
-  constructor(private service: CommentAndGradeService, private accommodationService: AccommodationsService, private userService:UserService) {
+  accommodation:Accommodation;
+
+  constructor(private service: CommentAndGradeService, private userService:UserService,
+              private commentService: CommentsService, private root:ActivatedRoute,
+              private acommodationsService:AccommodationsService) {
   }
 
+ 
+
   ngOnInit(): void {
-    // Combine the observables for comments and grades
-    this.service.getAllReportedAndPanding().subscribe({
+    if (!(this.userService.getRole()==="ROLE_ADMIN")) {
+
+      this.root.params.subscribe((params) =>{
+        const id=+params['id']
+        this.acommodationsService.getAccommodation(id).subscribe({
+          next:(data:Accommodation)=>{
+            this.accommodation=data;
+
+            this.commentService.getHostComments(this.accommodation.host.id).subscribe({
+              next:(data: CommentAndGrade[]) => {
+                this.commentsAndGrades = data
+              },
+              error: (_) => {console.log("Greska!")}
+            })
+          }
+          })
+        })
+    }
+
+    else {
+      this.service.getAllReportedAndPanding().subscribe({
       next: (data: CommentAndGrade[]) => {
         this.commentsAndGrades = data;
 
@@ -46,10 +73,12 @@ export class CommentsAndGradesCardsComponent implements OnInit {
         console.log("Error fetching data!");
       }
     });
+    }
   }
 
  
   onCommentAndGradeClicked(commentAndGrade: CommentAndGrade): void {
+    this.ngOnInit();
     this.clickedCommentAndGrade = commentAndGrade.text + " " + commentAndGrade.id;
   }
 
@@ -63,7 +92,7 @@ export class CommentsAndGradesCardsComponent implements OnInit {
     this.currentPage = pageNumber;
     window.scrollTo({
       top: 0,
-      behavior: 'auto' 
+      behavior: 'auto'
     });
   }
 

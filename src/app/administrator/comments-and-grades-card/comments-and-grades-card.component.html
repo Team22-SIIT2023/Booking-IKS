@@ -18,13 +18,20 @@
         </span>
       <span>({{commentAndGrade.rating}})</span>
       </p>
+<!--        <img class="user-picture" [src]="commentAndGrade?.guest?.picturePath" alt="User Profile Picture">-->
+       
+<!--        vanjino <mat-icon *ngFor="let star of Array(5); let i = index" class="stars" [ngClass]="getStarColor(i + 1)">star</mat-icon> -->
+
+<!--      <mat-icon *ngFor="let star of Array(5).fill(0); let i = index" class="stars" [style.color]="getColorForStar(i, commentAndGrade?.rating)">star</mat-icon>-->
+
       <p class="comment-text">{{commentAndGrade?.text}}</p>
-  
+
       <!-- Add Approve and Decline buttons -->
       <div class="action-buttons">
-        <button class="approve" (click)="approveComment()"> Approve </button>
-        <button *ngIf="commentAndGrade?.status === 'REPORTED'" class="decline" (click)="declineComment()">Decline</button>
+        <button *ngIf="role=='ROLE_ADMIN'" class="approve" (click)="approveComment()"> Approve </button>
+        <button *ngIf="commentAndGrade?.status === 'REPORTED' && role=='ROLE_ADMIN'" class="decline" (click)="declineComment()">Decline</button>
+        <button (click)="deleteHostComment(commentAndGrade?.id)" *ngIf="role=='ROLE_GUEST'" class = "decline">Delete</button>
+        <button (click)="reportHostComment(commentAndGrade?.id)" *ngIf="role=='ROLE_HOST'" class = "decline">Report</button>
       </div>
     </mat-card-content>
   </mat-card>
-  

@@ -15,8 +15,12 @@ export class CommentsService {
   constructor(private httpClient: HttpClient) { }
   getAverageAccommodationRating(id: number | undefined): Observable<number> {
     return this.httpClient.get<number>(environment.apiHost + 'comments/accommodation/'+id+'/averageRate')
-
   }
+
+  getAverageHostRating(hostId: number | undefined): Observable<number> {
+    return this.httpClient.get<number>(environment.apiHost + 'comments/host/'+hostId+'/averageRate')
+  }
+
   getAllForAccommodation(id: number | undefined){
     let params = new HttpParams();
     params=params.set('status','ACTIVE');
@@ -27,4 +31,25 @@ export class CommentsService {
   createHostComment(id: number , comment: CommentAndGrade): Observable<CommentAndGrade> {
     return this.httpClient.post<CommentAndGrade>(environment.apiHost+'comments/host/'+id, comment)
   }
+
+  createAccommodationComment(id: number|undefined, comment: CommentAndGrade): Observable<CommentAndGrade> {
+      return this.httpClient.post<CommentAndGrade>(environment.apiHost+'comments/accommodation/'+id, comment)
+  }
+
+  getCommentById(id: number | undefined): Observable<CommentAndGrade> {
+    return this.httpClient.get<CommentAndGrade>(environment.apiHost + 'comments/'+id)
+  }
+
+  reportComment(id: number|undefined, status: Status): Observable<CommentAndGrade> {
+    return this.httpClient.put<CommentAndGrade>(environment.apiHost+'comments/reportComment/'+id, status)
+  }
+
+  deleteComment(id: number|undefined): Observable<void> {
+    return this.httpClient.delete<void>(environment.apiHost+'comments/'+id)
+  }
+
+  getHostComments(id: number | undefined): Observable<CommentAndGrade[]> {
+    return this.httpClient.get<CommentAndGrade[]>(environment.apiHost + 'comments/host/'+id)
+  }
+
 }

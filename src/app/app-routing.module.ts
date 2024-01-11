@@ -16,6 +16,7 @@ import {AccommodationComponent} from "./accommodations/accommodation/accommodati
 import {ReservationComponent} from "./reservations/tabsView/reservation.component";
 import {AccountActivationComponent} from "./account-activation/account-activation.component";
 import {AccommodationUpdateComponent} from "./accommodations/accommodation-update/accommodation-update.component";
+import {ReportComponent} from "./reports/report/report.component";
 
 
 const routes: Routes = [
@@ -32,11 +33,13 @@ const routes: Routes = [
   {component: RegistrationComponent, path:"signIn"},
   {component: AccountManagementComponent, path:"myAccount"},
   {component: CommentsAndGradesCardsComponent, path:'commentsAndRatings'},
+  {component: CommentsAndGradesCardsComponent, path:'home/accommodations/accommodationDetails/:id/commentsAndRatings'},
   {component: ReportedUserCardsComponent, path:'reportedUsers'},
   {component: AccommodationApprovalCardsComponent, path:'accommodationApproval'},
   {component: AccommodationUpdateComponent, path:'home/accommodations/accommodationUpdate/:id'},
   {path: '', redirectTo: '/home', pathMatch: 'full'},
-  {path:"home",component:HomeComponent}
+  {path:"home",component:HomeComponent},
+  {component: ReportComponent, path:'reports'},
 ];
 
 @NgModule({

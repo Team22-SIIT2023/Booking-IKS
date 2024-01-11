@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import {ReservationsService} from "../reservations.service";
+import {UserService} from "../../account/account.service";
 
 @Component({
   selector: 'app-tabsView',
@@ -6,5 +8,14 @@ import { Component } from '@angular/core';
   styleUrls: ['./reservation.component.css']
 })
 export class ReservationComponent {
+  role:string;
+
+  constructor(private userService:UserService) {
+  }
+
+  ngOnInit(): void {
+    this.role = this.userService.getRole();
+  }
 
 }
+
