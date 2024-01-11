@@ -1,9 +1,10 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { UserService } from "../account.service";
-import { Account, Address, Role, Status, User } from "../model/model.module";
+import { Account, Address, Role, Status, User, Image} from "../model/model.module";
 import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { JWT_OPTIONS, JwtInterceptor } from '@auth0/angular-jwt';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-account-management',
@@ -13,7 +14,8 @@ import { JWT_OPTIONS, JwtInterceptor } from '@auth0/angular-jwt';
 export class AccountManagementComponent implements OnInit {
   user: User | undefined;
   role: string ;
-  url: string | null | ArrayBuffer = '../../../assets/images/addpicture.png';
+  images: string[] =[];
+  image:string = '../../../assets/images/addpicture.png';
 
   passwordMatchValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
     const password = control.get('password')?.value;
@@ -47,7 +49,7 @@ export class AccountManagementComponent implements OnInit {
     };
   }
 
-  constructor(private service: UserService,private router: Router,private cdr: ChangeDetectorRef) {}
+  constructor(private service: UserService,private router: Router,private cdr: ChangeDetectorRef, private sanitizer:DomSanitizer) {}
 
   ngOnInit(): void {
     const deleteButton = document.getElementById('deleteButton') as HTMLButtonElement;
@@ -57,11 +59,17 @@ export class AccountManagementComponent implements OnInit {
     this.service.getUser(this.service.getUserId()).subscribe({
       next: (data: User) => {
         this.user = data;
-        if (this.user.picturePath !== "") {
-          if(this.user.picturePath){
-          this.url = this.user.picturePath;
-        }
-        }
+        this.service.getImages(this.user?.id).subscribe(
+          (images) => {
+            this.images = images;
+            if(this.images.length>0){
+              this.image=this.decodeBase64AndSanitize(this.images[0])
+            }
+          },
+          (error) => {
+            console.error('Error fetching images:', error);
+          }
+        );
         this.updateUserForm.patchValue({
           firstName: this.user.firstName,
           lastName: this.user.lastName,
@@ -81,13 +89,33 @@ export class AccountManagementComponent implements OnInit {
     });
   }
 
-  onFileSelected(files: FileList | null) {
+  decodeBase64AndSanitize(image: string): string {
+    const decodedImage = atob(image);
+    const blob = new Blob([new Uint8Array([...decodedImage].map(char => char.charCodeAt(0)))], { type: 'image/png' });
+    const imageUrl = URL.createObjectURL(blob);
+    return this.sanitizer.bypassSecurityTrustUrl(imageUrl) as string;
+  }
+
+
+  selectedImages: Image[] = [];
+
+  onFileSelected(event: any):void {
+    const files: FileList | null = event.target.files;
     if (files) {
-      var reader = new FileReader()
-      reader.readAsDataURL(files[0])
-      reader.onload = (event: Event) => {
-        let fileReader = event.target as FileReader
-        this.url = fileReader.result;
+      for (let i=0; i < files.length; i++) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          if (e.target) {
+            const imageURL = e.target.result as string;
+            const image : Image = {
+              url: imageURL,
+              file: files[i]
+            }
+            this.selectedImages.push(image);
+            console.log(files[i]);
+          }
+        };
+        reader.readAsDataURL(files[i]);
       }
     }
   }
@@ -122,6 +150,7 @@ export class AccountManagementComponent implements OnInit {
 
       this.service.update(updatedUser).subscribe(
         (updatedUser) => {
+          this.uploadPicture(this.user?.id as number);
           console.log('User updated successfully', updatedUser);
         },
         (error) => {
@@ -129,6 +158,25 @@ export class AccountManagementComponent implements OnInit {
         }
       );
     }
+  }
+
+  uploadPicture(userId : number) {
+    const images : File[] = [];
+    for (let image of this.selectedImages) {
+      images.push(image.file);
+    }
+
+    // const idAccommodation = this.newAccommodation.id;
+    // @ts-ignore
+    this.service.uploadImage(images, userId).subscribe(
+      {
+        next: (data: User) => {
+          // alert(data);
+        },
+        error: (_) => {
+        }
+      }
+    );
   }
 
   deleteUser() {

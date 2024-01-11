@@ -8,10 +8,10 @@
 </head>
 <body>
     <div class="side-illustration">
-        <img [src]=url alt="Profile picture">
+        <img id="accommodation-image" [src]="image" alt="Profile picture">
         <br>
         <br>
-        <input type="file" class="d-none"  (change)="onFileSelected(imageInput.files)" #imageInput/>
+        <input class="fileInput" type="file" name="photos" (change)="onFileSelected($event)" multiple/>
     </div>
     <div class="login-container">
         <form  [formGroup]="updateUserForm" (ngSubmit)="updateUser()">

@@ -10,6 +10,7 @@ import {Guest} from "../administrator/comments-and-grades/model/model.module";
   providedIn: 'root'
 })
 export class UserService {
+  
   users: User[] = [];
 
   private headers = new HttpHeaders({'Content-Type': 'application/json'});
@@ -92,6 +93,19 @@ export class UserService {
   }
   setUser(): void {
     this.user$.next(this.getRole());
+  }
+  
+  uploadImage(files: File[], id: number): Observable<User> {
+    const data: FormData = new FormData();
+    for (let file of files) {
+      data.append("images", file);
+    }
+    return this.httpClient.post<User>(environment.apiHost + "users/" + id + "/upload-picture", data)
+  }
+
+
+  getImages(id: number | undefined): Observable<string[]> {
+    return this.httpClient.get<string[]>(environment.apiHost + 'users/' + id + '/images');
   }
 
   reportHost(guestId: number|undefined, reportedHost: User): Observable<User> {

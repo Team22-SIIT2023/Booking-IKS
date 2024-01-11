@@ -116,7 +116,7 @@
 </div>
 <div>
   <input class="fileInput" type="file" name="photos" (change)="onFileSelected($event)" multiple/>
-  <div class="loadImages">
+  <div class="loadImages"> 
     <div *ngFor="let image of selectedImages">
     <img [src]="image.url" alt="selected image" class="image">
     </div>
