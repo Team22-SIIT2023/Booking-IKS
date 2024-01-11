@@ -29,17 +29,15 @@ export class CommentsAndGradesCardComponent implements OnInit{
   @Output()
   clicked: EventEmitter<CommentAndGrade> = new EventEmitter<CommentAndGrade>();
 
-  constructor(private userService:UserService, private commentService: CommentsService, private snackBar: MatSnackBar) {
-    this.role=userService.getRole();
-  }
 
   onCommentAndGradeClicked(): void {
     this.commentAndGrade = this.commentAndGrade;
     this.clicked.emit(this.commentAndGrade);
   }
 
-  constructor(private service: CommentAndGradeService,  private router:Router, private location: Location, private userService: UserService, 
-    private sanitizer: DomSanitizer) {
+  constructor(private service: CommentAndGradeService,  private commentService: CommentsService, private router:Router, private location: Location, private userService: UserService, 
+    private sanitizer: DomSanitizer,  private snackBar: MatSnackBar) {
+      this.role=userService.getRole();
   }
 
   ngOnInit(): void {

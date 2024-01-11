@@ -1,6 +1,5 @@
 import { Accommodation } from "src/app/accommodations/accommodation/model/model.module";
 import { Status, User, Host } from "src/app/account/model/model.module";
-import {Accommodation} from "../../../accommodations/accommodation/model/model.module";
 
 export interface CommentAndGrade{
   id?: number;
