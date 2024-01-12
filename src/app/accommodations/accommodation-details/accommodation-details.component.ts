@@ -184,9 +184,49 @@ export class AccommodationDetailsComponent implements OnInit{
   createReservation(dateRangeStart: HTMLInputElement, dateRangeEnd: HTMLInputElement) {
 
     if(dateRangeStart.value && dateRangeEnd.value && this.form.value.numberSelect){
-
+      if(this.accommodation.automaticConfirmation){
         this.setValues(dateRangeStart, dateRangeEnd);
-
+        const price = this.form.value.priceInput;
+        const request: ReservationRequest={
+          timeSlot: this.timeSlot,
+          price:price,
+          guest:this.guest,
+          accommodation:this.accommodation,
+          status:RequestStatus.ACCEPTED,
+          guestNumber:this.guestNum
+        };
+        if (price==0){
+          this.snackBar.open("No prices for this date range!", 'Close', {
+            duration: 3000,
+          });
+        }
+        else {
+          this.reservationService.add(request).subscribe(
+            {
+              next: (data: ReservationRequest) => {
+                this.snackBar.open("Request added!", 'Close', {
+                  duration: 3000,
+                });
+                //ovde cu da nabavim isti taj request i da ga prihvatim 
+                this.acommodationsService.changeFreeTimeSlots(this.accommodation.id as number, request.timeSlot as TimeSlot).subscribe(
+                  {
+                    next: (data: Accommodation) => {
+                      this.snackBar.open("Request accepted immediately!", 'Close', {
+                        duration: 3000,
+                      });
+                      
+                    },
+                    error: (_) => {
+                    }
+                  });
+              },
+              error: (_) => {
+              }
+            });
+        }
+      }
+      else{
+        this.setValues(dateRangeStart, dateRangeEnd);
         const price = this.form.value.priceInput;
         const request: ReservationRequest={
           timeSlot: this.timeSlot,
@@ -213,6 +253,7 @@ export class AccommodationDetailsComponent implements OnInit{
               }
             });
         }
+      }
       }else {
               this.snackBar.open("Select date range and guest number!", 'Close', {
                 duration: 3000,
