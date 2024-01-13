@@ -11,7 +11,7 @@ import {
 
 } from "./accommodation/model/model.module";
 import {environment} from "../../env/env";
-import {DatePipe} from "@angular/common";
+import {DatePipe, Time} from "@angular/common";
 
 @Injectable({
   providedIn: 'root'
@@ -109,6 +109,10 @@ export class AccommodationsService {
 
   update(accommodation: Accommodation): Observable<Accommodation> {
     return this.httpClient.put<Accommodation>(environment.apiHost + "accommodations/" + accommodation.id, accommodation)
+  }
+
+  changeFreeTimeSlots(accommodationId:number, reservationTimeSlot: TimeSlot) {
+    return this.httpClient.put<Accommodation>(environment.apiHost + "accommodations/changeFreeTimeSlots/" + accommodationId, reservationTimeSlot)
   }
 
   getAllFavorites(id:number): Observable<Accommodation[]> {

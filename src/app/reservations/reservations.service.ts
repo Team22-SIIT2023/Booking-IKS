@@ -81,6 +81,19 @@ export class ReservationsService {
   delete(requestId?: number): Observable<ReservationRequest> {
     return this.httpClient.delete<ReservationRequest>(environment.apiHost + "requests/" +requestId)
   }
+
+  accept(request: ReservationRequest): Observable<ReservationRequest> {
+    return this.httpClient.put<ReservationRequest>(environment.apiHost + "requests/accept/" +request.id, request)
+  }
+  
+  deny(request: ReservationRequest): Observable<ReservationRequest> {
+    return this.httpClient.put<ReservationRequest>(environment.apiHost + "requests/deny/" +request.id,request)
+  }
+
+  cancel(reservation: ReservationRequest):Observable<ReservationRequest> {
+    return this.httpClient.put<ReservationRequest>(environment.apiHost + "requests/cancel/" +reservation.id,reservation)
+  }
+
   getCancellations(guestId:number){
     return this.httpClient.get<number>(environment.apiHost + "requests/" +guestId+"/cancelledReservations")
 

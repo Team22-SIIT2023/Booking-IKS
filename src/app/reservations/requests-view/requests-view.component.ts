@@ -48,7 +48,6 @@ export class RequestsViewComponent implements OnInit {
     this.role = this.userService.getRole();
     this.userId = this.userService.getUserId();
     if (this.role == "ROLE_HOST") {
-
       const hostId = this.userService.getUserId();
       this.userService.getUser(hostId).subscribe(
         (data) => {
@@ -153,6 +152,44 @@ export class RequestsViewComponent implements OnInit {
           },
           error: (_) => {
             this.snackBar.open("Request can't be deleted!", 'Close', {
+              duration: 3000,
+            });
+          }
+        });
+    }
+  }
+
+  denyRequest(request: ReservationRequest) {
+    if (request.status == RequestStatus.PENDING) {
+      this.requestService.deny(request).subscribe(
+        {
+          next: (data: ReservationRequest) => {
+            this.snackBar.open("Request denied!", 'Close', {
+              duration: 3000,
+            });
+            this.fetchData();
+          },
+          error: (_) => {
+            this.snackBar.open("Request can't be denied!", 'Close', {
+              duration: 3000,
+            });
+          }
+        });
+    }
+  }
+
+  acceptRequest(request: ReservationRequest) {
+    if (request.status == RequestStatus.PENDING) {
+      this.requestService.accept(request).subscribe(
+        {
+          next: (data: ReservationRequest) => {
+            this.snackBar.open("Request accepted!", 'Close', {
+              duration: 3000,
+            });
+            this.fetchData();
+          },
+          error: (_) => {
+            this.snackBar.open("Request can't be accepted!", 'Close', {
               duration: 3000,
             });
           }
