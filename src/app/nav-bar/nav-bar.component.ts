@@ -35,4 +35,13 @@ export class NavBarComponent {
     this.auth.setUser();
 
   }
+
+  public loadNotifications() {
+    this.service.getAll(this.auth.getUserId()).subscribe({
+      next: (data: Notification[]) => {
+        this.notifications = data
+      },
+      error: (_) => {console.log("Greska!")}
+    });
+  }
 }

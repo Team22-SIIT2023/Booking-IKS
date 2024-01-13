@@ -1,5 +1,6 @@
 import {Component, Input} from '@angular/core';
 import {Notification} from "../notification/model/model.module";
+import {MatChipOption} from "@angular/material/chips";
 
 @Component({
   selector: 'app-notification-card',

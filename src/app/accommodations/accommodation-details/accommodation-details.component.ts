@@ -21,7 +21,13 @@ import {MapService} from "../../map/map.service";
 import {DomSanitizer} from "@angular/platform-browser";
 import {UserService} from "../../account/account.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {Status} from "../../account/model/model.module";
+import {Status, User} from "../../account/model/model.module";
+import {
+    HostNotificationSettings,
+    Notification,
+    NotificationType
+} from "../../notification/notification/model/model.module";import {SocketService} from "../../socket/socket.service";
+import {NotificationService} from "../../notification/notification.service";
 // import { Host } from "src/app/account/model/model.module";
 
 
@@ -43,6 +49,7 @@ export class AccommodationDetailsComponent implements OnInit{
   hostComment: string = '';
   accommodationComment: string = '';
   hostAverageRating:number;
+  settings:HostNotificationSettings;
 
 
   protected readonly Array = Array;
@@ -71,7 +78,8 @@ export class AccommodationDetailsComponent implements OnInit{
               private reservationService:ReservationsService,
               private commentService:CommentsService, private mapService:MapService,
               private sanitizer: DomSanitizer,private userService:UserService,
-              private snackBar: MatSnackBar) {
+              private snackBar: MatSnackBar, private socketService: SocketService,
+              private notificationService: NotificationService) {
   }
 
   ngOnInit(): void {
@@ -137,6 +145,9 @@ export class AccommodationDetailsComponent implements OnInit{
                     console.error('Error fetching average rating:', error);
                 }
             );
+
+        this.getSettings();
+
 
         const initialApprovalType = this.accommodation.automaticConfirmation ? 'automatic' : 'manual';
         this.approvalType.patchValue({
@@ -204,17 +215,25 @@ export class AccommodationDetailsComponent implements OnInit{
           this.reservationService.add(request).subscribe(
             {
               next: (data: ReservationRequest) => {
-                this.snackBar.open("Request added!", 'Close', {
+                  const text="User "+this.guest.account.username+" has made a reservation request for " + request.accommodation?.name;
+
+                  if (this.checkNotificationStatus(NotificationType.RESERVATION_REQUEST)) {
+                      console.log("KREIRAOOOOOOOOOOO")
+                      this.createNotification(text, NotificationType.RESERVATION_REQUEST);
+                      this.socketService.sendMessageUsingSocket(text,this.guest.id,this.accommodation.host.id);
+                  }
+
+                  this.snackBar.open("Request added!", 'Close', {
                   duration: 3000,
                 });
-                //ovde cu da nabavim isti taj request i da ga prihvatim 
+                //ovde cu da nabavim isti taj request i da ga prihvatim
                 this.acommodationsService.changeFreeTimeSlots(this.accommodation.id as number, request.timeSlot as TimeSlot).subscribe(
                   {
                     next: (data: Accommodation) => {
                       this.snackBar.open("Request accepted immediately!", 'Close', {
                         duration: 3000,
                       });
-                      
+
                     },
                     error: (_) => {
                     }
@@ -245,7 +264,16 @@ export class AccommodationDetailsComponent implements OnInit{
           this.reservationService.add(request).subscribe(
             {
               next: (data: ReservationRequest) => {
-                this.snackBar.open("Request created!", 'Close', {
+
+                  const text="User "+this.guest.account.username+" has made a reservation request for " + request.accommodation?.name;
+
+                  if (this.checkNotificationStatus(NotificationType.RESERVATION_REQUEST)) {
+                      console.log("KREIRAOOOOOOOOOOO")
+                      this.createNotification(text, NotificationType.RESERVATION_REQUEST);
+                      this.socketService.sendMessageUsingSocket(text,this.guest.id,this.accommodation.host.id);
+                  }
+
+                  this.snackBar.open("Request created!", 'Close', {
                   duration: 3000,
                 });
               },
@@ -378,7 +406,17 @@ export class AccommodationDetailsComponent implements OnInit{
 
     this.commentService.createHostComment(this.accommodation.host.id, commentAndGrade).subscribe({
       next: (data: CommentAndGrade) => {
-        this.snackBar.open("Comment is created", 'Close', {
+
+          const text="User "+this.guest.account.username + " has commented you.";
+
+          if (this.checkNotificationStatus(NotificationType.HOST_RATED)) {
+              console.log("KREIRAOOOOOOOOOOO")
+
+              this.createNotification(text, NotificationType.HOST_RATED);
+              this.socketService.sendMessageUsingSocket(text,this.guest.id,this.accommodation.host.id);
+          }
+
+          this.snackBar.open("Comment is created", 'Close', {
           duration: 3000,
         });
       },
@@ -410,7 +448,16 @@ export class AccommodationDetailsComponent implements OnInit{
 
       this.commentService.createAccommodationComment(this.accommodation.id, commentAndGrade).subscribe({
           next: (data: CommentAndGrade) => {
-            this.snackBar.open("Comment is created", 'Close', {
+
+              const text="User " + this.guest.account.username + " has commented " + this.accommodation.name;
+
+              if (this.checkNotificationStatus(NotificationType.ACCOMMODATION_RATED)) {
+
+                  this.createNotification(text, NotificationType.ACCOMMODATION_RATED);
+                  this.socketService.sendMessageUsingSocket(text,this.guest.id,this.accommodation.host.id);
+              }
+
+              this.snackBar.open("Comment is created", 'Close', {
               duration: 3000,
             });
           },
@@ -468,5 +515,51 @@ export class AccommodationDetailsComponent implements OnInit{
       }
     );
 
+  }
+
+
+  private createNotification(text:string, notificationType:NotificationType) {
+
+    const notification: Notification = {
+      text: text,
+      date: new Date(),
+      type: notificationType,
+      user: (this.accommodation.host as User)
+    };
+    this.notificationService.createNotification(notification).subscribe(
+      {
+        next: (data: Notification) => {
+        },
+        error: () => {
+        }
+      }
+    );
+  }
+
+  public getSettings()  {
+    this.notificationService.getHostSettings(this.accommodation.host.id).subscribe(
+      {
+        next: (data: HostNotificationSettings) => {
+          this.settings = data;
+          console.log("SETINGS")
+          console.log(this.settings)
+        },
+        error: () => {
+        }
+      });
+  }
+
+  public checkNotificationStatus(type:NotificationType ):boolean{
+    if (NotificationType.RESERVATION_REQUEST==type && this.settings.requestCreated) {
+      console.log("USAOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
+      return true;
+    }
+    if (NotificationType.ACCOMMODATION_RATED==type && this.settings.accommodationRated) {
+      return true;
+    }
+    if (NotificationType.HOST_RATED==type && this.settings.rated) {
+      return true;
+    }
+    return false;
   }
 }
