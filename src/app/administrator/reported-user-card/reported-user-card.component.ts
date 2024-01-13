@@ -73,7 +73,17 @@ export class ReportedUserCardComponent implements OnInit {
     }
   }
   
-
-  
-  
-}
+  blockUser(userId: number) {
+    this.userService.block(this.reportedUser).subscribe(
+      () => {
+        console.log('User blocked successfully.');
+        localStorage.removeItem('user');
+        this.router.navigate(['logIn']);
+        this.userService.setUser();
+      },
+      (error: Error) => {
+        console.error('Error deleting user:', error);
+      }
+    );
+  }
+  }

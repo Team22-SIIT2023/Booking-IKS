@@ -10,7 +10,6 @@ import {Guest} from "../administrator/comments-and-grades/model/model.module";
   providedIn: 'root'
 })
 export class UserService {
-  
   users: User[] = [];
 
   private headers = new HttpHeaders({'Content-Type': 'application/json'});
@@ -107,6 +106,12 @@ export class UserService {
   getImages(id: number | undefined): Observable<string[]> {
     return this.httpClient.get<string[]>(environment.apiHost + 'users/' + id + '/images');
   }
+
+  block(user: User) {
+    const url = `${environment.apiHost}users/block/${user.id}`;
+    return this.httpClient.put<User>(url, user);
+  }
+  
 
   reportHost(guestId: number|undefined, reportedHost: User): Observable<User> {
     return this.httpClient.put<User>(environment.apiHost + 'users/reportUser/' + guestId, reportedHost);
