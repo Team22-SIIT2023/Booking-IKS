@@ -17,6 +17,7 @@ import {ReservationComponent} from "./reservations/tabsView/reservation.componen
 import {AccountActivationComponent} from "./account-activation/account-activation.component";
 import {AccommodationUpdateComponent} from "./accommodations/accommodation-update/accommodation-update.component";
 import {ReportComponent} from "./reports/report/report.component";
+import {NotificationComponent} from "./notification/notification/notification.component";
 
 
 const routes: Routes = [
@@ -33,6 +34,7 @@ const routes: Routes = [
   {component: RegistrationComponent, path:"signIn"},
   {component: AccountManagementComponent, path:"myAccount"},
   {component: CommentsAndGradesCardsComponent, path:'commentsAndRatings'},
+  {component: NotificationComponent, path:"notificationSettings"},
   {component: CommentsAndGradesCardsComponent, path:'home/accommodations/accommodationDetails/:id/commentsAndRatings'},
   {component: ReportedUserCardsComponent, path:'reportedUsers'},
   {component: AccommodationApprovalCardsComponent, path:'accommodationApproval'},
