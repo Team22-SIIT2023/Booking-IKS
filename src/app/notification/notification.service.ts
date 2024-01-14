@@ -22,16 +22,16 @@ export class NotificationService {
     return this.httpClient.get<HostNotificationSettings>(environment.apiHost + 'notifications/host/settings/' + id)
   }
 
-  updateHostSettings(id:number, settings: HostNotificationSettings): Observable<Notification> {
-    return this.httpClient.put<Notification>(environment.apiHost + 'notifications/' + id + '/hostSettings', settings)
+  updateHostSettings(id:number, settings: HostNotificationSettings): Observable<HostNotificationSettings> {
+    return this.httpClient.put<HostNotificationSettings>(environment.apiHost + 'notifications/' + id + '/hostSettings', settings)
   }
 
   getGuestSettings(id:number): Observable<GuestNotificationSettings> {
     return this.httpClient.get<GuestNotificationSettings>(environment.apiHost + 'notifications/guest/settings/' + id)
   }
 
-  updateGuestSettings(id:number, settings: GuestNotificationSettings): Observable<Notification> {
-    return this.httpClient.put<Notification>(environment.apiHost + 'notifications/' + id + '/guestSettings', settings)
+  updateGuestSettings(id:number, settings: GuestNotificationSettings): Observable<GuestNotificationSettings> {
+    return this.httpClient.put<GuestNotificationSettings>(environment.apiHost + 'notifications/' + id + '/guestSettings', settings)
   }
 
   createNotification( notification: Notification): Observable<Notification> {
