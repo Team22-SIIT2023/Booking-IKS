@@ -11,7 +11,6 @@ import {NotificationModule} from "../notification/notification.module";
 @NgModule({
   declarations: [
     HeaderComponent,
-    NavBarComponent,
     FooterComponent,
     HomeComponent
   ],
@@ -23,7 +22,6 @@ import {NotificationModule} from "../notification/notification.module";
     NotificationModule
   ],
     exports: [
-        NavBarComponent,
         HeaderComponent,
         HomeComponent,
         FooterComponent,

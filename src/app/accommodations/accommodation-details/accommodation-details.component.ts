@@ -11,7 +11,7 @@ import {
 } from "../accommodation/model/model.module";
 import {ReservationsService} from "../../reservations/reservations.service";
 import {formatDate} from "@angular/common";
-import {FormControl, FormGroup} from "@angular/forms";
+import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {MatOption} from "@angular/material/core";
 import {Observable, range, toArray} from "rxjs";
 import {transformMenu} from "@angular/material/menu";
@@ -71,8 +71,11 @@ export class AccommodationDetailsComponent implements OnInit{
   guest:Guest;
 
   form:FormGroup=new FormGroup({
-        numberSelect:new FormControl(),
-        priceInput:new FormControl(),
+        numberSelect:new FormControl("",[Validators.required]),
+        priceInput:new FormControl("",[Validators.required]),
+        startDateInput:new FormControl("",[Validators.required]),
+        endDateInput:new FormControl("",[Validators.required]),
+
     });
   approvalType: FormGroup=new FormGroup({
     approvalTypeRbt:new FormControl()
@@ -209,99 +212,106 @@ export class AccommodationDetailsComponent implements OnInit{
 
   createReservation(dateRangeStart: HTMLInputElement, dateRangeEnd: HTMLInputElement) {
 
-    if(dateRangeStart.value && dateRangeEnd.value && this.form.value.numberSelect){
-      if(this.accommodation.automaticConfirmation){
-        this.setValues(dateRangeStart, dateRangeEnd);
-        const price = this.form.value.priceInput;
-        const request: ReservationRequest={
-          timeSlot: this.timeSlot,
-          price:price,
-          guest:this.guest,
-          accommodation:this.accommodation,
-          status:RequestStatus.ACCEPTED,
-          guestNumber:this.guestNum
-        };
-        if (price==0){
-          this.snackBar.open("No prices for this date range!", 'Close', {
-            duration: 3000,
-          });
-        }
-        else {
-          this.reservationService.add(request).subscribe(
-            {
-              next: (data: ReservationRequest) => {
-                  const text="User "+this.guest.account.username+" has made a reservation request for " + request.accommodation?.name;
+      if(this.accommodation.automaticConfirmation) {
+        if(dateRangeStart.value && dateRangeEnd.value && this.form.value.numberSelect){
+          this.setValues(dateRangeStart, dateRangeEnd);
+          const price = this.form.value.priceInput;
+          const request: ReservationRequest = {
+            timeSlot: this.timeSlot,
+            price: price,
+            guest: this.guest,
+            accommodation: this.accommodation,
+            status: RequestStatus.ACCEPTED,
+            guestNumber: this.guestNum
+          };
+          if (price == 0) {
+            this.snackBar.open("No prices for this date range!", 'Close', {
+              duration: 3000,
+            });
+          } else {
+            this.reservationService.add(request).subscribe(
+              {
+                next: (data: ReservationRequest) => {
+                  const text = "User " + this.guest.account?.username + " has made a reservation request for " + request.accommodation?.name;
 
                   if (this.checkNotificationStatus(NotificationType.RESERVATION_REQUEST)) {
-                      console.log("KREIRAOOOOOOOOOOO")
-                      this.createNotification(text, NotificationType.RESERVATION_REQUEST);
-                      this.socketService.sendMessageUsingSocket(text,this.guest.id,this.accommodation.host.id);
+                    console.log("KREIRAOOOOOOOOOOO")
+                    this.createNotification(text, NotificationType.RESERVATION_REQUEST);
+                    this.socketService.sendMessageUsingSocket(text, this.guest.id, this.accommodation.host.id);
                   }
 
                   this.snackBar.open("Request added!", 'Close', {
-                  duration: 3000,
-                });
-                //ovde cu da nabavim isti taj request i da ga prihvatim
-                this.acommodationsService.changeFreeTimeSlots(this.accommodation.id as number, request.timeSlot as TimeSlot).subscribe(
-                  {
-                    next: (data: Accommodation) => {
-                      this.snackBar.open("Request accepted immediately!", 'Close', {
-                        duration: 3000,
-                      });
-
-                    },
-                    error: (_) => {
-                    }
+                    duration: 3000,
                   });
-              },
-              error: (_) => {
-              }
-            });
-        }
-      }
-      else{
-        this.setValues(dateRangeStart, dateRangeEnd);
-        const price = this.form.value.priceInput;
-        const request: ReservationRequest={
-          timeSlot: this.timeSlot,
-          price:price,
-          guest:this.guest,
-          accommodation:this.accommodation,
-          status:RequestStatus.PENDING,
-          guestNumber:this.guestNum
-        };
-        if (price==0){
-          this.snackBar.open("No prices for this date range!", 'Close', {
-            duration: 3000,
-          });
-        }
-        else {
-          this.reservationService.add(request).subscribe(
-            {
-              next: (data: ReservationRequest) => {
+                  //ovde cu da nabavim isti taj request i da ga prihvatim
+                  this.acommodationsService.changeFreeTimeSlots(this.accommodation.id as number, request.timeSlot as TimeSlot).subscribe(
+                    {
+                      next: (data: Accommodation) => {
+                        this.snackBar.open("Request accepted immediately!", 'Close', {
+                          duration: 3000,
+                        });
 
-                  const text="User "+this.guest.account.username+" has made a reservation request for " + request.accommodation?.name;
+                      },
+                      error: (_) => {
+                      }
+                    });
+                },
+                error: (_) => {
+                }
+              });
+          }
+      }
+      else {
+        this.snackBar.open("Select date range and guest number!", 'Close', {
+          duration: 3000,
+        });
+      }
+      }
+
+      else{
+        if(dateRangeStart.value && dateRangeEnd.value && this.form.value.numberSelect) { //moze da se skloni
+          this.setValues(dateRangeStart, dateRangeEnd);
+          const price = this.form.value.priceInput;
+          const request: ReservationRequest = {
+            timeSlot: this.timeSlot,
+            price: price,
+            guest: this.guest,
+            accommodation: this.accommodation,
+            status: RequestStatus.PENDING,
+            guestNumber: this.guestNum
+          };
+          if (price == 0) {
+            this.snackBar.open("No prices for this date range!", 'Close', {
+              duration: 3000,
+            });
+          } else {
+            this.reservationService.add(request).subscribe(
+              {
+                next: (data: ReservationRequest) => {
+
+                  const text = "User " + this.guest.account?.username + " has made a reservation request for " + request.accommodation?.name;
 
                   if (this.checkNotificationStatus(NotificationType.RESERVATION_REQUEST)) {
-                      console.log("KREIRAOOOOOOOOOOO")
-                      this.createNotification(text, NotificationType.RESERVATION_REQUEST);
-                      this.socketService.sendMessageUsingSocket(text,this.guest.id,this.accommodation.host.id);
+                    console.log("KREIRAOOOOOOOOOOO")
+                    this.createNotification(text, NotificationType.RESERVATION_REQUEST);
+                    this.socketService.sendMessageUsingSocket(text, this.guest.id, this.accommodation.host.id);
                   }
 
                   this.snackBar.open("Request created!", 'Close', {
-                  duration: 3000,
-                });
-              },
-              error: (_) => {
-              }
-            });
+                    duration: 3000,
+                  });
+                },
+                error: (_) => {
+                }
+              });
+          }
+        }
+        else {
+          this.snackBar.open("Select date range and guest number!", 'Close', {
+            duration: 3000,
+          });
         }
       }
-      }else {
-              this.snackBar.open("Select date range and guest number!", 'Close', {
-                duration: 3000,
-              });
-    }
   }
 
   protected readonly transformMenu = transformMenu;
@@ -422,7 +432,7 @@ export class AccommodationDetailsComponent implements OnInit{
     this.commentService.createHostComment(this.accommodation.host.id, commentAndGrade).subscribe({
       next: (data: CommentAndGrade) => {
 
-          const text="User "+this.guest.account.username + " has commented you.";
+          const text="User "+this.guest.account?.username + " has commented you.";
 
           if (this.checkNotificationStatus(NotificationType.HOST_RATED)) {
               console.log("KREIRAOOOOOOOOOOO")
@@ -464,7 +474,7 @@ export class AccommodationDetailsComponent implements OnInit{
       this.commentService.createAccommodationComment(this.accommodation.id, commentAndGrade).subscribe({
           next: (data: CommentAndGrade) => {
 
-              const text="User " + this.guest.account.username + " has commented " + this.accommodation.name;
+              const text="User " + this.guest.account?.username + " has commented " + this.accommodation.name;
 
               if (this.checkNotificationStatus(NotificationType.ACCOMMODATION_RATED)) {
 
