@@ -36,7 +36,7 @@
     <button [routerLink]="['logIn']" mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
       <mat-icon>person_add</mat-icon>
     </button>
-    <button (click)="logout()" mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
+    <button id="logoutBtn" (click)="logout()" mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
       <mat-icon>logout</mat-icon>
     </button>
     <mat-menu #menu="matMenu">

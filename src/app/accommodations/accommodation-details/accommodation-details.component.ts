@@ -1,4 +1,4 @@
-import {Component, Host, Input, OnInit, QueryList, ViewChildren} from '@angular/core';
+import {Component, EventEmitter, Host, Input, OnInit, Output, QueryList, ViewChildren} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {AccommodationsService} from "../accommodations.service";
 
@@ -49,7 +49,11 @@ export class AccommodationDetailsComponent implements OnInit{
   hostComment: string = '';
   accommodationComment: string = '';
   hostAverageRating:number;
+  accAverageRating:number;
   settings:HostNotificationSettings;
+
+  // @Output()
+  // delComm = new EventEmitter<CommentAndGrade>()
 
 
   protected readonly Array = Array;
@@ -148,6 +152,17 @@ export class AccommodationDetailsComponent implements OnInit{
                     console.error('Error fetching average rating:', error);
                 }
             );
+
+        this.commentService.getAverageAccommodationRating(this.accommodation?.id)
+          .subscribe(
+            (averageRating: number) => {
+              this.accAverageRating = averageRating;
+              console.log("AVERAGEEEEE")
+            },
+            (error) => {
+              console.error('Error fetching average rating:', error);
+            }
+          );
 
         this.getSettings();
 
@@ -492,15 +507,26 @@ export class AccommodationDetailsComponent implements OnInit{
           });
         },
         (error) => {
-          this.snackBar.open("You can't report the host", 'Close', {
-            duration: 3000,
-          });
+          if (error.status===404) {
+            this.snackBar.open("Host is reported already!", 'Close', {
+              duration: 3000,
+            });
+          }
+          else {
+            this.snackBar.open("You can't report the host", 'Close', {
+              duration: 3000,
+            });
+          }
         });
     }
 
     getHostStarColor(starIndex: number): string {
         return starIndex <= this.hostAverageRating ? 'filled-star' : 'empty-star';
     }
+
+  getAccStarColor(starIndex: number): string {
+    return starIndex <= this.accAverageRating ? 'filled-star' : 'empty-star';
+  }
 
   changeApprovalType() {
     const selectedValue = this.approvalType.value.approvalTypeRbt;
@@ -524,7 +550,6 @@ export class AccommodationDetailsComponent implements OnInit{
         }
       }
     );
-
   }
 
 
@@ -571,5 +596,25 @@ export class AccommodationDetailsComponent implements OnInit{
       return true;
     }
     return false;
+  }
+
+
+  loadComments($event: CommentAndGrade) {
+    this.commentService.getAllForAccommodation(this.accommodation?.id).subscribe({
+      next: (data: CommentAndGrade[]) => {
+        this.comments = data
+      },
+      error: (_) => {console.log("Greska!")}
+    })
+
+    this.commentService.getAverageAccommodationRating(this.accommodation?.id)
+      .subscribe(
+        (averageRating: number) => {
+          this.accAverageRating = averageRating;
+        },
+        (error) => {
+          console.error('Error fetching average rating:', error);
+        }
+      );
   }
 }

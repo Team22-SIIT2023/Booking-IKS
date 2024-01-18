@@ -143,9 +143,16 @@ export class RequestsViewComponent implements OnInit {
             });
           },
           (error) => {
-            this.snackBar.open("You can't report guest!", 'Close', {
-              duration: 3000,
-            });
+            if (error.status===404) {
+              this.snackBar.open("Guest is reported already!", 'Close', {
+                duration: 3000,
+              });
+            }
+            else {
+              this.snackBar.open("You can't report guest!", 'Close', {
+                duration: 3000,
+              });
+            }
           });
       },
       (error) => {

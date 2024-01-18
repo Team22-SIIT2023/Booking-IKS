@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {CommentAndGrade} from "../../administrator/comments-and-grades/model/model.module";
 import {AccommodationsService} from "../../accommodations/accommodations.service";
 import {CommentsService} from "../comments.service";
@@ -14,6 +14,9 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 export class CommentCardComponent {
   role:string='';
   userId:number;
+
+  @Output()
+  delComm = new EventEmitter<CommentAndGrade>()
 
 
   constructor( private commentService: CommentsService , private accountService: UserService, private snackBar: MatSnackBar) {
@@ -54,6 +57,7 @@ export class CommentCardComponent {
   public deleteAccommodationComment(id: number|undefined) {
     this.commentService.deleteComment(id).subscribe({
       next: data => {
+        this.delComm.emit();
         this.snackBar.open("Delete successful", 'Close', {
           duration: 3000,
         });
