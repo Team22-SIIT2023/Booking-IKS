@@ -2,9 +2,9 @@ export interface User {
   id: number;
   firstName:string;
   lastName:string;
-  address:Address;
+  address?:Address;
   phoneNumber : string;
-  account : Account;
+  account? : Account;
   picturePath? : string;
   lastPasswordResetDate?: Date
 }

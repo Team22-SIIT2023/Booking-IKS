@@ -58,7 +58,7 @@ export class ReservationsViewComponent implements OnInit{
         {
           next: (data: ReservationRequest) => {
 
-            const text="User " + reservation.guest?.account.username + " has cancelled reservation.";
+            const text="User " + reservation.guest?.account?.username + " has cancelled reservation.";
 
             if (this.checkNotificationStatus(NotificationType.RESERVATION_CANCELLED)) {
               console.log("KREIRAOOOOOOOOOOO")

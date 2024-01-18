@@ -11,7 +11,7 @@ import {
 } from "../accommodation/model/model.module";
 import {ReservationsService} from "../../reservations/reservations.service";
 import {formatDate} from "@angular/common";
-import {FormControl, FormGroup} from "@angular/forms";
+import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {MatOption} from "@angular/material/core";
 import {Observable, range, toArray} from "rxjs";
 import {transformMenu} from "@angular/material/menu";
@@ -67,8 +67,11 @@ export class AccommodationDetailsComponent implements OnInit{
   guest:Guest;
 
   form:FormGroup=new FormGroup({
-        numberSelect:new FormControl(),
-        priceInput:new FormControl(),
+        numberSelect:new FormControl("",[Validators.required]),
+        priceInput:new FormControl("",[Validators.required]),
+        startDateInput:new FormControl("",[Validators.required]),
+        endDateInput:new FormControl("",[Validators.required]),
+
     });
   approvalType: FormGroup=new FormGroup({
     approvalTypeRbt:new FormControl()
@@ -214,7 +217,7 @@ export class AccommodationDetailsComponent implements OnInit{
             this.reservationService.add(request).subscribe(
               {
                 next: (data: ReservationRequest) => {
-                  const text = "User " + this.guest.account.username + " has made a reservation request for " + request.accommodation?.name;
+                  const text = "User " + this.guest.account?.username + " has made a reservation request for " + request.accommodation?.name;
 
                   if (this.checkNotificationStatus(NotificationType.RESERVATION_REQUEST)) {
                     console.log("KREIRAOOOOOOOOOOO")
@@ -251,7 +254,7 @@ export class AccommodationDetailsComponent implements OnInit{
       }
 
       else{
-        if(dateRangeStart.value && dateRangeEnd.value && this.form.value.numberSelect) {
+        if(dateRangeStart.value && dateRangeEnd.value && this.form.value.numberSelect) { //moze da se skloni
           this.setValues(dateRangeStart, dateRangeEnd);
           const price = this.form.value.priceInput;
           const request: ReservationRequest = {
@@ -271,7 +274,7 @@ export class AccommodationDetailsComponent implements OnInit{
               {
                 next: (data: ReservationRequest) => {
 
-                  const text = "User " + this.guest.account.username + " has made a reservation request for " + request.accommodation?.name;
+                  const text = "User " + this.guest.account?.username + " has made a reservation request for " + request.accommodation?.name;
 
                   if (this.checkNotificationStatus(NotificationType.RESERVATION_REQUEST)) {
                     console.log("KREIRAOOOOOOOOOOO")
@@ -414,7 +417,7 @@ export class AccommodationDetailsComponent implements OnInit{
     this.commentService.createHostComment(this.accommodation.host.id, commentAndGrade).subscribe({
       next: (data: CommentAndGrade) => {
 
-          const text="User "+this.guest.account.username + " has commented you.";
+          const text="User "+this.guest.account?.username + " has commented you.";
 
           if (this.checkNotificationStatus(NotificationType.HOST_RATED)) {
               console.log("KREIRAOOOOOOOOOOO")
@@ -456,7 +459,7 @@ export class AccommodationDetailsComponent implements OnInit{
       this.commentService.createAccommodationComment(this.accommodation.id, commentAndGrade).subscribe({
           next: (data: CommentAndGrade) => {
 
-              const text="User " + this.guest.account.username + " has commented " + this.accommodation.name;
+              const text="User " + this.guest.account?.username + " has commented " + this.accommodation.name;
 
               if (this.checkNotificationStatus(NotificationType.ACCOMMODATION_RATED)) {
 
