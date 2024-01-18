@@ -2,9 +2,9 @@
   <div class="imageDescription">
 <mat-card class="accommodationCard">
   <mat-card-header class="accommodationName">
-    <span  *ngIf="role == 'ROLE_HOST'"  [routerLink]="['editDates']"><mat-icon class="iconEdit" >edit</mat-icon></span>
+    <span id="editAccommodationBtn"  *ngIf="role == 'ROLE_HOST'"  [routerLink]="['editDates']"><mat-icon class="iconEdit" >edit</mat-icon></span>
     <strong>{{accommodation.name}}</strong> <div class="rating">
-    <mat-icon *ngFor="let star of Array(5)" class="stars">star</mat-icon>
+    <mat-icon *ngFor="let star of Array(5); let i = index" class="stars" [ngClass]="getAccStarColor(i + 1)">star</mat-icon>
 
   </div></mat-card-header>
   <mat-card-subtitle class="address">
@@ -70,16 +70,16 @@
 <div *ngIf="role != 'ROLE_HOST'" class="filter" [formGroup]="form" >
   <div class="dates">
     <p>Select dates</p>
-    <mat-form-field class="date-picker">
+    <mat-form-field id="dateRangeForEditFreeDates" class="date-picker">
       <mat-date-range-input [rangePicker]="rangePicker" [dateFilter]="dateFilter">
-        <input matStartDate placeholder="Start date" #dateRangeStart >
-        <input matEndDate placeholder="End date" #dateRangeEnd>
+        <input formControlName="startDateInput" matStartDate placeholder="Start date" #dateRangeStart >
+        <input formControlName="endDateInput" matEndDate placeholder="End date" #dateRangeEnd>
       </mat-date-range-input>
       <mat-datepicker-toggle matSuffix [for]="rangePicker"></mat-datepicker-toggle>
       <mat-date-range-picker #rangePicker>
         <mat-date-range-picker-actions>
           <button mat-button matDateRangePickerCancel>Cancel</button>
-          <button mat-raised-button color="primary" matDateRangePickerApply (click)="calculateTotalPrice(dateRangeStart,dateRangeEnd)">Apply</button>
+          <button id="applyDateForTimeSlots" mat-raised-button color="primary" matDateRangePickerApply (click)="calculateTotalPrice(dateRangeStart,dateRangeEnd)">Apply</button>
         </mat-date-range-picker-actions>
       </mat-date-range-picker>
     </mat-form-field>
@@ -123,12 +123,11 @@
   </div>
   <div class="comments">
     <div *ngFor="let comment of comments">
-      <app-comment-card [comment]="comment"></app-comment-card>
+      <app-comment-card (delComm)="loadComments($event)" [comment]="comment"></app-comment-card>
     </div>
 </div>
 
 
 
 <div class="footer">
-
 </div>

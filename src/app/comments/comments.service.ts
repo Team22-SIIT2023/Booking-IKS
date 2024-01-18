@@ -49,6 +49,9 @@ export class CommentsService {
   }
 
   getHostComments(id: number | undefined): Observable<CommentAndGrade[]> {
+    let params = new HttpParams();
+    params=params.set('status','ACTIVE');
+    const options={params}
     return this.httpClient.get<CommentAndGrade[]>(environment.apiHost + 'comments/host/'+id)
   }
 

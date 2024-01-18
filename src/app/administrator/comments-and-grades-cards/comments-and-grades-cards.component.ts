@@ -29,7 +29,7 @@ export class CommentsAndGradesCardsComponent implements OnInit {
               private accommodationService:AccommodationsService) {
   }
 
- 
+
 
   ngOnInit(): void {
     if (!(this.userService.getRole()==="ROLE_ADMIN")) {
@@ -42,6 +42,8 @@ export class CommentsAndGradesCardsComponent implements OnInit {
 
             this.commentService.getHostComments(this.accommodation.host.id).subscribe({
               next:(data: CommentAndGrade[]) => {
+                console.log("VANJAANAJAAJAA")
+                console.log(data);
                 this.commentsAndGrades = data
               },
               error: (_) => {console.log("Greska!")}
@@ -75,7 +77,7 @@ export class CommentsAndGradesCardsComponent implements OnInit {
     }
   }
 
- 
+
   onCommentAndGradeClicked(commentAndGrade: CommentAndGrade): void {
     this.ngOnInit();
     this.clickedCommentAndGrade = commentAndGrade.text + " " + commentAndGrade.id;
@@ -108,6 +110,6 @@ export class CommentsAndGradesCardsComponent implements OnInit {
     const imageUrl = URL.createObjectURL(blob);
     return this.sanitizer.bypassSecurityTrustUrl(imageUrl) as string;
   }
-  
+
 }
 

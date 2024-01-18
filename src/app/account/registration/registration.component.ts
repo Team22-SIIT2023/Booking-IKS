@@ -67,7 +67,7 @@ export class RegistrationComponent implements OnInit {
 
   ngOnInit(): void {
   }
-  submit() {
+  onSubmit() {
 
     if (this.registrationForm.valid) {
       console.log("usao :)")
@@ -115,7 +115,6 @@ export class RegistrationComponent implements OnInit {
     this.authenticationService.signup(auth).subscribe(
       result => {
         // this.toastr.success('Successful login!');
-        // localStorage.setItem('user', JSON.stringify(result));
         this.router.navigate(['logIn']);
 
       },
