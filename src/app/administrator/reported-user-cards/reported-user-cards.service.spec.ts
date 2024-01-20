@@ -1,6 +1,5 @@
 import { TestBed } from '@angular/core/testing';
 
-import { ReportedUserService } from './reported-user-cards.service';
 import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
 
 describe('ReportedUserCardsService', () => {

@@ -113,8 +113,16 @@ export class AccommodationUpdateComponent {
 
   haveActiveReservation(){
     const today: Date = new Date();
+    const targetDate: Date = new Date(2030, 11, 31); 
+
+    const year: number = today.getFullYear();
+    const month: number = today.getMonth() + 1; // Month is zero-based, so add 1
+    const day: number = today.getDate();
+    const dateString: string = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+    const dateString1: string = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`
+
     console.log(this.updateAccommodationFormGroup.value.name)
-    this.reservationService.getAll(RequestStatus.ACCEPTED,this.updateAccommodationFormGroup.value.name as string,'','').subscribe({
+    this.reservationService.getAll(RequestStatus.ACCEPTED,this.updateAccommodationFormGroup.value.name as string,dateString,dateString1).subscribe({
       next: (data: ReservationRequest[]) => {
         this.activeReservations = data;
         console.log(this.activeReservations)
