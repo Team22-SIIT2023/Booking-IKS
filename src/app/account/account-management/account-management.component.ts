@@ -150,8 +150,10 @@ export class AccountManagementComponent implements OnInit {
 
       this.service.update(updatedUser).subscribe(
         (updatedUser) => {
+          localStorage.removeItem('user');
+          this.router.navigate(['logIn']);
+          this.service.setUser();
           this.uploadPicture(this.user?.id as number);
-          console.log('User updated successfully', updatedUser);
         },
         (error) => {
           console.error('Error updating user', error);
