@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {AbstractControl, FormBuilder, ValidationErrors, ValidatorFn, Validators} from "@angular/forms";
 import {UserService} from "../account.service";
 import {Router} from "@angular/router";
-import {ToastrService} from "ngx-toastr";
+// import {ToastrService} from "ngx-toastr";
 import {Account, Address, Role, Status, User} from "../model/model.module";
 import {SharedService} from "../../shared/shared.service";
 
@@ -28,7 +28,7 @@ export class RegistrationComponent implements OnInit {
     private fb: FormBuilder,
     private authenticationService: UserService,
     private router: Router,
-    private toastr: ToastrService,
+    // private toastr: ToastrService,
     private sharedService: SharedService
   ) {}
 
@@ -41,16 +41,16 @@ export class RegistrationComponent implements OnInit {
   // };
 
   registrationForm = this.fb.group({
-    username : [null, [Validators.required]],
-    password: [null, [Validators.required]],
-    confirmPassword: [null, [Validators.required, this.matchValues('password')]],
-    firstName: [null, [Validators.required]],
-    lastName: [null, [Validators.required]],
-    address: [null, [Validators.required]],
-    city: [null, [Validators.required]],
-    country: [null, [Validators.required]],
-    phoneNumber: [null, [Validators.required]],
-    role: [null, [Validators.required]]
+    username : ['', [Validators.required, Validators.email]],
+    password: ['', [Validators.required, Validators.pattern(/^(?=[^A-Z]*[A-Z])(?=[^a-z]*[a-z])(?=\D*\d).{8,}$/)]],
+    confirmPassword: ['', [Validators.required, this.matchValues('password')]],
+    firstName: ['', [Validators.required]],
+    lastName: ['', [Validators.required]],
+    address: ['', [Validators.required]],
+    city: ['', [Validators.required]],
+    country: ['', [Validators.required]],
+    phoneNumber: ['', [Validators.required]],
+    role: ['', [Validators.required]]
   });
 
   matchValues(field: string) {
@@ -67,7 +67,7 @@ export class RegistrationComponent implements OnInit {
 
   ngOnInit(): void {
   }
-  submit() {
+  onSubmit() {
 
     if (this.registrationForm.valid) {
       console.log("usao :)")
@@ -115,13 +115,12 @@ export class RegistrationComponent implements OnInit {
     this.authenticationService.signup(auth).subscribe(
       result => {
         // this.toastr.success('Successful login!');
-        // localStorage.setItem('user', JSON.stringify(result));
         this.router.navigate(['logIn']);
 
       },
       error => {
         // this.sharedService.openSnack("Your account is not active. Check your email address!")
-        this.toastr.error(error.error);
+        // this.toastr.error(error.error);
       }
     );
 

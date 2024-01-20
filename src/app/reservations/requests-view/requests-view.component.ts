@@ -13,6 +13,15 @@ import {UserService} from "../../account/account.service";
 import {Host, User} from "src/app/account/model/model.module";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {of} from "rxjs";
+import {
+  GuestNotificationSettings,
+  HostNotificationSettings,
+  Notification,
+  NotificationType
+} from "../../notification/notification/model/model.module";
+import {SocketService} from "../../socket/socket.service";
+import {NotificationService} from "../../notification/notification.service";
+import {Guest} from "../../administrator/comments-and-grades/model/model.module";
 
 
 @Component({
@@ -31,6 +40,7 @@ export class RequestsViewComponent implements OnInit {
 
   guest: User;
   host: Host;
+  settings:GuestNotificationSettings;
   startDate: string = "";
   endDate: string = "";
   userId: number;
@@ -41,7 +51,9 @@ export class RequestsViewComponent implements OnInit {
     requestStatus: new FormControl()
   });
 
-  constructor(private requestService: ReservationsService, private userService: UserService, private snackBar: MatSnackBar) {
+  constructor(private requestService: ReservationsService, private userService: UserService,
+              private snackBar: MatSnackBar, private socketService: SocketService,
+              private notificationService: NotificationService) {
   }
 
   ngOnInit(): void {
@@ -62,6 +74,8 @@ export class RequestsViewComponent implements OnInit {
     } else {
       this.displayedColumns = ['timeSlot', 'price', 'host', 'accommodation', 'status', 'delete']
     }
+
+    // this.getSettings();
     this.statusOptions = Object.values(RequestStatus).map(item => String(item));
     this.fetchData();
   }
@@ -110,10 +124,16 @@ export class RequestsViewComponent implements OnInit {
   }
 
   dateRangeChange(dateRangeStart: HTMLInputElement, dateRangeEnd: HTMLInputElement) {
-    // @ts-ignore
-    this.startDate = this.getFormatedDate(new Date(dateRangeStart.value), "yyyy-MM-dd");
-    // @ts-ignore
-    this.endDate = this.getFormatedDate(new Date(dateRangeEnd.value), "yyyy-MM-dd");
+    if(dateRangeEnd.value!="" && dateRangeStart.value!=""){
+      // @ts-ignore
+      this.startDate = this.getFormatedDate(new Date(dateRangeStart.value), "yyyy-MM-dd");
+      // @ts-ignore
+      this.endDate = this.getFormatedDate(new Date(dateRangeEnd.value), "yyyy-MM-dd");
+    }else{
+      this.startDate = "";
+      this.endDate = "";
+    }
+
   }
 
 
@@ -129,9 +149,16 @@ export class RequestsViewComponent implements OnInit {
             });
           },
           (error) => {
-            this.snackBar.open("You can't report guest!", 'Close', {
-              duration: 3000,
-            });
+            if (error.status===404) {
+              this.snackBar.open("Guest is reported already!", 'Close', {
+                duration: 3000,
+              });
+            }
+            else {
+              this.snackBar.open("You can't report guest!", 'Close', {
+                duration: 3000,
+              });
+            }
           });
       },
       (error) => {
@@ -160,10 +187,21 @@ export class RequestsViewComponent implements OnInit {
   }
 
   denyRequest(request: ReservationRequest) {
+    // @ts-ignore
+    this.getSettings(request.guest?.id);
     if (request.status == RequestStatus.PENDING) {
       this.requestService.deny(request).subscribe(
         {
           next: (data: ReservationRequest) => {
+
+            const text:string="Host denied your request!";
+
+            if (this.checkNotificationStatus(NotificationType.RESERVATION_RESPONSE)) {
+              this.createNotification(request.guest as Guest, text, NotificationType.RESERVATION_RESPONSE);
+              // @ts-ignore
+              this.socketService.sendMessageUsingSocket(text,request.accommodation?.host.id, request.guest.id);
+            }
+
             this.snackBar.open("Request denied!", 'Close', {
               duration: 3000,
             });
@@ -179,10 +217,19 @@ export class RequestsViewComponent implements OnInit {
   }
 
   acceptRequest(request: ReservationRequest) {
+    // @ts-ignore
+    this.getSettings(request.guest?.id);
     if (request.status == RequestStatus.PENDING) {
       this.requestService.accept(request).subscribe(
         {
           next: (data: ReservationRequest) => {
+            const text:string="Host accepted your request!";
+
+            if (this.checkNotificationStatus(NotificationType.RESERVATION_RESPONSE)) {
+              this.createNotification(request.guest as Guest, text, NotificationType.RESERVATION_RESPONSE);
+              // @ts-ignore
+              this.socketService.sendMessageUsingSocket(text,request.accommodation?.host.id, request.guest.id);
+            }
             this.snackBar.open("Request accepted!", 'Close', {
               duration: 3000,
             });
@@ -210,5 +257,54 @@ export class RequestsViewComponent implements OnInit {
         }
       });
     }
+  }
+
+  private createNotification(guest:Guest, text:string, notificationType:NotificationType) {
+
+    const notification: Notification = {
+      text: text,
+      date: this.formatDate(new Date()),
+      type: notificationType,
+      user: guest
+    };
+    this.notificationService.createNotification(notification).subscribe(
+        {
+          next: (data: Notification) => {
+          },
+          error: () => {
+          }
+        }
+    );
+  }
+  private formatDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+  }
+
+  public getSettings(guestId: number)  {
+    this.notificationService.getGuestSettings(guestId).subscribe(
+        {
+          next: (data: GuestNotificationSettings) => {
+            this.settings = data;
+            console.log("SETINGS")
+            console.log(this.settings)
+          },
+          error: () => {
+          }
+        });
+  }
+
+  public checkNotificationStatus(type:NotificationType ):boolean{
+    if (NotificationType.RESERVATION_RESPONSE==type && this.settings.requestResponded) {
+      console.log("USAOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
+      return true;
+    }
+    return false;
   }
 }

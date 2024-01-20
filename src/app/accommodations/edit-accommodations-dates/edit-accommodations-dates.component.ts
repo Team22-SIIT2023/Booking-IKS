@@ -70,6 +70,19 @@ export class EditAccommodationsDatesComponent implements  OnInit, AfterViewInit{
     })
   }
 
+
+  getAcc() {
+    this.accommodationService.getAccommodation(this.id).subscribe({
+      next: (data: Accommodation) => {
+        // @ts-ignore
+        this.pricelists = data.priceList;
+        this.dataSource = new MatTableDataSource<PriceListItem>(this.pricelists);
+      },
+      error: (_) => {console.log("Greska!")}
+    })
+  }
+
+
   edit() {
     this.submitted=true;
 
@@ -92,7 +105,11 @@ export class EditAccommodationsDatesComponent implements  OnInit, AfterViewInit{
             this.isEdit = false;
             this.createAccommodationForm.reset();
             // this.dataSource = new MatTableDataSource<PriceListItem>(this.pricelists);
-            this.ngOnInit();
+            this.getAcc();
+
+            // this.snackBar.open("Updated", 'Close', {
+            //   duration: 3000,
+            // });
           },
           error: (_) => {
           }
@@ -115,6 +132,9 @@ export class EditAccommodationsDatesComponent implements  OnInit, AfterViewInit{
         {
           next: (data: Accommodation) => {
             this.editTimeSlotsAccommodationForm.reset();  // proveriti
+            this.snackBar.open("Updated", 'Close', {
+              duration: 3000,
+            });
           },
           error: (_) => {
             this.snackBar.open("Already has reservations in that period!", 'Close', {

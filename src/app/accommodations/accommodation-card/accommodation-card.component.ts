@@ -38,16 +38,17 @@ export class AccommodationCardComponent {
 
   ngOnInit() {
     this.role = this.userService.getRole();
-    const guestId=this.userService.getUserId();
-    this.userService.getUser(guestId).subscribe(
-      (data) => {
-        this.guest=data;
-        console.log(this.guest)
-      },
-      (error) => {
-        console.error('Error fetching guest:', error);
-      });
-    this.colorFavorites();
+    if(this.role=="ROLE_GUEST"){
+      const guestId=this.userService.getUserId();
+      this.userService.getUser(guestId).subscribe(
+        (data) => {
+          this.guest=data;
+        },
+        (error) => {
+          console.error('Error fetching guest:', error);
+        });
+      this.colorFavorites();
+    }
     this.accommodation.unitPrice=0;
     this.accommodation.price=0;
     const updateButtons = document.getElementsByClassName('updateAccommodation') as HTMLCollectionOf<HTMLButtonElement>;

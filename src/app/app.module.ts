@@ -23,15 +23,19 @@ import { AccountActivationComponent } from './account-activation/account-activat
 import {MatButtonModule} from "@angular/material/button";
 import {ReportsModule} from "./reports/reports.module";
 import {NgChartsModule } from 'ng2-charts';
+import {MaterialModule} from "./infrastructure/material/material.module";
+
 
 @NgModule({
   declarations: [
     AppComponent,
+    NavBarComponent,
     AccountActivationComponent,
   ],
   imports: [
     NgChartsModule,
     ReportsModule,
+    MaterialModule,
     BrowserModule,
     FormsModule,
     AppRoutingModule,

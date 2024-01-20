@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import {UserService} from "../account.service";
 import {SharedService} from "../../shared/shared.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {SocketService} from "../../socket/socket.service";
 
 @Component({
   selector: 'app-login',
@@ -21,7 +22,8 @@ export class LoginComponent implements OnInit{
     private router: Router,
     private toastr: ToastrService,
     // private sharedService: SharedService
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private socketService: SocketService
   ) {}
 
 
@@ -46,6 +48,7 @@ export class LoginComponent implements OnInit{
         this.toastr.success('Successful login!');
         localStorage.setItem('user', JSON.stringify(result));
         this.authenticationService.setUser()
+        this.socketService.initializeWebSocketConnection(this.authenticationService.getUserId());
         this.router.navigate(['home']);
       },
       error => {

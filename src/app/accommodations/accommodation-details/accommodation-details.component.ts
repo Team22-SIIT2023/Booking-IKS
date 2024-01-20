@@ -1,4 +1,4 @@
-import {Component, Host, Input, OnInit, QueryList, ViewChildren} from '@angular/core';
+import {Component, EventEmitter, Host, Input, OnInit, Output, QueryList, ViewChildren} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {AccommodationsService} from "../accommodations.service";
 
@@ -11,7 +11,7 @@ import {
 } from "../accommodation/model/model.module";
 import {ReservationsService} from "../../reservations/reservations.service";
 import {formatDate} from "@angular/common";
-import {FormControl, FormGroup} from "@angular/forms";
+import {FormControl, FormGroup, ValidationErrors, Validators} from "@angular/forms";
 import {MatOption} from "@angular/material/core";
 import {Observable, range, toArray} from "rxjs";
 import {transformMenu} from "@angular/material/menu";
@@ -21,8 +21,13 @@ import {MapService} from "../../map/map.service";
 import {DomSanitizer} from "@angular/platform-browser";
 import {UserService} from "../../account/account.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {Status} from "../../account/model/model.module";
-// import { Host } from "src/app/account/model/model.module";
+import {Status, User} from "../../account/model/model.module";
+import {
+    HostNotificationSettings,
+    Notification,
+    NotificationType
+} from "../../notification/notification/model/model.module";import {SocketService} from "../../socket/socket.service";
+import {NotificationService} from "../../notification/notification.service";
 
 
 @Component({
@@ -43,6 +48,11 @@ export class AccommodationDetailsComponent implements OnInit{
   hostComment: string = '';
   accommodationComment: string = '';
   hostAverageRating:number;
+  accAverageRating:number;
+  settings:HostNotificationSettings;
+
+  // @Output()
+  // delComm = new EventEmitter<CommentAndGrade>()
 
 
   protected readonly Array = Array;
@@ -60,8 +70,10 @@ export class AccommodationDetailsComponent implements OnInit{
   guest:Guest;
 
   form:FormGroup=new FormGroup({
-        numberSelect:new FormControl(),
-        priceInput:new FormControl(),
+        numberSelect:new FormControl("",[Validators.required]),
+        priceInput:new FormControl(""),
+        startDateInput: new FormControl(null, [Validators.required]),
+        endDateInput: new FormControl(null, [Validators.required])
     });
   approvalType: FormGroup=new FormGroup({
     approvalTypeRbt:new FormControl()
@@ -71,11 +83,12 @@ export class AccommodationDetailsComponent implements OnInit{
               private reservationService:ReservationsService,
               private commentService:CommentsService, private mapService:MapService,
               private sanitizer: DomSanitizer,private userService:UserService,
-              private snackBar: MatSnackBar) {
+              private snackBar: MatSnackBar, private socketService: SocketService,
+              private notificationService: NotificationService) {
   }
 
   ngOnInit(): void {
-      const guestId=this.userService.getUserId();
+    const guestId=this.userService.getUserId();
       this.userService.getUser(guestId).subscribe(
           (data) => {
               this.guest=data;
@@ -138,6 +151,20 @@ export class AccommodationDetailsComponent implements OnInit{
                 }
             );
 
+        this.commentService.getAverageAccommodationRating(this.accommodation?.id)
+          .subscribe(
+            (averageRating: number) => {
+              this.accAverageRating = averageRating;
+              console.log("AVERAGEEEEE")
+            },
+            (error) => {
+              console.error('Error fetching average rating:', error);
+            }
+          );
+
+        this.getSettings();
+
+
         const initialApprovalType = this.accommodation.automaticConfirmation ? 'automatic' : 'manual';
         this.approvalType.patchValue({
           approvalTypeRbt: initialApprovalType
@@ -183,82 +210,106 @@ export class AccommodationDetailsComponent implements OnInit{
 
   createReservation(dateRangeStart: HTMLInputElement, dateRangeEnd: HTMLInputElement) {
 
-    if(dateRangeStart.value && dateRangeEnd.value && this.form.value.numberSelect){
-      if(this.accommodation.automaticConfirmation){
-        this.setValues(dateRangeStart, dateRangeEnd);
-        const price = this.form.value.priceInput;
-        const request: ReservationRequest={
-          timeSlot: this.timeSlot,
-          price:price,
-          guest:this.guest,
-          accommodation:this.accommodation,
-          status:RequestStatus.ACCEPTED,
-          guestNumber:this.guestNum
-        };
-        if (price==0){
-          this.snackBar.open("No prices for this date range!", 'Close', {
-            duration: 3000,
-          });
-        }
-        else {
-          this.reservationService.add(request).subscribe(
-            {
-              next: (data: ReservationRequest) => {
-                this.snackBar.open("Request added!", 'Close', {
-                  duration: 3000,
-                });
-                //ovde cu da nabavim isti taj request i da ga prihvatim 
-                this.acommodationsService.changeFreeTimeSlots(this.accommodation.id as number, request.timeSlot as TimeSlot).subscribe(
-                  {
-                    next: (data: Accommodation) => {
-                      this.snackBar.open("Request accepted immediately!", 'Close', {
-                        duration: 3000,
-                      });
-                      
-                    },
-                    error: (_) => {
-                    }
+      if(this.accommodation.automaticConfirmation) {
+        if(dateRangeStart.value && dateRangeEnd.value && this.form.value.numberSelect){
+          this.setValues(dateRangeStart, dateRangeEnd);
+          const price = this.form.value.priceInput;
+          const request: ReservationRequest = {
+            timeSlot: this.timeSlot,
+            price: price,
+            guest: this.guest,
+            accommodation: this.accommodation,
+            status: RequestStatus.ACCEPTED,
+            guestNumber: this.guestNum
+          };
+          if (price == 0) {
+            this.snackBar.open("No prices for this date range!", 'Close', {
+              duration: 3000,
+            });
+          } else {
+            this.reservationService.add(request).subscribe(
+              {
+                next: (data: ReservationRequest) => {
+                  const text = "User " + this.guest.account?.username + " has made a reservation request for " + request.accommodation?.name;
+
+                  if (this.checkNotificationStatus(NotificationType.RESERVATION_REQUEST)) {
+                    console.log("KREIRAOOOOOOOOOOO")
+                    this.createNotification(text, NotificationType.RESERVATION_REQUEST);
+                    this.socketService.sendMessageUsingSocket(text, this.guest.id, this.accommodation.host.id);
+                  }
+
+                  this.snackBar.open("Request added!", 'Close', {
+                    duration: 3000,
                   });
-              },
-              error: (_) => {
-              }
-            });
-        }
+                  //ovde cu da nabavim isti taj request i da ga prihvatim
+                  this.acommodationsService.changeFreeTimeSlots(this.accommodation.id as number, request.timeSlot as TimeSlot).subscribe(
+                    {
+                      next: (data: Accommodation) => {
+                        this.snackBar.open("Request accepted immediately!", 'Close', {
+                          duration: 3000,
+                        });
+
+                      },
+                      error: (_) => {
+                      }
+                    });
+                },
+                error: (_) => {
+                }
+              });
+          }
       }
+      else {
+        this.snackBar.open("Select date range and guest number!", 'Close', {
+          duration: 3000,
+        });
+      }
+      }
+
       else{
-        this.setValues(dateRangeStart, dateRangeEnd);
-        const price = this.form.value.priceInput;
-        const request: ReservationRequest={
-          timeSlot: this.timeSlot,
-          price:price,
-          guest:this.guest,
-          accommodation:this.accommodation,
-          status:RequestStatus.PENDING,
-          guestNumber:this.guestNum
-        };
-        if (price==0){
-          this.snackBar.open("No prices for this date range!", 'Close', {
+        if(dateRangeStart.value && dateRangeEnd.value && this.form.value.numberSelect) { //moze da se skloni
+          this.setValues(dateRangeStart, dateRangeEnd);
+          const price = this.form.value.priceInput;
+          const request: ReservationRequest = {
+            timeSlot: this.timeSlot,
+            price: price,
+            guest: this.guest,
+            accommodation: this.accommodation,
+            status: RequestStatus.PENDING,
+            guestNumber: this.guestNum
+          };
+          if (price == 0) {
+            this.snackBar.open("No prices for this date range!", 'Close', {
+              duration: 3000,
+            });
+          } else {
+            this.reservationService.add(request).subscribe(
+              {
+                next: (data: ReservationRequest) => {
+
+                  const text = "User " + this.guest.account?.username + " has made a reservation request for " + request.accommodation?.name;
+
+                  if (this.checkNotificationStatus(NotificationType.RESERVATION_REQUEST)) {
+                    console.log("KREIRAOOOOOOOOOOO")
+                    this.createNotification(text, NotificationType.RESERVATION_REQUEST);
+                    this.socketService.sendMessageUsingSocket(text, this.guest.id, this.accommodation.host.id);
+                  }
+
+                  this.snackBar.open("Request created!", 'Close', {
+                    duration: 3000,
+                  });
+                },
+                error: (_) => {
+                }
+              });
+          }
+        }
+        else {
+          this.snackBar.open("Select date range and guest number!", 'Close', {
             duration: 3000,
           });
         }
-        else {
-          this.reservationService.add(request).subscribe(
-            {
-              next: (data: ReservationRequest) => {
-                this.snackBar.open("Request created!", 'Close', {
-                  duration: 3000,
-                });
-              },
-              error: (_) => {
-              }
-            });
-        }
       }
-      }else {
-              this.snackBar.open("Select date range and guest number!", 'Close', {
-                duration: 3000,
-              });
-    }
   }
 
   protected readonly transformMenu = transformMenu;
@@ -378,7 +429,17 @@ export class AccommodationDetailsComponent implements OnInit{
 
     this.commentService.createHostComment(this.accommodation.host.id, commentAndGrade).subscribe({
       next: (data: CommentAndGrade) => {
-        this.snackBar.open("Comment is created", 'Close', {
+
+          const text="User "+this.guest.account?.username + " has commented you.";
+
+          if (this.checkNotificationStatus(NotificationType.HOST_RATED)) {
+              console.log("KREIRAOOOOOOOOOOO")
+
+              this.createNotification(text, NotificationType.HOST_RATED);
+              this.socketService.sendMessageUsingSocket(text,this.guest.id,this.accommodation.host.id);
+          }
+
+          this.snackBar.open("Comment is created", 'Close', {
           duration: 3000,
         });
       },
@@ -410,7 +471,16 @@ export class AccommodationDetailsComponent implements OnInit{
 
       this.commentService.createAccommodationComment(this.accommodation.id, commentAndGrade).subscribe({
           next: (data: CommentAndGrade) => {
-            this.snackBar.open("Comment is created", 'Close', {
+
+              const text="User " + this.guest.account?.username + " has commented " + this.accommodation.name;
+
+              if (this.checkNotificationStatus(NotificationType.ACCOMMODATION_RATED)) {
+
+                  this.createNotification(text, NotificationType.ACCOMMODATION_RATED);
+                  this.socketService.sendMessageUsingSocket(text,this.guest.id,this.accommodation.host.id);
+              }
+
+              this.snackBar.open("Comment is created", 'Close', {
               duration: 3000,
             });
           },
@@ -435,9 +505,16 @@ export class AccommodationDetailsComponent implements OnInit{
           });
         },
         (error) => {
-          this.snackBar.open("You can't report the host", 'Close', {
-            duration: 3000,
-          });
+          if (error.status===404) {
+            this.snackBar.open("Host is reported already!", 'Close', {
+              duration: 3000,
+            });
+          }
+          else {
+            this.snackBar.open("You can't report the host", 'Close', {
+              duration: 3000,
+            });
+          }
         });
     }
 
@@ -445,28 +522,99 @@ export class AccommodationDetailsComponent implements OnInit{
         return starIndex <= this.hostAverageRating ? 'filled-star' : 'empty-star';
     }
 
+  getAccStarColor(starIndex: number): string {
+    return starIndex <= this.accAverageRating ? 'filled-star' : 'empty-star';
+  }
+
   changeApprovalType() {
     const selectedValue = this.approvalType.value.approvalTypeRbt;
-    if(selectedValue){
-      if(selectedValue=="manual"){
-        this.accommodation.automaticConfirmation=false;
-      }else{
-        this.accommodation.automaticConfirmation=true;
-      }
-      this.updateAccommodation();
+    if (selectedValue) {
+      this.accommodation.automaticConfirmation = selectedValue != "manual";
+      this.acommodationsService.updateRequestApproval(this.accommodation).subscribe(
+        {
+          next: (data: Accommodation) => {
+            this.accommodation = data;
+          },
+          error: (_) => {
+          }
+        }
+      );
     }
   }
 
-  updateAccommodation(){
-    this.acommodationsService.update(this.accommodation).subscribe(
+  private createNotification(text:string, notificationType:NotificationType) {
+
+    const notification: Notification = {
+      text: text,
+      date: this.formatDate(new Date),
+      type: notificationType,
+      user: (this.accommodation.host as User)
+    };
+    this.notificationService.createNotification(notification).subscribe(
       {
-        next: (data: Accommodation) => {
-          this.accommodation = data;
+        next: (data: Notification) => {
+          console.log(notification.date);
         },
-        error: (_) => {
+        error: () => {
         }
       }
     );
+  }
+  private formatDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
 
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+  }
+
+  public getSettings()  {
+    this.notificationService.getHostSettings(this.accommodation.host.id).subscribe(
+      {
+        next: (data: HostNotificationSettings) => {
+          this.settings = data;
+          console.log("SETINGS")
+          console.log(this.settings)
+        },
+        error: () => {
+        }
+      });
+  }
+
+  public checkNotificationStatus(type:NotificationType ):boolean{
+    if (NotificationType.RESERVATION_REQUEST==type && this.settings.requestCreated) {
+      console.log("USAOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
+      return true;
+    }
+    if (NotificationType.ACCOMMODATION_RATED==type && this.settings.accommodationRated) {
+      return true;
+    }
+    if (NotificationType.HOST_RATED==type && this.settings.rated) {
+      return true;
+    }
+    return false;
+  }
+
+
+  loadComments($event: CommentAndGrade) {
+    this.commentService.getAllForAccommodation(this.accommodation?.id).subscribe({
+      next: (data: CommentAndGrade[]) => {
+        this.comments = data
+      },
+      error: (_) => {console.log("Greska!")}
+    })
+
+    this.commentService.getAverageAccommodationRating(this.accommodation?.id)
+      .subscribe(
+        (averageRating: number) => {
+          this.accAverageRating = averageRating;
+        },
+        (error) => {
+          console.error('Error fetching average rating:', error);
+        }
+      );
   }
 }

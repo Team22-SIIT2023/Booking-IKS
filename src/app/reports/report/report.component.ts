@@ -50,58 +50,63 @@ export class ReportComponent {
 
   generateRangeReport(dateRangeStart: HTMLInputElement, dateRangeEnd: HTMLInputElement) {
 
-    const startDate=this.getFormattedDate(new Date(dateRangeStart.value));
-    const endDate= this.getFormattedDate(new Date(dateRangeEnd.value));
-    this.showReservationsChart=true;
+    if(dateRangeEnd.value!="" && dateRangeStart.value!="") {
+      const startDate = this.getFormattedDate(new Date(dateRangeStart.value));
+      const endDate = this.getFormattedDate(new Date(dateRangeEnd.value));
+      this.showReservationsChart = true;
 
-    this.reportService.getTimeSlotRepost(this.userService.getUserId(), startDate, endDate)
-      .subscribe({
-        next: (data: AccommodationReport[]) => {
-          this.reports = data;
-          const totalProfits = this.reports.map(report => report.totalProfit);
-          const numberOfReservations = this.reports.map(report => report.numberOfReservations);
-          const accommodationNames = this.reports.map(report => report.accommodationName);
+      this.reportService.getTimeSlotRepost(this.userService.getUserId(), startDate, endDate)
+        .subscribe({
+          next: (data: AccommodationReport[]) => {
+            this.reports = data;
+            const totalProfits = this.reports.map(report => report.totalProfit);
+            const numberOfReservations = this.reports.map(report => report.numberOfReservations);
+            const accommodationNames = this.reports.map(report => report.accommodationName);
 
-          this.profitChart.data = [
-            { data: totalProfits, label: 'Profit', type: 'line' },
-          ];
-          this.profitChart.labels = accommodationNames;
-          this.profitChart.options = {
-            responsive: true,
-            scales: {
-              xAxes: [{ ticks: { beginAtZero: true },barPercentage: 0.5  }],
-              yAxes: [{ ticks: { beginAtZero: true } }],
-            },
-          };
+            this.profitChart.data = [
+              {data: totalProfits, label: 'Profit', type: 'line'},
+            ];
+            this.profitChart.labels = accommodationNames;
+            this.profitChart.options = {
+              responsive: true,
+              scales: {
+                xAxes: [{ticks: {beginAtZero: true}, barPercentage: 0.5}],
+                yAxes: [{ticks: {beginAtZero: true}}],
+              },
+            };
 
-          this.reservationsChart.data = [
-            { data: numberOfReservations, label: 'Number of Reservations', type: 'line' }
-          ];
-          this.reservationsChart.labels = accommodationNames;
-          this.reservationsChart.options = {
-            responsive: true,
-            scales: {
-              xAxes: [{ ticks: { beginAtZero: true }, barPercentage: 0.5 }],
-              yAxes: [{ ticks: { beginAtZero: true } }],
-            },
-          };
-          // @ts-ignore
-          document.getElementById('monthInfo').innerText="";
-          // @ts-ignore
-          document.getElementById('accommodationInfo').innerText="";
-          // @ts-ignore
-          document.getElementById('yearInfo').innerText ="Start date: "+startDate.toLocaleDateString()+"\nEnd date: "+endDate.toLocaleDateString();
-          for(const rep of this.reports){
+            this.reservationsChart.data = [
+              {data: numberOfReservations, label: 'Number of Reservations', type: 'line'}
+            ];
+            this.reservationsChart.labels = accommodationNames;
+            this.profitChart.options = {
+              responsive: true,
+              scales: {
+                x: {
+                  ticks: {beginAtZero: true},
+                },
+                y: {
+                  ticks: {beginAtZero: true},
+                },
+              },
+            };
             // @ts-ignore
-            document.getElementById('accommodationInfo').innerText+=
-              "\n"+rep.accommodationName+"\nTotal profit: "+rep.totalProfit+ "\nNumber of reservations:"+rep.numberOfReservations+"\n";
+            document.getElementById('monthInfo').innerText = "";
+            // @ts-ignore
+            document.getElementById('accommodationInfo').innerText = "";
+            // @ts-ignore
+            document.getElementById('yearInfo').innerText = "Start date: " + startDate.toLocaleDateString() + "\nEnd date: " + endDate.toLocaleDateString();
+            for (const rep of this.reports) {
+              // @ts-ignore
+              document.getElementById('accommodationInfo').innerText +=
+                "\n" + rep.accommodationName + "\nTotal profit: " + rep.totalProfit + "\nNumber of reservations:" + rep.numberOfReservations + "\n";
+            }
+          },
+          error: (_) => {
+            console.log("Error fetching time slot reports!");
           }
-        },
-        error: (_) => {
-          console.log("Error fetching time slot reports!");
-        }
-      });
-
+        });
+    }
 
   }
   getFormattedDate(date: Date): Date {
@@ -112,39 +117,43 @@ export class ReportComponent {
     const selectedAcc=this.form.value.accommodationName;
     const selectedYear=this.form.value.year;
     this.showReservationsChart=false;
-    this.reportService.getAnnualReport(selectedAcc,selectedYear).subscribe({
-      next: (data: AccommodationReport) => {
-        this.report = data
-        console.log(this.report);
-        this.profitChart.data = [{ data: this.report.profitByMonth, label: 'Monthly Profit' }];
-        this.profitChart.labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July','August','September','October','November','December'];
-        this.profitChart.options = {
-          responsive: true,
-          scales: {
-            xAxes: [{ ticks: { beginAtZero: true }}],
-            yAxes: [{ ticks: { beginAtZero: true } }],
-          },
-        };
-        // @ts-ignore
-        document.getElementById('yearInfo').innerText ="Year: "+selectedYear;
-        // @ts-ignore
-        document.getElementById('accommodationInfo').innerText ="Accommodation: "+this.report.accommodationName;
-
-        const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-        let monthNum=0;
-        // @ts-ignore
-        document.getElementById('monthInfo').innerText="Monthly profits:\n";
-        for(const profit of this.report.profitByMonth){
-          const monthName = monthNames[monthNum];
-          monthNum+=1;
+    if(selectedYear!=null && selectedAcc!=null) {
+      this.reportService.getAnnualReport(selectedAcc,selectedYear).subscribe({
+        next: (data: AccommodationReport) => {
+          this.report = data
+          console.log(this.report);
+          this.profitChart.data = [{ data: this.report.profitByMonth, label: 'Monthly Profit' }];
+          this.profitChart.labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July','August','September','October','November','December'];
+          this.profitChart.options = {
+            responsive: true,
+            scales: {
+              x: {
+                ticks: { beginAtZero: true },
+              },
+              y: {
+                ticks: { beginAtZero: true },
+              },
+            },
+          };
           // @ts-ignore
-          document.getElementById('monthInfo').innerText += `${monthName}: ${parseInt(profit)}\n`;
-        }
-      },
-      error: (_) => {console.log("Greska!")}
-    });
+          document.getElementById('yearInfo').innerText ="Year: "+selectedYear;
+          // @ts-ignore
+          document.getElementById('accommodationInfo').innerText ="Accommodation: "+this.report.accommodationName;
 
-
+          const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+          let monthNum=0;
+          // @ts-ignore
+          document.getElementById('monthInfo').innerText="Monthly profits:\n";
+          for(const profit of this.report.profitByMonth){
+            const monthName = monthNames[monthNum];
+            monthNum+=1;
+            // @ts-ignore
+            document.getElementById('monthInfo').innerText += `${monthName}: ${parseInt(profit)}\n`;
+          }
+        },
+        error: (_) => {console.log("Greska!")}
+      });
+    }
   }
 
   private loadAccommodations(hostId: number) {

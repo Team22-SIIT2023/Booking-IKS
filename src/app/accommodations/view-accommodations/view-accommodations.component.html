@@ -15,7 +15,7 @@
     <mat-label>Number of guests</mat-label>
     <input matInput type="number" min="0" name="guestNum" class="example-right-align" formControlName="guestNum">
   </mat-form-field>
-  <mat-form-field class="date-picker">
+  <mat-form-field id="dateRangeForEditFreeDates" class="date-picker">
     <mat-date-range-input [rangePicker]="rangePicker">
       <input matStartDate placeholder="Start date" #dateRangeStart>
       <input matEndDate placeholder="End date" #dateRangeEnd>
@@ -24,7 +24,7 @@
     <mat-date-range-picker #rangePicker>
       <mat-date-range-picker-actions>
         <button mat-button matDateRangePickerCancel>Cancel</button>
-        <button mat-raised-button color="primary" matDateRangePickerApply (click)="dateRangeChanged(dateRangeStart,dateRangeEnd)">Apply</button>
+        <button mat-raised-button color="primary" id="applyDateForTimeSlots" matDateRangePickerApply (click)="dateRangeChanged(dateRangeStart,dateRangeEnd)">Apply</button>
       </mat-date-range-picker-actions>
     </mat-date-range-picker>
   </mat-form-field>

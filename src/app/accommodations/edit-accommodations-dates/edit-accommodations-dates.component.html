@@ -3,7 +3,7 @@
 <h3>Edit price</h3>
   <form class="example-form"  [formGroup]="createAccommodationForm">
 
-    <mat-form-field class="date-picker example-full-width">
+    <mat-form-field id="dateRangeForEditPrice" class="date-picker example-full-width">
       <mat-date-range-input [min]="todayDate"  [rangePicker]="rangePicker">
         <input matStartDate name="startDate" formControlName="startDate" placeholder="Start date" #dateRangeStart>
         <input matEndDate name="endDate" formControlName="endDate" placeholder="End date" #dateRangeEnd>
@@ -12,7 +12,7 @@
       <mat-date-range-picker #rangePicker>
         <mat-date-range-picker-actions>
           <button mat-button matDateRangePickerCancel>Cancel</button>
-          <button mat-raised-button color="primary" (click)="dateRangeChanged(dateRangeStart,dateRangeEnd)" matDateRangePickerApply>Apply</button>
+          <button id="applyDateForPrice" mat-raised-button color="primary" (click)="dateRangeChanged(dateRangeStart,dateRangeEnd)" matDateRangePickerApply>Apply</button>
         </mat-date-range-picker-actions>
       </mat-date-range-picker>
     </mat-form-field>
@@ -28,7 +28,7 @@
     </mat-form-field>
   </form>
 
-  <button (click)="edit()" mat-raised-button class="reserveButton">Accept</button>
+  <button (click)="edit()" mat-raised-button class="editPriceBtn">Accept</button>
 
 <div>
   <div class="mat-elevation-z8">
@@ -69,7 +69,7 @@
 
   <form class="example-form"  [formGroup]="editTimeSlotsAccommodationForm">
 
-    <mat-form-field class="date-picker example-full-width">
+    <mat-form-field id="dateRangeForEditFreeDates" class="date-picker example-full-width">
       <mat-date-range-input [min]="todayDate"  [rangePicker]="dateRangePicker">
         <input matStartDate name="startFreeDate" formControlName="startFreeDate" placeholder="Start date" #freeDateRangeStart>
         <input matEndDate name="endFreeDate" formControlName="endFreeDate" placeholder="End date" #freeDateRangeEnd>
@@ -78,12 +78,12 @@
       <mat-date-range-picker  #dateRangePicker>
         <mat-date-range-picker-actions>
           <button mat-button matDateRangePickerCancel>Cancel</button>
-          <button mat-raised-button color="primary" (click)="freeDatesRangeChanged(freeDateRangeStart,freeDateRangeEnd)" matDateRangePickerApply>Apply</button>
+          <button id="applyDateForTimeSlots" mat-raised-button color="primary" (click)="freeDatesRangeChanged(freeDateRangeStart,freeDateRangeEnd)" matDateRangePickerApply>Apply</button>
         </mat-date-range-picker-actions>
       </mat-date-range-picker>
     </mat-form-field>
   </form>
-  <button (click)="editTimeSlots()" mat-raised-button class="reserveButton">Accept</button>
+  <button  (click)="editTimeSlots()" mat-raised-button class="acceptFreeDatesButton">Accept</button>
 
 </div>
 </div>
