@@ -149,4 +149,7 @@ export class AccommodationsService {
   getImages(id: number | undefined): Observable<string[]> {
     return this.httpClient.get<string[]>(environment.apiHost + 'accommodations/' + id + '/images');
   }
+  updateRequestApproval(accommodation: Accommodation): Observable<Accommodation> {
+    return this.httpClient.put<Accommodation>(environment.apiHost + "accommodations/request/approval",accommodation)
+  }
 }
