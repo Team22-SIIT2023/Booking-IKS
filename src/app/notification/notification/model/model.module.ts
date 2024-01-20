@@ -1,9 +1,10 @@
 import {User} from "../../../account/model/model.module";
+import {Timestamp} from "rxjs";
 
 export interface Notification {
   id?: number;
   text: string;
-  date: Date;
+  date: string;
   type: NotificationType;
   user?:User;
 }

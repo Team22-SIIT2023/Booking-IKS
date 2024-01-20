@@ -124,10 +124,16 @@ export class RequestsViewComponent implements OnInit {
   }
 
   dateRangeChange(dateRangeStart: HTMLInputElement, dateRangeEnd: HTMLInputElement) {
-    // @ts-ignore
-    this.startDate = this.getFormatedDate(new Date(dateRangeStart.value), "yyyy-MM-dd");
-    // @ts-ignore
-    this.endDate = this.getFormatedDate(new Date(dateRangeEnd.value), "yyyy-MM-dd");
+    if(dateRangeEnd.value!="" && dateRangeStart.value!=""){
+      // @ts-ignore
+      this.startDate = this.getFormatedDate(new Date(dateRangeStart.value), "yyyy-MM-dd");
+      // @ts-ignore
+      this.endDate = this.getFormatedDate(new Date(dateRangeEnd.value), "yyyy-MM-dd");
+    }else{
+      this.startDate = "";
+      this.endDate = "";
+    }
+
   }
 
 
@@ -257,7 +263,7 @@ export class RequestsViewComponent implements OnInit {
 
     const notification: Notification = {
       text: text,
-      date: new Date(),
+      date: this.formatDate(new Date()),
       type: notificationType,
       user: guest
     };
@@ -269,6 +275,16 @@ export class RequestsViewComponent implements OnInit {
           }
         }
     );
+  }
+  private formatDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
   }
 
   public getSettings(guestId: number)  {

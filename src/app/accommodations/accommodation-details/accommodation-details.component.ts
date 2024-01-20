@@ -11,7 +11,7 @@ import {
 } from "../accommodation/model/model.module";
 import {ReservationsService} from "../../reservations/reservations.service";
 import {formatDate} from "@angular/common";
-import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {FormControl, FormGroup, ValidationErrors, Validators} from "@angular/forms";
 import {MatOption} from "@angular/material/core";
 import {Observable, range, toArray} from "rxjs";
 import {transformMenu} from "@angular/material/menu";
@@ -28,7 +28,6 @@ import {
     NotificationType
 } from "../../notification/notification/model/model.module";import {SocketService} from "../../socket/socket.service";
 import {NotificationService} from "../../notification/notification.service";
-// import { Host } from "src/app/account/model/model.module";
 
 
 @Component({
@@ -72,10 +71,9 @@ export class AccommodationDetailsComponent implements OnInit{
 
   form:FormGroup=new FormGroup({
         numberSelect:new FormControl("",[Validators.required]),
-        priceInput:new FormControl("",[Validators.required]),
-        startDateInput:new FormControl("",[Validators.required]),
-        endDateInput:new FormControl("",[Validators.required]),
-
+        priceInput:new FormControl(""),
+        startDateInput: new FormControl(null, [Validators.required]),
+        endDateInput: new FormControl(null, [Validators.required])
     });
   approvalType: FormGroup=new FormGroup({
     approvalTypeRbt:new FormControl()
@@ -90,7 +88,7 @@ export class AccommodationDetailsComponent implements OnInit{
   }
 
   ngOnInit(): void {
-      const guestId=this.userService.getUserId();
+    const guestId=this.userService.getUserId();
       this.userService.getUser(guestId).subscribe(
           (data) => {
               this.guest=data;
@@ -530,45 +528,47 @@ export class AccommodationDetailsComponent implements OnInit{
 
   changeApprovalType() {
     const selectedValue = this.approvalType.value.approvalTypeRbt;
-    if(selectedValue){
-      if(selectedValue=="manual"){
-        this.accommodation.automaticConfirmation=false;
-      }else{
-        this.accommodation.automaticConfirmation=true;
-      }
-      this.updateAccommodation();
+    if (selectedValue) {
+      this.accommodation.automaticConfirmation = selectedValue != "manual";
+      this.acommodationsService.updateRequestApproval(this.accommodation).subscribe(
+        {
+          next: (data: Accommodation) => {
+            this.accommodation = data;
+          },
+          error: (_) => {
+          }
+        }
+      );
     }
   }
-
-  updateAccommodation(){
-    this.acommodationsService.update(this.accommodation).subscribe(
-      {
-        next: (data: Accommodation) => {
-          this.accommodation = data;
-        },
-        error: (_) => {
-        }
-      }
-    );
-  }
-
 
   private createNotification(text:string, notificationType:NotificationType) {
 
     const notification: Notification = {
       text: text,
-      date: new Date(),
+      date: this.formatDate(new Date),
       type: notificationType,
       user: (this.accommodation.host as User)
     };
     this.notificationService.createNotification(notification).subscribe(
       {
         next: (data: Notification) => {
+          console.log(notification.date);
         },
         error: () => {
         }
       }
     );
+  }
+  private formatDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
   }
 
   public getSettings()  {
