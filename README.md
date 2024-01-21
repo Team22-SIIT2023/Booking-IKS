@@ -1,27 +1,45 @@
-# BookingApp
+# TravelBee
+### Description
+This application is an application that allows users to search and book accommodation (similar to Booking). 
+Book a spot in the hive.  :bee:
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.2.10.
 
-## Development server
+### Running a project
+Clone these repositories:
+`https://github.com/Team22-SIIT2023/Booking-IKS.git`
+`https://github.com/Team22-SIIT2023/Booking-ISS.git`
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+Run frontend:
+`npm install`
+`ng serve`
 
-## Code scaffolding
+Frontend runs on local port 4200
+Backend runs on local port 8080
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
-## Build
+### Team
+| Student 1 | Student 2 | Student 3 | 
+| -------- | -------- | -------- | 
+| Valentina Jevtic | Isidora Aleksic | Sonja Baljicki |
+| SV11/2021 | SV36/2021 | SV59/2021 |
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
 
-## Running unit tests
+### Structure
+TravelBee consist of 5 classes that we took this semester:
+-   Software Frontend Engenieering
+-   Software Backend Engenieering
+-   Mobile Application Engenieering
+-   Software Tests Engenieering
+-   Software development methodologies
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
-## Running end-to-end tests
+#### Backend
+We developed backend for this app in Java Spring Boot framework. There are 3 different roles in the system: admin, host and guest. Users can register as guests and hosts. For authentication and authorization we used JWT. The database we used for this project - PostgreSQL.
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
 
-## Further help
+#### Frontend
+We developed the frontend for this app in Angular framework. For communication with the backend we used HttpClient and for notifications WebSockets.
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+
+#### Testing 
+The backend was tested with JUnit5 tests for services, repositories and controllers as well as Selenium for e2e testing. The frontend was tested with Jasmin and Karma.
