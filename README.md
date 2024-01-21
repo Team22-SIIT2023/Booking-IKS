@@ -6,14 +6,19 @@ Book a spot in the hive.  :bee:
 
 ### Running a project
 Clone these repositories:
+
 `https://github.com/Team22-SIIT2023/Booking-IKS.git`
+
 `https://github.com/Team22-SIIT2023/Booking-ISS.git`
 
 Run frontend:
+
 `npm install`
+
 `ng serve`
 
 Frontend runs on local port 4200
+
 Backend runs on local port 8080
 
 
