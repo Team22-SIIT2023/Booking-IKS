@@ -71,7 +71,7 @@ export class AccommodationDetailsComponent implements OnInit{
 
   form:FormGroup=new FormGroup({
         numberSelect:new FormControl("",[Validators.required]),
-        priceInput:new FormControl(""),
+        priceInput:new FormControl("",[Validators.min(1)]),
         startDateInput: new FormControl(null, [Validators.required]),
         endDateInput: new FormControl(null, [Validators.required])
     });
@@ -208,7 +208,7 @@ export class AccommodationDetailsComponent implements OnInit{
         return new Date(formattedDate);
     }
 
-  createReservation(dateRangeStart: HTMLInputElement, dateRangeEnd: HTMLInputElement) {
+  public createReservation(dateRangeStart: HTMLInputElement, dateRangeEnd: HTMLInputElement) {
 
       if(this.accommodation.automaticConfirmation) {
         if(dateRangeStart.value && dateRangeEnd.value && this.form.value.numberSelect){

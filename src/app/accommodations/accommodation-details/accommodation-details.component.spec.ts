@@ -18,6 +18,7 @@ import {By} from "@angular/platform-browser";
 describe('AccommodationDetailsComponent', () => {
   let component: AccommodationDetailsComponent;
   let fixture: ComponentFixture<AccommodationDetailsComponent>;
+  let el: HTMLElement;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -58,47 +59,95 @@ describe('AccommodationDetailsComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it("should disable the button when everything is empty",() => {
-    component.form.controls['numberSelect'].setValue('');
-    component.form.controls['startDateInput'].setValue('');
-    component.form.controls['endDateInput'].setValue('');
 
+  function setValues(numberValue:string,startDate:string,endDate:string,price:number) {
+    component.form.controls['numberSelect'].setValue(numberValue);
+    component.form.controls['startDateInput'].setValue(new Date(startDate));
+    component.form.controls['endDateInput'].setValue(new Date(endDate));
+    component.form.controls['priceInput'].setValue(price);
     fixture.detectChanges();
+  }
+
+  it(`should enable the button and call the createReservation method because the inputs are valid`, fakeAsync(() => {
+
+    spyOn(component, 'isDateInAvailableRange').and.returnValue(true);
+    spyOn(component, 'createReservation');
+    setValues("2","1/25/2024","1/30/2024",1000);
+
+    const button = fixture.debugElement.query(By.css(".reserveButton"));
+    expect(button.nativeElement.disabled).toBeFalsy();
+    expect(component.form.valid).toBeTruthy();
+
+    button.nativeElement.click();
+    tick();
+    expect(component.createReservation).toHaveBeenCalledTimes(1);
+
+  }));
+
+  it("should disable the button when inputs are invalid, and not call createReservation",fakeAsync(() => {
+
+    spyOn(component, 'createReservation');
+    setValues("","","",0);
 
     expect(component.form.valid).toBeFalsy();
     const button = fixture.debugElement.query(By.css(".reserveButton"));
     expect(button.nativeElement.disabled).toBeTruthy();
+
+    button.nativeElement.click();
+    tick();
+    expect(component.createReservation).toHaveBeenCalledTimes(0);
+
+  }));
+
+  it("should disable the button when guest number select is not empty, but dates and price are",() => {
+
+    setValues("2","","",0);
+
+    expect(component.form.valid).toBeFalsy();
+    const button = fixture.debugElement.query(By.css(".reserveButton"));
+    expect(button.nativeElement.disabled).toBeTruthy();
+
   });
 
-    it("should disable the button when guest number select is not empty, but dates are",() => {
-        component.form.controls['numberSelect'].setValue(2);
-        component.form.controls['startDateInput'].setValue('');
-        component.form.controls['endDateInput'].setValue('');
+  it("should disable the button when guest number select and dates are not empty, but the price is",() => {
 
-        fixture.detectChanges();
+    spyOn(component, 'isDateInAvailableRange').and.returnValue(true);
+    setValues("2","1/25/2024","1/30/2024",0);
 
-        expect(component.form.valid).toBeFalsy();
-        const button = fixture.debugElement.query(By.css(".reserveButton"));
-        expect(button.nativeElement.disabled).toBeTruthy();
+    expect(component.form.valid).toBeFalsy();
+    const button = fixture.debugElement.query(By.css(".reserveButton"));
+    expect(button.nativeElement.disabled).toBeTruthy();
 
-    });
+  });
+  it("should disable the button when guest number select and price are not empty, but the dates are",() => {
 
-    it("should enable the button",() => {
+    setValues("2","","",1000);
 
+    expect(component.form.valid).toBeFalsy();
+    const button = fixture.debugElement.query(By.css(".reserveButton"));
+    expect(button.nativeElement.disabled).toBeTruthy();
 
-       spyOn(component, 'isDateInAvailableRange').and.returnValue(true);
+  });
+  it("should disable the button when guest number select,one date and price are not empty, but one date is",() => {
 
-        component.form.controls['startDateInput'].setValue(new Date("1/19/2024"));
-        component.form.controls['endDateInput'].setValue(new Date("1/20/2024"));
-        component.form.controls['numberSelect'].setValue(2);
+    spyOn(component, 'isDateInAvailableRange').and.returnValue(true);
+    setValues("2","1/25/2024","",1000);
 
-        fixture.detectChanges();
+    expect(component.form.valid).toBeFalsy();
+    const button = fixture.debugElement.query(By.css(".reserveButton"));
+    expect(button.nativeElement.disabled).toBeTruthy();
 
-        const button = fixture.debugElement.query(By.css(".reserveButton"));
-        expect(button.nativeElement.disabled).toBeFalsy();
-        expect(component.form.valid).toBeTruthy();
+  });
+  it("should disable the button because the dates are not free",() => {
 
-    });
+    spyOn(component, 'isDateInAvailableRange').and.returnValue(false);
+    setValues("2","1/25/2024","1/30/2024",1000);
+
+    const button = fixture.debugElement.query(By.css(".reserveButton"));
+    expect(button.nativeElement.disabled).toBeTruthy();
+    expect(component.form.valid).toBeFalsy();
+
+  });
 
 
 });
