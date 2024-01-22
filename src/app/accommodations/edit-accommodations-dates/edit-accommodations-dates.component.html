@@ -28,7 +28,7 @@
     </mat-form-field>
   </form>
 
-  <button (click)="edit()" mat-raised-button class="editPriceBtn">Accept</button>
+  <button [disabled]="!createAccommodationForm.valid" (click)="edit()" mat-raised-button class="editPriceBtn">Accept</button>
 
 <div>
   <div class="mat-elevation-z8">
