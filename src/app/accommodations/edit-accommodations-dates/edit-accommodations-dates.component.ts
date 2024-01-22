@@ -37,7 +37,7 @@ export class EditAccommodationsDatesComponent implements  OnInit, AfterViewInit{
   todayDate:Date = new Date();
 
   createAccommodationForm = new FormGroup({
-    price: new FormControl(),
+    price: new FormControl(0, [Validators.min(0)]),
     startDate: new FormControl(),
     endDate: new FormControl()
   });
@@ -93,7 +93,8 @@ export class EditAccommodationsDatesComponent implements  OnInit, AfterViewInit{
         startDate: this.formatedStartDate,
         endDate: this.formatedEndDate
         };
-      const pricelistItem: PriceListItem = {
+        const pricelistItem: PriceListItem = {
+            // @ts-ignore
         price: this.createAccommodationForm.value.price,
         timeSlot: timeSlot
       }
