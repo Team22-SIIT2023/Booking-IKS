@@ -15,7 +15,7 @@
     </div>
     <div class="login-container">
         <form  [formGroup]="updateUserForm" (ngSubmit)="updateUser()">
-            
+
             <label for="firstName">First name:</label>
             <input type="text" id="firstName"  name="firstName" formControlName="firstName" [value]="user?.firstName" required>
             <div *ngIf="updateUserForm.get('firstName')?.hasError('required')">
@@ -95,7 +95,7 @@
             </div>
 
 
-            <button type="submit" [disabled]="updateUserForm.invalid">Save changes</button>
+            <button id="saveChanges" type="submit" [disabled]="updateUserForm.invalid">Save changes</button>
             <button id="deleteButton" (click)="deleteUser()">Delete account</button>
 
         </form>
